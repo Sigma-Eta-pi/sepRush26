@@ -4,9 +4,8 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Link } from "wouter";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-hero-bg-QdjE5NSyrfDKbv92hvh9eH.webp";
 
@@ -82,6 +81,83 @@ const FAQ = [
     a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions.",
   },
 ];
+
+function TimelineItem({ event, index, isLast }: {
+  event: typeof RECRUITMENT_EVENTS[number]; index: number; isLast: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const isLeft = index % 2 === 0;
+
+  return (
+    <div
+      ref={ref}
+      className={`relative flex items-start ${isLast ? "" : "pb-12"} ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+      style={{
+        transition: "opacity 0.6s ease, transform 0.6s ease",
+        transitionDelay: `${index * 100}ms`,
+      }}
+    >
+      {/* Timeline dot */}
+      <div
+        className={`absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-[3px] border-[#05006C] z-10 mt-1 transition-colors duration-500 ${
+          visible ? "bg-[#05006C]" : "bg-[#EEEADE]"
+        }`}
+      />
+
+      {/* Content card — alternates sides on md+ */}
+      <div
+        className={`ml-14 md:ml-0 md:w-[calc(50%-2rem)] ${
+          isLeft ? "md:mr-auto md:pr-0" : "md:ml-auto md:pl-0"
+        }`}
+      >
+        <div className="bg-[#FFFFFF] border-2 border-[#05006C] p-6 transition-all duration-300 hover:shadow-lg">
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-2"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              color: "#05006C",
+            }}
+          >
+            {event.date}
+          </div>
+          <h3
+            className="text-[#05006C] mb-2"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontWeight: 900,
+              fontSize: "1.2rem",
+              textTransform: "uppercase",
+            }}
+          >
+            {event.title}
+          </h3>
+          <p className="text-[#0C141A]/70 text-sm mb-3" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+            {event.description}
+          </p>
+          <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+            <span>{event.time}</span>
+            <span>{event.location}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
   return (
@@ -199,6 +275,7 @@ export default function Recruitment() {
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Why Join Section */}
       <section className="py-20 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -278,6 +355,9 @@ export default function Recruitment() {
       </section>
 
       {/* Events Section */}
+=======
+      {/* Events Timeline Section */}
+>>>>>>> 1d673df3a8a4b5f67c9052d412acd4a8ca1695db
       <section id="events" className="py-20 bg-[#EEEADE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -303,8 +383,12 @@ export default function Recruitment() {
             </h2>
           </div>
 
-          <div className="space-y-4 max-w-3xl mx-auto">
+          <div className="relative max-w-3xl mx-auto">
+            {/* Vertical timeline line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#05006C]/20 -translate-x-1/2" />
+
             {RECRUITMENT_EVENTS.map((event, i) => (
+<<<<<<< HEAD
               <div
                 key={i}
                 className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:border-[#D0E4EF] hover:bg-[#D0E4EF]/20 transition-all duration-300 group"
@@ -353,6 +437,9 @@ export default function Recruitment() {
                   </a>
                 </div>
               </div>
+=======
+              <TimelineItem key={i} event={event} index={i} isLast={i === RECRUITMENT_EVENTS.length - 1} />
+>>>>>>> 1d673df3a8a4b5f67c9052d412acd4a8ca1695db
             ))}
           </div>
         </div>
