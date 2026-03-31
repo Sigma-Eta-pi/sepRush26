@@ -1,0 +1,274 @@
+/*
+ * UCSB SEP Careers Page — "Silicon Ambition" Design
+ * Alumni placements, company logos, career resources
+ */
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Link } from "wouter";
+
+const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
+
+const COMPANIES = [
+  { name: "Google", category: "Tech" },
+  { name: "Amazon", category: "Tech" },
+  { name: "Apple", category: "Tech" },
+  { name: "Microsoft", category: "Tech" },
+  { name: "Meta", category: "Tech" },
+  { name: "Tesla", category: "Tech" },
+  { name: "Salesforce", category: "Tech" },
+  { name: "Oracle", category: "Tech" },
+  { name: "IBM", category: "Tech" },
+  { name: "Intel", category: "Tech" },
+  { name: "Deloitte", category: "Consulting" },
+  { name: "PwC", category: "Consulting" },
+  { name: "EY", category: "Consulting" },
+  { name: "KPMG", category: "Consulting" },
+  { name: "Accenture", category: "Consulting" },
+  { name: "McKinsey", category: "Consulting" },
+  { name: "J.P. Morgan", category: "Finance" },
+  { name: "Goldman Sachs", category: "Finance" },
+  { name: "Morgan Stanley", category: "Finance" },
+  { name: "BlackRock", category: "Finance" },
+  { name: "Citi", category: "Finance" },
+  { name: "Bank of America", category: "Finance" },
+  { name: "Y Combinator", category: "Venture" },
+  { name: "Sequoia", category: "Venture" },
+  { name: "a16z", category: "Venture" },
+  { name: "Stripe", category: "Fintech" },
+  { name: "Airbnb", category: "Tech" },
+  { name: "Uber", category: "Tech" },
+  { name: "LinkedIn", category: "Tech" },
+  { name: "Adobe", category: "Tech" },
+  { name: "Nvidia", category: "Tech" },
+  { name: "PayPal", category: "Fintech" },
+  { name: "SpaceX", category: "Aerospace" },
+  { name: "Palantir", category: "Tech" },
+  { name: "Databricks", category: "Tech" },
+  { name: "OpenAI", category: "AI" },
+  { name: "Figma", category: "Tech" },
+  { name: "Notion", category: "Tech" },
+  { name: "Zoom", category: "Tech" },
+  { name: "Snap", category: "Tech" },
+];
+
+const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech", "AI", "Aerospace"];
+
+const CAREER_RESOURCES = [
+  {
+    icon: "🎯",
+    title: "Alumni Network",
+    description: "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond.",
+  },
+  {
+    icon: "📊",
+    title: "Professional Workshops",
+    description: "Regular workshops on resume building, interview prep, case studies, and startup pitching.",
+  },
+  {
+    icon: "🤝",
+    title: "Industry Panels",
+    description: "Hear directly from founders, VCs, and executives about their career journeys and insights.",
+  },
+  {
+    icon: "💼",
+    title: "Recruiting Support",
+    description: "Access to exclusive job postings, referrals, and recruiting prep from members at top firms.",
+  },
+];
+
+import { useState } from "react";
+
+export default function Careers() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredCompanies = activeCategory === "All"
+    ? COMPANIES
+    : COMPANIES.filter(c => c.category === activeCategory);
+
+  return (
+    <div className="min-h-screen bg-[#0D0D0D] text-white">
+      <Navbar />
+
+      {/* Page Hero */}
+      <section
+        className="relative h-72 md:h-96 flex items-end overflow-hidden"
+        style={{
+          backgroundImage: `url(${CAREERS_BG})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
+          <div className="sep-label mb-2">Careers</div>
+          <h1
+            className="text-white"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            Our Careers
+          </h1>
+        </div>
+      </section>
+
+      {/* Intro */}
+      <section className="py-16 bg-[#111111]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="sep-label mb-4">Where We Go</div>
+            <h2
+              className="text-white mb-6"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                textTransform: "uppercase",
+                lineHeight: 1.1,
+              }}
+            >
+              Sigma Eta Pi Alumni Are Everywhere
+            </h2>
+            <p className="text-white/70 text-base leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+              Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Career Resources */}
+      <section className="py-16 bg-[#0D0D0D]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="sep-label mb-3">Resources</div>
+            <h2
+              className="text-white"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
+                textTransform: "uppercase",
+              }}
+            >
+              What We Offer
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {CAREER_RESOURCES.map((resource, i) => (
+              <div
+                key={i}
+                className="bg-[#1A1A1A] border border-white/10 p-6 hover:border-green-400/40 transition-all duration-300 group"
+              >
+                <div className="text-3xl mb-4">{resource.icon}</div>
+                <h3
+                  className="text-white mb-3 group-hover:text-green-400 transition-colors"
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 700,
+                    fontSize: "1.2rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {resource.title}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {resource.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Company Logos */}
+      <section className="py-16 bg-[#111111]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="sep-label mb-3">Where We Work</div>
+            <h2
+              className="text-white mb-6"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
+                textTransform: "uppercase",
+              }}
+            >
+              Companies Our Members Work At
+            </h2>
+            {/* Category filter */}
+            <div className="flex flex-wrap justify-center gap-2 mt-6">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-200 border ${
+                    activeCategory === cat
+                      ? "border-green-400 bg-green-400/10 text-green-400"
+                      : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
+                  }`}
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+            {filteredCompanies.map((company, i) => (
+              <div
+                key={i}
+                className="aspect-square flex flex-col items-center justify-center border border-white/15 bg-[#1A1A1A] hover:border-green-400/40 hover:bg-green-400/5 transition-all duration-300 p-3 group"
+              >
+                <span
+                  className="text-white/70 text-xs font-medium text-center leading-tight group-hover:text-white transition-colors"
+                  style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.65rem" }}
+                >
+                  {company.name}
+                </span>
+                <span
+                  className="text-green-400/50 text-center mt-1 group-hover:text-green-400/80 transition-colors"
+                  style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", letterSpacing: "0.1em" }}
+                >
+                  {company.category}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-[#0D0D0D] border-t border-white/10">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2
+            className="text-white mb-6"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2rem, 5vw, 3.5rem)",
+              textTransform: "uppercase",
+            }}
+          >
+            Launch Your Career with SEP
+          </h2>
+          <p className="text-white/60 mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Join a network of entrepreneurs and professionals who support each other throughout their careers.
+          </p>
+          <Link href="/recruitment" className="sep-btn-green text-sm px-8 py-4">
+            Apply Now
+          </Link>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
