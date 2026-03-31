@@ -275,89 +275,7 @@ export default function Recruitment() {
         </div>
       </section>
 
-<<<<<<< HEAD
-      {/* Why Join Section */}
-      <section className="py-20 bg-[#FFFFFF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div
-              className="text-xs font-bold tracking-widest uppercase mb-3"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
-              }}
-            >
-              Why Join
-            </div>
-            <h2
-              className="text-[#1B212C]"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                fontWeight: 900,
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                textTransform: "uppercase",
-              }}
-            >
-              What You'll Gain
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Network",
-                desc: "Connect with ambitious entrepreneurs and professionals across industries and chapters nationwide.",
-              },
-              {
-                title: "Growth",
-                desc: "Develop leadership skills, business acumen, and entrepreneurial mindset through workshops and mentorship.",
-              },
-              {
-                title: "Opportunity",
-                desc: "Access exclusive job postings, startup opportunities, and connections to top companies and VCs.",
-              },
-              {
-                title: "Community",
-                desc: "Join a supportive brotherhood that celebrates your wins and supports you through challenges.",
-              },
-              {
-                title: "Experience",
-                desc: "Participate in events, conferences, and initiatives that shape your professional journey.",
-              },
-              {
-                title: "Legacy",
-                desc: "Be part of founding the Epsilon Chapter and help define SEP's culture at UCSB.",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
-              >
-                <h3
-                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
-                  style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "1.3rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  {item.title}
-                </h3>
-                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Events Section */}
-=======
       {/* Events Timeline Section */}
->>>>>>> 1d673df3a8a4b5f67c9052d412acd4a8ca1695db
       <section id="events" className="py-20 bg-[#EEEADE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -388,58 +306,7 @@ export default function Recruitment() {
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#05006C]/20 -translate-x-1/2" />
 
             {RECRUITMENT_EVENTS.map((event, i) => (
-<<<<<<< HEAD
-              <div
-                key={i}
-                className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:border-[#D0E4EF] hover:bg-[#D0E4EF]/20 transition-all duration-300 group"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div>
-                    <div
-                      className="text-xs font-bold tracking-widest uppercase mb-2"
-                      style={{
-                        fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                        color: "#1B212C",
-                      }}
-                    >
-                      {event.date}
-                    </div>
-                    <h3
-                      className="text-[#1B212C] mb-2 group-hover:text-[#0C141A] transition-colors"
-                      style={{
-                        fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                        fontWeight: 900,
-                        fontSize: "1.2rem",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {event.title}
-                    </h3>
-                    <p className="text-[#0C141A]/70 text-sm mb-2" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                      {event.description}
-                    </p>
-                    <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                      <div>⏰ {event.time}</div>
-                      <div>📍 {event.location}</div>
-                    </div>
-                  </div>
-                  <a
-                    href="https://forms.gle/your-rsvp-form"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-2 bg-[#1B212C] text-[#EEEADE] font-bold text-xs rounded-lg transition-all duration-300 hover:bg-[#0C141A] whitespace-nowrap self-start sm:self-auto"
-                    style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    RSVP
-                  </a>
-                </div>
-              </div>
-=======
               <TimelineItem key={i} event={event} index={i} isLast={i === RECRUITMENT_EVENTS.length - 1} />
->>>>>>> 1d673df3a8a4b5f67c9052d412acd4a8ca1695db
             ))}
           </div>
         </div>
