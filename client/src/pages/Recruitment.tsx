@@ -85,13 +85,13 @@ const FAQ = [
 
 function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
   return (
-    <div className="border-2 border-[#05006C]">
+    <div className="border-2 border-[#1B212C]">
       <button
         onClick={onToggle}
         className="w-full px-6 py-4 flex items-center justify-between bg-[#EEEADE] hover:bg-[#D0E4EF] transition-colors duration-200 group"
       >
         <span
-          className="text-left text-[#05006C] font-bold group-hover:text-[#0C141A] transition-colors"
+          className="text-left text-[#1B212C] font-bold group-hover:text-[#0C141A] transition-colors"
           style={{
             fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             fontSize: "0.95rem",
@@ -101,11 +101,11 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
         </span>
         <ChevronDown
           size={20}
-          className={`text-[#05006C] flex-shrink-0 ml-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+          className={`text-[#1B212C] flex-shrink-0 ml-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
       {isOpen && (
-        <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#05006C]">
+        <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#1B212C]">
           <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
             {a}
           </p>
@@ -136,14 +136,14 @@ export default function Recruitment() {
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
-            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#05006C] text-[#05006C] text-xs tracking-widest uppercase"
+            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#1B212C] text-[#1B212C] text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
             Winter 2026 Recruitment
           </div>
 
           <h1
-            className="text-[#05006C] leading-none mb-4"
+            className="text-[#1B212C] leading-none mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -172,7 +172,7 @@ export default function Recruitment() {
               href="https://forms.gle/your-application-form"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -182,7 +182,7 @@ export default function Recruitment() {
             </a>
             <a
               href="#events"
-              className="px-8 py-4 border-2 border-[#05006C] text-[#05006C] font-bold rounded-lg transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -194,8 +194,8 @@ export default function Recruitment() {
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <div className="w-px h-8 bg-[#05006C]/30" />
-          <div className="w-1.5 h-1.5 rounded-full bg-[#05006C]" />
+          <div className="w-px h-8 bg-[#1B212C]/30" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#1B212C]" />
         </div>
       </section>
 
@@ -207,13 +207,13 @@ export default function Recruitment() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Why Join
             </div>
             <h2
-              className="text-[#05006C]"
+              className="text-[#1B212C]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -254,10 +254,10 @@ export default function Recruitment() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="bg-[#EEEADE] border-4 border-[#05006C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
+                className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
                 <h3
-                  className="text-[#05006C] mb-3 group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
@@ -285,13 +285,13 @@ export default function Recruitment() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Recruitment Schedule
             </div>
             <h2
-              className="text-[#05006C]"
+              className="text-[#1B212C]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -307,7 +307,7 @@ export default function Recruitment() {
             {RECRUITMENT_EVENTS.map((event, i) => (
               <div
                 key={i}
-                className="bg-[#FFFFFF] border-4 border-[#05006C] p-6 hover:border-[#D0E4EF] hover:bg-[#D0E4EF]/20 transition-all duration-300 group"
+                className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:border-[#D0E4EF] hover:bg-[#D0E4EF]/20 transition-all duration-300 group"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div>
@@ -315,13 +315,13 @@ export default function Recruitment() {
                       className="text-xs font-bold tracking-widest uppercase mb-2"
                       style={{
                         fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                        color: "#05006C",
+                        color: "#1B212C",
                       }}
                     >
                       {event.date}
                     </div>
                     <h3
-                      className="text-[#05006C] mb-2 group-hover:text-[#0C141A] transition-colors"
+                      className="text-[#1B212C] mb-2 group-hover:text-[#0C141A] transition-colors"
                       style={{
                         fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                         fontWeight: 900,
@@ -343,7 +343,7 @@ export default function Recruitment() {
                     href="https://forms.gle/your-rsvp-form"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-2 bg-[#05006C] text-[#EEEADE] font-bold text-xs rounded-lg transition-all duration-300 hover:bg-[#0C141A] whitespace-nowrap self-start sm:self-auto"
+                    className="px-6 py-2 bg-[#1B212C] text-[#EEEADE] font-bold text-xs rounded-lg transition-all duration-300 hover:bg-[#0C141A] whitespace-nowrap self-start sm:self-auto"
                     style={{
                       fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       letterSpacing: "0.05em",
@@ -366,13 +366,13 @@ export default function Recruitment() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Questions?
             </div>
             <h2
-              className="text-[#05006C]"
+              className="text-[#1B212C]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -399,10 +399,10 @@ export default function Recruitment() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#05006C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#05006C] mb-6"
+            className="text-[#1B212C] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -419,7 +419,7 @@ export default function Recruitment() {
             href="https://forms.gle/your-application-form"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-10 py-5 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",

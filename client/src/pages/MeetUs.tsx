@@ -67,13 +67,13 @@ export default function MeetUs() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Executive Board
             </div>
             <h2
-              className="text-[#05006C] mb-4"
+              className="text-[#1B212C] mb-4"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -92,11 +92,11 @@ export default function MeetUs() {
             {EXEC_BOARD.map((member, i) => (
               <div
                 key={i}
-                className="group border-4 border-[#05006C] hover:border-[#D0E4EF] transition-all duration-300 overflow-hidden"
+                className="group border-4 border-[#1B212C] hover:border-[#D0E4EF] transition-all duration-300 overflow-hidden"
               >
                 <div className="aspect-[3/4] bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative">
                   <div
-                    className="text-[#05006C] font-bold"
+                    className="text-[#1B212C] font-bold"
                     style={{
                       fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontSize: "3rem",
@@ -105,18 +105,18 @@ export default function MeetUs() {
                   >
                     {member.initials}
                   </div>
-                  <div className="absolute inset-0 bg-[#05006C]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-[#1B212C]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 <div className="p-4 bg-[#EEEADE]">
                   <div
-                    className="text-[#05006C] font-bold text-sm mb-1"
+                    className="text-[#1B212C] font-bold text-sm mb-1"
                     style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                   >
                     {member.name}
                   </div>
                   <div
-                    className="text-[#05006C] text-xs tracking-wide"
+                    className="text-[#1B212C] text-xs tracking-wide"
                     style={{
                       fontFamily: "'Glacial Indifference', serif",
                       fontSize: "0.7rem",
@@ -126,7 +126,7 @@ export default function MeetUs() {
                   </div>
                 </div>
 
-                <div className="h-1 bg-[#05006C] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                <div className="h-1 bg-[#1B212C] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </div>
             ))}
           </div>
@@ -134,19 +134,19 @@ export default function MeetUs() {
       </section>
 
       {/* Join the Team CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#05006C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div
             className="text-xs font-bold tracking-widest uppercase mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              color: "#05006C",
+              color: "#1B212C",
             }}
           >
             Join Us
           </div>
           <h2
-            className="text-[#05006C] mb-6"
+            className="text-[#1B212C] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -163,7 +163,7 @@ export default function MeetUs() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recruitment"
-              className="px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -173,7 +173,7 @@ export default function MeetUs() {
             </Link>
             <Link
               href="/about"
-              className="px-8 py-4 border-2 border-[#05006C] text-[#05006C] font-bold rounded-lg transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",

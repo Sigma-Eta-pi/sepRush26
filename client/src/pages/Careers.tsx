@@ -131,13 +131,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-4"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Where We Go
             </div>
             <h2
-              className="text-[#05006C] mb-6"
+              className="text-[#1B212C] mb-6"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -163,13 +163,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Resources
             </div>
             <h2
-              className="text-[#05006C]"
+              className="text-[#1B212C]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -184,11 +184,11 @@ export default function Careers() {
             {CAREER_RESOURCES.map((resource, i) => (
               <div
                 key={i}
-                className="bg-[#FFFFFF] border-4 border-[#05006C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
+                className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
                 <div className="text-3xl mb-4">{resource.icon}</div>
                 <h3
-                  className="text-[#05006C] mb-3 group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
@@ -216,13 +216,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Where We Work
             </div>
             <h2
-              className="text-[#05006C] mb-6"
+              className="text-[#1B212C] mb-6"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -239,8 +239,8 @@ export default function Careers() {
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-200 border-2 ${
                     activeCategory === cat
-                      ? "border-[#05006C] bg-[#05006C] text-[#EEEADE]"
-                      : "border-[#05006C] text-[#05006C] hover:bg-[#05006C]/10"
+                      ? "border-[#1B212C] bg-[#1B212C] text-[#EEEADE]"
+                      : "border-[#1B212C] text-[#1B212C] hover:bg-[#1B212C]/10"
                   }`}
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -256,10 +256,10 @@ export default function Careers() {
             {filteredCompanies.map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex flex-col items-center justify-center border-2 border-[#05006C] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
+                className="aspect-square flex flex-col items-center justify-center border-2 border-[#1B212C] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
               >
                 <span
-                  className="text-[#05006C] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#1B212C] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "0.65rem",
@@ -268,7 +268,7 @@ export default function Careers() {
                   {company.name}
                 </span>
                 <span
-                  className="text-[#05006C]/50 text-center mt-1 group-hover:text-[#05006C] transition-colors"
+                  className="text-[#1B212C]/50 text-center mt-1 group-hover:text-[#1B212C] transition-colors"
                   style={{
                     fontFamily: "'Glacial Indifference', serif",
                     fontSize: "0.55rem",
@@ -284,10 +284,10 @@ export default function Careers() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#05006C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#05006C] mb-6"
+            className="text-[#1B212C] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -302,7 +302,7 @@ export default function Careers() {
           </p>
           <Link
             href="/recruitment"
-            className="inline-block px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            className="inline-block px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
