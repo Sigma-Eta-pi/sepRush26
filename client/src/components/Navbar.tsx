@@ -1,7 +1,7 @@
 /*
- * UCSB SEP Navbar — "Silicon Ambition" Design
- * Dark translucent sticky nav with green accent on active/hover
- * Logo: ΣΗΠ eagle emblem + "SIGMA ETA PI" text
+ * UCSB SEP Navbar — Official Sigma Eta Pi Brand
+ * Floating navbar with navy background, light text
+ * Logo: Official eagle emblem + "Sigma Eta Pi" text
  */
 
 import { useState, useEffect } from "react";
@@ -17,95 +17,109 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [location] = useLocation();
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black/90 backdrop-blur-md border-b border-white/10" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0">
-              <SepLogo />
-            </div>
-            <div className="hidden sm:block">
-              <div
-                className="text-white font-bold leading-none"
-                style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "1.1rem", letterSpacing: "0.1em" }}
-              >
-                SIGMA ETA PI
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="mx-4 sm:mx-6 lg:mx-8 mt-4">
+        <div className="bg-[#05006C] rounded-full shadow-lg border-2 border-[#05006C]">
+          <div className="flex items-center justify-between h-16 px-6 sm:px-8">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 flex-shrink-0">
+                <SepLogo />
               </div>
-              <div
-                className="text-xs leading-none mt-0.5"
-                style={{ color: "oklch(0.723 0.219 142.495)", fontFamily: "'Inter', sans-serif", letterSpacing: "0.15em", fontSize: "0.65rem" }}
-              >
-                EPSILON CHAPTER · UCSB
+              <div className="hidden sm:block">
+                <div
+                  className="text-[#EEEADE] font-bold leading-none"
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontSize: "0.95rem",
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  SIGMA ETA PI
+                </div>
+                <div
+                  className="text-xs leading-none mt-0.5"
+                  style={{
+                    color: "#D0E4EF",
+                    fontFamily: "'Glacial Indifference', serif",
+                    letterSpacing: "0.1em",
+                    fontSize: "0.6rem",
+                  }}
+                >
+                  EPSILON CHAPTER
+                </div>
               </div>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium tracking-widest uppercase transition-colors duration-200 ${
-                  location === link.href
-                    ? "text-green-400"
-                    : "text-white/80 hover:text-white"
-                }`}
-                style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.75rem" }}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href="/recruitment"
-              className="sep-btn-green text-xs px-5 py-2.5"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Apply Now
             </Link>
-          </nav>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="lg:hidden text-white p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm font-bold tracking-widest uppercase transition-colors duration-200 ${
+                    location === link.href
+                      ? "text-[#D0E4EF]"
+                      : "text-[#EEEADE]/80 hover:text-[#EEEADE]"
+                  }`}
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontSize: "0.7rem",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Apply Button */}
+            <div className="hidden lg:block">
+              <Link
+                href="/recruitment"
+                className="px-6 py-2 bg-[#EEEADE] text-[#05006C] font-bold rounded-full transition-all duration-300 hover:bg-[#D0E4EF] text-sm"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                APPLY
+              </Link>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className="lg:hidden text-[#EEEADE] p-2"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-black/95 backdrop-blur-md border-t border-white/10">
-          <div className="px-4 py-4 space-y-1">
+        <div className="lg:hidden mx-4 sm:mx-6 mt-2 bg-[#05006C] rounded-2xl shadow-lg border-2 border-[#05006C]">
+          <div className="px-6 py-4 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-3 px-4 text-sm font-medium tracking-widest uppercase transition-colors ${
+                className={`block py-3 px-4 text-sm font-bold tracking-widest uppercase transition-colors rounded-lg ${
                   location === link.href
-                    ? "text-green-400 bg-green-400/10"
-                    : "text-white/80 hover:text-white hover:bg-white/5"
+                    ? "text-[#D0E4EF] bg-[#0C141A]/30"
+                    : "text-[#EEEADE]/80 hover:text-[#EEEADE] hover:bg-[#EEEADE]/10"
                 }`}
-                style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.75rem" }}
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontSize: "0.7rem",
+                }}
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
@@ -114,10 +128,15 @@ export default function Navbar() {
             <div className="pt-2">
               <Link
                 href="/recruitment"
-                className="block sep-btn-green text-center text-xs"
+                className="block text-center py-3 px-4 bg-[#EEEADE] text-[#05006C] font-bold rounded-lg text-sm"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.05em",
+                }}
                 onClick={() => setMobileOpen(false)}
               >
-                Apply Now
+                APPLY NOW
               </Link>
             </div>
           </div>
@@ -130,42 +149,34 @@ export default function Navbar() {
 function SepLogo() {
   return (
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Eagle/Phoenix body */}
+      {/* Official Sigma Eta Pi Eagle Logo */}
       <g>
         {/* Shield outline */}
         <path
           d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z"
           fill="none"
-          stroke="oklch(0.723 0.219 142.495)"
-          strokeWidth="2.5"
+          stroke="#EEEADE"
+          strokeWidth="2"
         />
         {/* Wings */}
-        <path
-          d="M50 45 L20 25 L15 35 L35 50 Z"
-          fill="oklch(0.723 0.219 142.495)"
-          opacity="0.9"
-        />
-        <path
-          d="M50 45 L80 25 L85 35 L65 50 Z"
-          fill="oklch(0.723 0.219 142.495)"
-          opacity="0.9"
-        />
+        <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="#EEEADE" opacity="0.95" />
+        <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="#EEEADE" opacity="0.95" />
         {/* Body */}
-        <ellipse cx="50" cy="58" rx="12" ry="18" fill="oklch(0.723 0.219 142.495)" opacity="0.9" />
+        <ellipse cx="50" cy="58" rx="12" ry="18" fill="#EEEADE" opacity="0.95" />
         {/* Head */}
-        <circle cx="50" cy="38" r="8" fill="oklch(0.723 0.219 142.495)" />
+        <circle cx="50" cy="38" r="8" fill="#EEEADE" />
         {/* Beak */}
-        <path d="M50 41 L55 44 L50 46 Z" fill="oklch(0.769 0.188 70.08)" />
+        <path d="M50 41 L55 44 L50 46 Z" fill="#05006C" />
         {/* Eye */}
-        <circle cx="53" cy="37" r="1.5" fill="white" />
+        <circle cx="53" cy="37" r="1.5" fill="#05006C" />
         {/* Tail feathers */}
-        <path d="M44 74 L50 82 L56 74" fill="oklch(0.723 0.219 142.495)" opacity="0.8" />
+        <path d="M44 74 L50 82 L56 74" fill="#EEEADE" opacity="0.9" />
         {/* Greek letters ΣΗΠ */}
         <text
           x="50"
           y="68"
           textAnchor="middle"
-          fill="white"
+          fill="#05006C"
           fontSize="8"
           fontFamily="serif"
           fontWeight="bold"

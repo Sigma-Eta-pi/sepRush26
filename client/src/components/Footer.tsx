@@ -1,6 +1,6 @@
 /*
- * UCSB SEP Footer — "Silicon Ambition" Design
- * Dark background with green accent links, social icons, contact info
+ * UCSB SEP Footer — Official Sigma Eta Pi Brand
+ * Light background with navy text and accents
  */
 
 import { Link } from "wouter";
@@ -16,7 +16,7 @@ const navLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/10">
+    <footer className="bg-[#D2D0D1] border-t-4 border-[#05006C]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
@@ -27,28 +27,37 @@ export default function Footer() {
               </div>
               <div>
                 <div
-                  className="text-white font-bold leading-none"
-                  style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "1.1rem", letterSpacing: "0.1em" }}
+                  className="text-[#05006C] font-bold leading-none"
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontSize: "1rem",
+                    letterSpacing: "0.08em",
+                  }}
                 >
                   SIGMA ETA PI
                 </div>
                 <div
                   className="text-xs leading-none mt-1"
-                  style={{ color: "oklch(0.723 0.219 142.495)", fontFamily: "'Inter', sans-serif", letterSpacing: "0.12em", fontSize: "0.65rem" }}
+                  style={{
+                    color: "#05006C",
+                    fontFamily: "'Glacial Indifference', serif",
+                    letterSpacing: "0.1em",
+                    fontSize: "0.6rem",
+                  }}
                 >
                   EPSILON CHAPTER · UCSB
                 </div>
               </div>
             </div>
-            <p className="text-white/50 text-sm leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
-              UCSB's premier co-ed entrepreneurship fraternity. Cultivating innovative, action-oriented leaders since 2026.
+            <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              UCSB's premier co-ed entrepreneurship fraternity. Cultivating innovative, action-oriented leaders.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <a
                 href="https://www.instagram.com/ucsbsep/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/50 hover:text-green-400 transition-colors"
+                className="text-[#0C141A]/50 hover:text-[#05006C] transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram size={20} />
@@ -57,7 +66,7 @@ export default function Footer() {
                 href="https://www.linkedin.com/company/ucsbsep/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/50 hover:text-green-400 transition-colors"
+                className="text-[#0C141A]/50 hover:text-[#05006C] transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={20} />
@@ -66,7 +75,7 @@ export default function Footer() {
                 href="https://www.ucsbsep.org"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/50 hover:text-green-400 transition-colors"
+                className="text-[#0C141A]/50 hover:text-[#05006C] transition-colors"
                 aria-label="Website"
               >
                 <ExternalLink size={20} />
@@ -77,8 +86,10 @@ export default function Footer() {
           {/* Navigation */}
           <div>
             <h3
-              className="text-white font-semibold mb-6 text-xs tracking-widest uppercase"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.723 0.219 142.495)" }}
+              className="text-[#05006C] font-bold mb-6 text-xs tracking-widest uppercase"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              }}
             >
               Navigation
             </h3>
@@ -87,8 +98,8 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-white text-sm transition-colors"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
+                    className="text-[#0C141A]/70 hover:text-[#05006C] text-sm transition-colors"
+                    style={{ fontFamily: "'Glacial Indifference', serif" }}
                   >
                     {link.label}
                   </Link>
@@ -100,24 +111,26 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3
-              className="text-white font-semibold mb-6 text-xs tracking-widest uppercase"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.723 0.219 142.495)" }}
+              className="text-[#05006C] font-bold mb-6 text-xs tracking-widest uppercase"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              }}
             >
               Contact
             </h3>
             <div className="space-y-3">
               <a
                 href="mailto:exec@ucsbsep.org"
-                className="flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors"
-                style={{ fontFamily: "'Inter', sans-serif" }}
+                className="flex items-center gap-2 text-[#0C141A]/70 hover:text-[#05006C] text-sm transition-colors"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
               >
                 <Mail size={16} className="flex-shrink-0" />
                 exec@ucsbsep.org
               </a>
-              <p className="text-white/40 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
                 University of California, Santa Barbara
               </p>
-              <p className="text-white/40 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
                 Santa Barbara, CA 93106
               </p>
             </div>
@@ -125,19 +138,35 @@ export default function Footer() {
             <div className="mt-8">
               <Link
                 href="/recruitment"
-                className="inline-block sep-btn-green text-xs px-6 py-3"
+                className="inline-block px-6 py-3 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-xs"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  letterSpacing: "0.05em",
+                }}
               >
-                Join Our Founding Class
+                JOIN NOW
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-xs" style={{ fontFamily: "'Inter', sans-serif", letterSpacing: "0.05em" }}>
+        <div className="mt-12 pt-8 border-t-2 border-[#05006C] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p
+            className="text-[#0C141A]/50 text-xs"
+            style={{
+              fontFamily: "'Glacial Indifference', serif",
+              letterSpacing: "0.05em",
+            }}
+          >
             © {new Date().getFullYear()} Sigma Eta Pi — Epsilon Chapter at UCSB. All rights reserved.
           </p>
-          <p className="text-white/30 text-xs" style={{ fontFamily: "'Inter', sans-serif", letterSpacing: "0.05em" }}>
+          <p
+            className="text-[#0C141A]/50 text-xs"
+            style={{
+              fontFamily: "'Glacial Indifference', serif",
+              letterSpacing: "0.05em",
+            }}
+          >
             UCSB's Premier Co-Ed Entrepreneurship Fraternity
           </p>
         </div>
@@ -150,20 +179,15 @@ function SepLogoFooter() {
   return (
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <g>
-        <path
-          d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z"
-          fill="none"
-          stroke="oklch(0.723 0.219 142.495)"
-          strokeWidth="2.5"
-        />
-        <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="oklch(0.723 0.219 142.495)" opacity="0.9" />
-        <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="oklch(0.723 0.219 142.495)" opacity="0.9" />
-        <ellipse cx="50" cy="58" rx="12" ry="18" fill="oklch(0.723 0.219 142.495)" opacity="0.9" />
-        <circle cx="50" cy="38" r="8" fill="oklch(0.723 0.219 142.495)" />
-        <path d="M50 41 L55 44 L50 46 Z" fill="oklch(0.769 0.188 70.08)" />
-        <circle cx="53" cy="37" r="1.5" fill="white" />
-        <path d="M44 74 L50 82 L56 74" fill="oklch(0.723 0.219 142.495)" opacity="0.8" />
-        <text x="50" y="68" textAnchor="middle" fill="white" fontSize="8" fontFamily="serif" fontWeight="bold" opacity="0.9">ΣΗΠ</text>
+        <path d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z" fill="none" stroke="#05006C" strokeWidth="2" />
+        <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="#05006C" opacity="0.95" />
+        <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="#05006C" opacity="0.95" />
+        <ellipse cx="50" cy="58" rx="12" ry="18" fill="#05006C" opacity="0.95" />
+        <circle cx="50" cy="38" r="8" fill="#05006C" />
+        <path d="M50 41 L55 44 L50 46 Z" fill="#EEEADE" />
+        <circle cx="53" cy="37" r="1.5" fill="#EEEADE" />
+        <path d="M44 74 L50 82 L56 74" fill="#05006C" opacity="0.9" />
+        <text x="50" y="68" textAnchor="middle" fill="#EEEADE" fontSize="8" fontFamily="serif" fontWeight="bold" opacity="0.9">ΣΗΠ</text>
       </g>
     </svg>
   );

@@ -1,14 +1,18 @@
-/* 
- * UCSB Sigma Eta Pi — "Silicon Ambition" Design System
- * Design Philosophy: Dark Mode Tech Startup meets Professional Fraternity
- * Primary: Near-black #0D0D0D, Accent: Electric Green #22C55E, Gold #F59E0B
- * Typography: Barlow Condensed (display) + Inter (body)
+/*
+ * UCSB Sigma Eta Pi — Official Brand Design System
+ * Design Philosophy: Professional, Elegant, Timeless
+ * Primary: Navy Blue #05006C, Secondary: Light Cream #EEEADE
+ * Typography: Helvetica Now (display) + Glacial Indifference (secondary) + Tangerine (accent)
  */
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+/* Sigma Eta Pi Official Brand Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -47,49 +51,50 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
-  /* SEP Brand Colors */
-  --color-sep-green: oklch(0.723 0.219 142.495);
-  --color-sep-gold: oklch(0.769 0.188 70.08);
-  --color-sep-dark: oklch(0.1 0 0);
-  --color-sep-dark-card: oklch(0.14 0 0);
-  --color-sep-dark-border: oklch(0.22 0 0);
 }
 
 :root {
-  --radius: 0.25rem;
-  --background: oklch(0.09 0 0);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.13 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.13 0 0);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.723 0.219 142.495);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.18 0 0);
-  --secondary-foreground: oklch(0.85 0 0);
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.723 0.219 142.495);
-  --accent-foreground: oklch(0.1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.22 0 0);
-  --input: oklch(0.22 0 0);
-  --ring: oklch(0.723 0.219 142.495);
-  --chart-1: oklch(0.723 0.219 142.495);
-  --chart-2: oklch(0.769 0.188 70.08);
-  --chart-3: oklch(0.6 0 0);
-  --chart-4: oklch(0.4 0 0);
-  --chart-5: oklch(0.25 0 0);
-  --sidebar: oklch(0.13 0 0);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.723 0.219 142.495);
-  --sidebar-primary-foreground: oklch(0.1 0 0);
-  --sidebar-accent: oklch(0.18 0 0);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.22 0 0);
-  --sidebar-ring: oklch(0.723 0.219 142.495);
+  /* Sigma Eta Pi Official Color Palette */
+  --sep-navy: #05006C;
+  --sep-dark-navy: #0C141A;
+  --sep-light: #EEEADE;
+  --sep-light-blue: #D0E4EF;
+  --sep-blue-gray: #8FA2C2;
+  --sep-gray: #D2D0D1;
+  
+  --radius: 1rem;
+  --background: #EEEADE;
+  --foreground: #0C141A;
+  --card: #FFFFFF;
+  --card-foreground: #0C141A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0C141A;
+  --primary: #05006C;
+  --primary-foreground: #EEEADE;
+  --secondary: #D0E4EF;
+  --secondary-foreground: #05006C;
+  --muted: #D2D0D1;
+  --muted-foreground: #8FA2C2;
+  --accent: #05006C;
+  --accent-foreground: #EEEADE;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #D2D0D1;
+  --input: #FFFFFF;
+  --ring: #05006C;
+  --chart-1: #8FA2C2;
+  --chart-2: #D0E4EF;
+  --chart-3: #05006C;
+  --chart-4: #0C141A;
+  --chart-5: #D2D0D1;
+  --sidebar: #EEEADE;
+  --sidebar-foreground: #0C141A;
+  --sidebar-primary: #05006C;
+  --sidebar-primary-foreground: #EEEADE;
+  --sidebar-accent: #05006C;
+  --sidebar-accent-foreground: #EEEADE;
+  --sidebar-border: #D2D0D1;
+  --sidebar-ring: #05006C;
 }
 
 @layer base {
@@ -98,7 +103,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -114,6 +118,9 @@
 }
 
 @layer components {
+  /**
+   * Custom container utility that centers content and adds responsive padding.
+   */
   .container {
     width: 100%;
     margin-left: auto;
@@ -142,93 +149,37 @@
     }
   }
 
-  /* SEP Custom Utilities */
-  .sep-heading {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
+  /* Sigma Eta Pi Custom Components */
+  .sep-btn-primary {
+    @apply px-6 py-3 bg-[#05006C] text-[#EEEADE] font-bold border-2 border-[#05006C] transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#05006C] hover:border-[#05006C];
+  }
+
+  .sep-btn-secondary {
+    @apply px-6 py-3 bg-transparent text-[#05006C] font-bold border-2 border-[#05006C] transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE];
   }
 
   .sep-label {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: oklch(0.723 0.219 142.495);
+    @apply text-xs font-bold tracking-widest uppercase;
+    color: #05006C;
+    font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .sep-btn-primary {
-    background: transparent;
-    border: 2px solid white;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.75rem 2rem;
-    transition: all 0.3s ease;
+  .sep-heading {
+    font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 900;
+    color: #05006C;
   }
 
-  .sep-btn-primary:hover {
-    background: white;
-    color: oklch(0.09 0 0);
+  .sep-subheading {
+    font-family: 'Glacial Indifference', serif;
+    font-weight: 400;
+    color: #0C141A;
   }
 
-  .sep-btn-green {
-    background: oklch(0.723 0.219 142.495);
-    border: 2px solid oklch(0.723 0.219 142.495);
-    color: oklch(0.09 0 0);
-    font-family: 'Inter', sans-serif;
+  .sep-accent {
+    font-family: 'Tangerine', cursive;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.75rem 2rem;
-    transition: all 0.3s ease;
-  }
-
-  .sep-btn-green:hover {
-    background: transparent;
-    color: oklch(0.723 0.219 142.495);
-  }
-
-  /* Logo ticker animation */
-  @keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  .logo-ticker {
-    animation: ticker 30s linear infinite;
-  }
-
-  .logo-ticker:hover {
-    animation-play-state: paused;
-  }
-
-  /* Fade-in animation for sections */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.7s ease forwards;
-  }
-
-  /* Count-up number style */
-  .stat-number {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    color: oklch(0.723 0.219 142.495);
-    line-height: 1;
+    font-size: 2rem;
+    color: #05006C;
   }
 }

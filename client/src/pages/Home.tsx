@@ -1,7 +1,6 @@
 /*
- * UCSB SEP Home Page — "Silicon Ambition" Design
- * Sections: Hero, Stats, Core Values Carousel, Places We're At (Companies), Footer
- * Mirrors AKPSI UCLA structure with SEP content
+ * UCSB SEP Home Page — Official Sigma Eta Pi Brand
+ * Light backgrounds, navy accents, elegant typography
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -21,24 +20,21 @@ const VALUES = [
     id: 0,
     label: "Innovation",
     title: "Innovation",
-    description:
-      "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+    description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
     image: INNOVATION_IMG,
   },
   {
     id: 1,
     label: "Brotherhood",
     title: "Brotherhood",
-    description:
-      "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
+    description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
     image: BROTHERHOOD_IMG,
   },
   {
     id: 2,
     label: "Leadership",
     title: "Leadership",
-    description:
-      "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+    description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
     image: ABOUT_BG,
   },
 ];
@@ -73,17 +69,27 @@ function StatCard({ value, suffix, label, description, startCount }: {
 }) {
   const count = useCountUp(value, 1800, startCount);
   return (
-    <div className="text-center px-8 py-10 border-r border-white/10 last:border-r-0 flex-1">
-      <div className="stat-number">
+    <div className="text-center px-8 py-10 border-r border-[#05006C]/20 last:border-r-0 flex-1">
+      <div
+        className="text-[#05006C] font-bold mb-2"
+        style={{
+          fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontSize: "3rem",
+          letterSpacing: "-0.02em",
+        }}
+      >
         {count}{suffix}
       </div>
       <div
-        className="text-white font-bold mt-2 mb-3 text-lg"
-        style={{ fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: "0.05em" }}
+        className="text-[#05006C] font-bold mt-2 mb-3 text-lg"
+        style={{
+          fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          letterSpacing: "0.05em",
+        }}
       >
         {label}
       </div>
-      <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <p className="text-[#0C141A]/60 text-sm leading-relaxed max-w-xs mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
         {description}
       </p>
     </div>
@@ -94,9 +100,7 @@ export default function Home() {
   const [activeValue, setActiveValue] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
-  const tickerRef = useRef<HTMLDivElement>(null);
 
-  // Intersection observer for stats count-up
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
@@ -106,7 +110,6 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-advance carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveValue((prev) => (prev + 1) % VALUES.length);
@@ -115,36 +118,33 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
       <Navbar />
 
       {/* ─── HERO SECTION ─── */}
       <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24"
         style={{
           backgroundImage: `url(${HERO_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}
       >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/60" />
-        {/* Green tint overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#EEEADE]" />
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          {/* Chapter badge */}
           <div
-            className="inline-block mb-6 px-4 py-1.5 border border-green-400/50 text-green-400 text-xs tracking-widest uppercase"
-            style={{ fontFamily: "'Inter', sans-serif" }}
+            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#05006C] text-[#05006C] text-xs tracking-widest uppercase"
+            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
             Epsilon Chapter · UCSB
           </div>
 
           <h1
-            className="text-white leading-none mb-4"
+            className="text-[#05006C] leading-none mb-4"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(3.5rem, 10vw, 8rem)",
               letterSpacing: "-0.02em",
@@ -155,11 +155,11 @@ export default function Home() {
           </h1>
 
           <p
-            className="text-white/80 mb-10 max-w-2xl mx-auto"
+            className="text-[#0C141A]/80 mb-10 max-w-2xl mx-auto"
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Glacial Indifference', serif",
               fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
-              fontWeight: 300,
+              fontWeight: 400,
               letterSpacing: "0.05em",
             }}
           >
@@ -167,26 +167,39 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/recruitment" className="sep-btn-green text-sm px-8 py-4">
-              Join Our Founding Class
+            <Link
+              href="/recruitment"
+              className="px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                letterSpacing: "0.05em",
+              }}
+            >
+              JOIN OUR FOUNDING CLASS
             </Link>
-            <Link href="/about" className="sep-btn-primary text-sm px-8 py-4">
-              Learn More
+            <Link
+              href="/about"
+              className="px-8 py-4 border-2 border-[#05006C] text-[#05006C] font-bold rounded-lg transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE] text-sm"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                letterSpacing: "0.05em",
+              }}
+            >
+              LEARN MORE
             </Link>
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <div className="w-px h-8 bg-white/30" />
-          <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+          <div className="w-px h-8 bg-[#05006C]/30" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#05006C]" />
         </div>
       </section>
 
       {/* ─── STATS SECTION ─── */}
-      <section ref={statsRef} className="bg-[#111111] border-y border-white/10">
+      <section ref={statsRef} className="bg-[#FFFFFF] border-y-4 border-[#05006C]">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-white/10">
+          <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#05006C]/20">
             <StatCard
               value={21}
               suffix="+"
@@ -213,16 +226,23 @@ export default function Home() {
       </section>
 
       {/* ─── CORE VALUES SECTION ─── */}
-      <section className="py-24 bg-[#0D0D0D]">
+      <section className="py-24 bg-[#EEEADE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section header */}
           <div className="text-center mb-16">
-            <div className="sep-label mb-3">Our Core Values</div>
-            <h2
-              className="text-white"
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#05006C",
+              }}
+            >
+              Our Core Values
+            </div>
+            <h2
+              className="text-[#05006C]"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
                 fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 textTransform: "uppercase",
                 letterSpacing: "-0.01em",
@@ -233,9 +253,7 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Carousel */}
-          <div className="relative overflow-hidden rounded-none">
-            {/* Main image + content */}
+          <div className="relative overflow-hidden rounded-2xl border-4 border-[#05006C]">
             <div
               className="relative h-[500px] md:h-[600px] overflow-hidden"
               style={{
@@ -245,17 +263,25 @@ export default function Home() {
                 transition: "background-image 0.5s ease",
               }}
             >
-              <div className="absolute inset-0 bg-black/60" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
 
               <div className="relative z-10 h-full flex items-end p-8 md:p-16">
                 <div className="max-w-xl">
-                  <div className="sep-label mb-3">{VALUES[activeValue].label}</div>
+                  <div
+                    className="text-xs font-bold tracking-widest uppercase mb-3"
+                    style={{
+                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      color: "#D0E4EF",
+                    }}
+                  >
+                    {VALUES[activeValue].label}
+                  </div>
                   <h3
                     className="text-white mb-4"
                     style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 800,
+                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontWeight: 900,
                       fontSize: "clamp(2rem, 5vw, 3.5rem)",
                       textTransform: "uppercase",
                     }}
@@ -263,40 +289,46 @@ export default function Home() {
                     {VALUES[activeValue].title}
                   </h3>
                   <p
-                    className="text-white/80 text-base leading-relaxed mb-8"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
+                    className="text-white/90 text-base leading-relaxed mb-8"
+                    style={{ fontFamily: "'Glacial Indifference', serif" }}
                   >
                     {VALUES[activeValue].description}
                   </p>
-                  <Link href="/about" className="sep-btn-primary text-sm px-6 py-3">
+                  <Link
+                    href="/about"
+                    className="inline-block px-6 py-3 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#05006C] text-sm"
+                    style={{
+                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
                     Learn More
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Carousel controls */}
             <div className="absolute bottom-8 right-8 z-20 flex items-center gap-3">
               {VALUES.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveValue(i)}
                   className={`w-2 h-2 transition-all duration-300 ${
-                    i === activeValue ? "bg-green-400 w-6" : "bg-white/40 hover:bg-white/70"
+                    i === activeValue ? "bg-[#05006C] w-6" : "bg-white/40 hover:bg-white/70"
                   }`}
                   aria-label={`Go to value ${i + 1}`}
                 />
               ))}
               <button
                 onClick={() => setActiveValue((prev) => (prev - 1 + VALUES.length) % VALUES.length)}
-                className="ml-2 w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:border-green-400 hover:text-green-400 transition-colors"
+                className="ml-2 w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Previous"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={() => setActiveValue((prev) => (prev + 1) % VALUES.length)}
-                className="w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:border-green-400 hover:text-green-400 transition-colors"
+                className="w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Next"
               >
                 <ChevronRight size={18} />
@@ -304,18 +336,20 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Value tabs */}
-          <div className="flex border-t border-white/10">
+          <div className="flex border-t-4 border-[#05006C] mt-0">
             {VALUES.map((value, i) => (
               <button
                 key={i}
                 onClick={() => setActiveValue(i)}
-                className={`flex-1 py-5 text-sm font-semibold tracking-widest uppercase transition-all duration-300 border-t-2 ${
+                className={`flex-1 py-5 text-sm font-bold tracking-widest uppercase transition-all duration-300 ${
                   i === activeValue
-                    ? "border-green-400 text-green-400 bg-green-400/5"
-                    : "border-transparent text-white/40 hover:text-white/70 hover:bg-white/5"
+                    ? "bg-[#05006C] text-[#EEEADE]"
+                    : "text-[#05006C] hover:bg-[#05006C]/10"
                 }`}
-                style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.7rem" }}
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontSize: "0.7rem",
+                }}
               >
                 {value.label}
               </button>
@@ -334,15 +368,23 @@ export default function Home() {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="sep-label mb-3">Places We're At</div>
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-3"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#D0E4EF",
+              }}
+            >
+              Places We're At
+            </div>
             <h2
               className="text-white mb-4"
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
                 fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 textTransform: "uppercase",
               }}
@@ -350,40 +392,20 @@ export default function Home() {
               Anywhere you want to go,
               <br /> we're probably there!
             </h2>
-            <p className="text-white/60 max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <p className="text-white/70 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
               Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support across different industries and companies.
             </p>
           </div>
 
-          {/* Company logo ticker */}
-          <div className="overflow-hidden mb-12" ref={tickerRef}>
-            <div className="flex gap-8 logo-ticker" style={{ width: "max-content" }}>
-              {[...COMPANIES, ...COMPANIES].map((company, i) => (
-                <div
-                  key={i}
-                  className="flex-shrink-0 px-6 py-3 border border-white/20 bg-white/5 hover:border-green-400/50 hover:bg-green-400/5 transition-all duration-300"
-                >
-                  <span
-                    className="text-white/70 text-sm font-medium whitespace-nowrap"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    {company}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Company grid */}
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 mb-12">
             {COMPANIES.slice(0, 32).map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex items-center justify-center border border-white/15 bg-white/5 hover:border-green-400/40 hover:bg-green-400/5 transition-all duration-300 p-2"
+                className="aspect-square flex items-center justify-center border-2 border-white/20 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-[#D0E4EF]/10 transition-all duration-300 p-2"
               >
                 <span
-                  className="text-white/60 text-xs font-medium text-center leading-tight"
-                  style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem" }}
+                  className="text-white/70 text-xs font-medium text-center leading-tight"
+                  style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}
                 >
                   {company}
                 </span>
@@ -392,24 +414,39 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Link href="/careers" className="sep-btn-green text-sm px-8 py-4">
-              Our Careers
+            <Link
+              href="/careers"
+              className="inline-block px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#05006C] text-sm"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                letterSpacing: "0.05em",
+              }}
+            >
+              OUR CAREERS
             </Link>
           </div>
         </div>
       </section>
 
       {/* ─── ABOUT TEASER SECTION ─── */}
-      <section className="py-24 bg-[#111111]">
+      <section className="py-24 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <div className="sep-label mb-4">About Sigma Eta Pi</div>
-              <h2
-                className="text-white mb-6"
+              <div
+                className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 800,
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  color: "#05006C",
+                }}
+              >
+                About Sigma Eta Pi
+              </div>
+              <h2
+                className="text-[#05006C] mb-6"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontWeight: 900,
                   fontSize: "clamp(2rem, 4vw, 3rem)",
                   textTransform: "uppercase",
                   lineHeight: 1.1,
@@ -417,38 +454,43 @@ export default function Home() {
               >
                 UCSB's Premier Co-Ed Entrepreneurship Fraternity
               </h2>
-              <p className="text-white/70 text-base leading-relaxed mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <p className="text-[#0C141A]/70 text-base leading-relaxed mb-6" style={{ fontFamily: "'Glacial Indifference', serif" }}>
                 Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
               </p>
-              <p className="text-white/70 text-base leading-relaxed mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <p className="text-[#0C141A]/70 text-base leading-relaxed mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
                 Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.
               </p>
-              <Link href="/about" className="sep-btn-primary text-sm px-8 py-4">
-                Learn More About Us
+              <Link
+                href="/about"
+                className="inline-block px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                LEARN MORE ABOUT US
               </Link>
             </div>
             <div className="relative">
               <div
-                className="aspect-[4/3] overflow-hidden"
+                className="aspect-[4/3] overflow-hidden border-4 border-[#05006C]"
                 style={{
                   backgroundImage: `url(${ABOUT_BG})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               />
-              {/* Accent border */}
-              <div
-                className="absolute -bottom-4 -right-4 w-full h-full border-2 border-green-400/30 -z-10"
-              />
-              {/* Stats overlay */}
-              <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-sm border border-white/20 px-6 py-4">
+              <div className="absolute bottom-6 left-6 bg-[#05006C] text-[#EEEADE] px-6 py-4 border-4 border-[#EEEADE]">
                 <div
-                  className="text-green-400 font-bold"
-                  style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "2rem" }}
+                  className="font-bold"
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontSize: "2rem",
+                  }}
                 >
                   2026
                 </div>
-                <div className="text-white/60 text-xs tracking-widest uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                   Founded at UCSB
                 </div>
               </div>
@@ -458,13 +500,21 @@ export default function Home() {
       </section>
 
       {/* ─── RECRUITMENT CTA ─── */}
-      <section className="py-24 bg-[#0D0D0D] border-t border-white/10">
+      <section className="py-24 bg-[#EEEADE] border-t-4 border-[#05006C]">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="sep-label mb-4">Recruitment</div>
-          <h2
-            className="text-white mb-6"
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-4"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              color: "#05006C",
+            }}
+          >
+            Recruitment
+          </div>
+          <h2
+            className="text-[#05006C] mb-6"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
               textTransform: "uppercase",
@@ -473,11 +523,18 @@ export default function Home() {
           >
             Join Our Founding Class
           </h2>
-          <p className="text-white/60 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
             As we relaunch at UCSB, we can't wait to meet our founding class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.
           </p>
-          <Link href="/recruitment" className="sep-btn-green text-sm px-10 py-5">
-            Winter 2026 Application
+          <Link
+            href="/recruitment"
+            className="inline-block px-10 py-5 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              letterSpacing: "0.05em",
+            }}
+          >
+            WINTER 2026 APPLICATION
           </Link>
         </div>
       </section>

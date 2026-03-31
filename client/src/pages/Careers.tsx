@@ -1,11 +1,11 @@
 /*
- * UCSB SEP Careers Page — "Silicon Ambition" Design
- * Alumni placements, company logos, career resources
+ * UCSB SEP Careers Page — Official Sigma Eta Pi Brand
  */
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
+import { useState } from "react";
 
 const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
 
@@ -77,8 +77,6 @@ const CAREER_RESOURCES = [
   },
 ];
 
-import { useState } from "react";
-
 export default function Careers() {
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -87,25 +85,33 @@ export default function Careers() {
     : COMPANIES.filter(c => c.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
       <Navbar />
 
       {/* Page Hero */}
       <section
-        className="relative h-72 md:h-96 flex items-end overflow-hidden"
+        className="relative h-72 md:h-96 flex items-end overflow-hidden pt-24"
         style={{
           backgroundImage: `url(${CAREERS_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
-          <div className="sep-label mb-2">Careers</div>
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-2"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              color: "#D0E4EF",
+            }}
+          >
+            Careers
+          </div>
           <h1
             className="text-white"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
               textTransform: "uppercase",
@@ -118,15 +124,23 @@ export default function Careers() {
       </section>
 
       {/* Intro */}
-      <section className="py-16 bg-[#111111]">
+      <section className="py-16 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="sep-label mb-4">Where We Go</div>
-            <h2
-              className="text-white mb-6"
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-4"
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#05006C",
+              }}
+            >
+              Where We Go
+            </div>
+            <h2
+              className="text-[#05006C] mb-6"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
                 textTransform: "uppercase",
                 lineHeight: 1.1,
@@ -134,7 +148,7 @@ export default function Careers() {
             >
               Sigma Eta Pi Alumni Are Everywhere
             </h2>
-            <p className="text-white/70 text-base leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <p className="text-[#0C141A]/70 text-base leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
               Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.
             </p>
           </div>
@@ -142,15 +156,23 @@ export default function Careers() {
       </section>
 
       {/* Career Resources */}
-      <section className="py-16 bg-[#0D0D0D]">
+      <section className="py-16 bg-[#EEEADE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <div className="sep-label mb-3">Resources</div>
-            <h2
-              className="text-white"
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#05006C",
+              }}
+            >
+              Resources
+            </div>
+            <h2
+              className="text-[#05006C]"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
                 textTransform: "uppercase",
               }}
@@ -162,14 +184,14 @@ export default function Careers() {
             {CAREER_RESOURCES.map((resource, i) => (
               <div
                 key={i}
-                className="bg-[#1A1A1A] border border-white/10 p-6 hover:border-green-400/40 transition-all duration-300 group"
+                className="bg-[#FFFFFF] border-4 border-[#05006C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
                 <div className="text-3xl mb-4">{resource.icon}</div>
                 <h3
-                  className="text-white mb-3 group-hover:text-green-400 transition-colors"
+                  className="text-[#05006C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 700,
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontWeight: 900,
                     fontSize: "1.2rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
@@ -177,7 +199,7 @@ export default function Careers() {
                 >
                   {resource.title}
                 </h3>
-                <p className="text-white/60 text-sm leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
                   {resource.description}
                 </p>
               </div>
@@ -187,33 +209,42 @@ export default function Careers() {
       </section>
 
       {/* Company Logos */}
-      <section className="py-16 bg-[#111111]">
+      <section className="py-16 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <div className="sep-label mb-3">Where We Work</div>
-            <h2
-              className="text-white mb-6"
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#05006C",
+              }}
+            >
+              Where We Work
+            </div>
+            <h2
+              className="text-[#05006C] mb-6"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
                 textTransform: "uppercase",
               }}
             >
               Companies Our Members Work At
             </h2>
-            {/* Category filter */}
             <div className="flex flex-wrap justify-center gap-2 mt-6">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-200 border ${
+                  className={`px-4 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-200 border-2 ${
                     activeCategory === cat
-                      ? "border-green-400 bg-green-400/10 text-green-400"
-                      : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
+                      ? "border-[#05006C] bg-[#05006C] text-[#EEEADE]"
+                      : "border-[#05006C] text-[#05006C] hover:bg-[#05006C]/10"
                   }`}
-                  style={{ fontFamily: "'Inter', sans-serif" }}
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  }}
                 >
                   {cat}
                 </button>
@@ -225,17 +256,24 @@ export default function Careers() {
             {filteredCompanies.map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex flex-col items-center justify-center border border-white/15 bg-[#1A1A1A] hover:border-green-400/40 hover:bg-green-400/5 transition-all duration-300 p-3 group"
+                className="aspect-square flex flex-col items-center justify-center border-2 border-[#05006C] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
               >
                 <span
-                  className="text-white/70 text-xs font-medium text-center leading-tight group-hover:text-white transition-colors"
-                  style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.65rem" }}
+                  className="text-[#05006C] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
+                  style={{
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontSize: "0.65rem",
+                  }}
                 >
                   {company.name}
                 </span>
                 <span
-                  className="text-green-400/50 text-center mt-1 group-hover:text-green-400/80 transition-colors"
-                  style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", letterSpacing: "0.1em" }}
+                  className="text-[#05006C]/50 text-center mt-1 group-hover:text-[#05006C] transition-colors"
+                  style={{
+                    fontFamily: "'Glacial Indifference', serif",
+                    fontSize: "0.55rem",
+                    letterSpacing: "0.1em",
+                  }}
                 >
                   {company.category}
                 </span>
@@ -246,12 +284,12 @@ export default function Careers() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[#0D0D0D] border-t border-white/10">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#05006C]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-white mb-6"
+            className="text-[#05006C] mb-6"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
               textTransform: "uppercase",
@@ -259,11 +297,18 @@ export default function Careers() {
           >
             Launch Your Career with SEP
           </h2>
-          <p className="text-white/60 mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
             Join a network of entrepreneurs and professionals who support each other throughout their careers.
           </p>
-          <Link href="/recruitment" className="sep-btn-green text-sm px-8 py-4">
-            Apply Now
+          <Link
+            href="/recruitment"
+            className="inline-block px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              letterSpacing: "0.05em",
+            }}
+          >
+            APPLY NOW
           </Link>
         </div>
       </section>
