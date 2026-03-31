@@ -7,6 +7,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -19,6 +20,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [location] = useLocation();
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -76,8 +78,8 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Apply Button */}
-            <div className="hidden lg:block">
+            {/* Apply Button + Auth */}
+            <div className="hidden lg:flex items-center gap-3">
               <Link
                 href="/recruitment"
                 className="px-6 py-2 bg-[#EEEADE] text-[#05006C] font-bold rounded-full transition-all duration-300 hover:bg-[#D0E4EF] text-sm"
@@ -89,6 +91,21 @@ export default function Navbar() {
               >
                 APPLY
               </Link>
+              {isAuthenticated ? (
+                <Link
+                  href="/dashboard"
+                  className="px-4 py-2 bg-[#EEEADE]/10 text-[#EEEADE] hover:bg-[#EEEADE]/20 font-bold rounded-full text-xs tracking-widest transition-all border border-[#EEEADE]/30"
+                >
+                  DASHBOARD
+                </Link>
+              ) : (
+                <Link
+                  href="/active-login"
+                  className="px-4 py-2 border border-[#EEEADE]/40 text-[#EEEADE]/80 hover:text-[#EEEADE] hover:border-[#EEEADE] font-bold rounded-full text-xs tracking-widest transition-all"
+                >
+                  ACTIVE LOGIN
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -125,7 +142,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               <Link
                 href="/recruitment"
                 className="block text-center py-3 px-4 bg-[#EEEADE] text-[#05006C] font-bold rounded-lg text-sm"
@@ -138,6 +155,23 @@ export default function Navbar() {
               >
                 APPLY NOW
               </Link>
+              {isAuthenticated ? (
+                <Link
+                  href="/dashboard"
+                  className="block text-center py-3 px-4 bg-[#EEEADE]/10 text-[#EEEADE] font-bold rounded-lg text-xs tracking-widest border border-[#EEEADE]/30"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  DASHBOARD
+                </Link>
+              ) : (
+                <Link
+                  href="/active-login"
+                  className="block text-center py-3 px-4 border border-[#EEEADE]/40 text-[#EEEADE]/80 font-bold rounded-lg text-xs tracking-widest"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  ACTIVE LOGIN
+                </Link>
+              )}
             </div>
           </div>
         </div>
