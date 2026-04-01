@@ -4,7 +4,7 @@
  * Logo: Official eagle emblem + "Sigma Eta Pi" text
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import logoImg from "@/images/logo.png";
@@ -35,8 +35,8 @@ export default function Navbar() {
                 <div
                   className="text-white font-bold leading-none"
                   style={{
-                    fontFamily: "'MonteCarlo', cursive",
-                    fontSize: "1.4rem",
+                    fontFamily: "'The Youngest', cursive",
+                    fontSize: "1.1rem",
                     letterSpacing: "0.04em",
                   }}
                 >

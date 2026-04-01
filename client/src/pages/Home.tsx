@@ -150,9 +150,9 @@ export default function Home() {
           <h1
             className="text-white leading-none mb-4"
             style={{
-              fontFamily: "'MonteCarlo', cursive",
+              fontFamily: "'The Youngest', cursive",
               fontWeight: 400,
-              fontSize: "clamp(4rem, 12vw, 10rem)",
+              fontSize: "clamp(3rem, 9vw, 8rem)",
               letterSpacing: "0.02em",
             }}
           >
