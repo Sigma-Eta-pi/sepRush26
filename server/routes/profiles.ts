@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
-import { db } from '../db.js';
+import { sql } from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
@@ -10,19 +10,37 @@ function trimStr(val: unknown, maxLen: number): string | undefined {
   return val.trim().slice(0, maxLen);
 }
 
-// GET /api/profiles
-router.get('/', requireAuth, (_req, res) => {
-  res.json(db.data.profiles);
+function rowToProfile(r: any) {
+  return {
+    id: r.id,
+    userId: r.user_id,
+    name: r.name || '',
+    major: r.major,
+    gradYear: r.grad_year,
+    hometown: r.hometown,
+    birthday: r.birthday,
+    bio: r.bio,
+    linkedin: r.linkedin,
+    instagram: r.instagram,
+    phone: r.phone,
+    pledgeClass: r.pledge_class,
+    photoUrl: r.photo_url,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  };
+}
+
+router.get('/', requireAuth, async (_req, res) => {
+  const rows = await sql`SELECT * FROM profiles`;
+  res.json(rows.map(rowToProfile));
 });
 
-// GET /api/profiles/:userId
-router.get('/:userId', requireAuth, (req, res) => {
-  const profile = db.data.profiles.find(p => p.userId === req.params.userId);
-  if (!profile) { res.status(404).json({ error: 'Profile not found' }); return; }
-  res.json(profile);
+router.get('/:userId', requireAuth, async (req, res) => {
+  const rows = await sql`SELECT * FROM profiles WHERE user_id = ${req.params.userId} LIMIT 1`;
+  if (rows.length === 0) { res.status(404).json({ error: 'Profile not found' }); return; }
+  res.json(rowToProfile(rows[0]));
 });
 
-// POST /api/profiles (upsert by userId)
 router.post('/', requireAuth, async (req, res) => {
   const name = trimStr(req.body.name, 100);
   const major = trimStr(req.body.major, 100);
@@ -33,45 +51,48 @@ router.post('/', requireAuth, async (req, res) => {
   const instagram = trimStr(req.body.instagram, 100);
   const phone = trimStr(req.body.phone, 20);
   const pledgeClass = trimStr(req.body.pledgeClass, 50);
-  const { gradYear } = req.body;
-  const existing = db.data.profiles.find(p => p.userId === req.user!.id);
+  const gradYear = req.body.gradYear ?? null;
+  const userId = req.user!.id;
   const now = new Date().toISOString();
 
-  if (existing) {
-    if (name !== undefined) existing.name = name;
-    if (major !== undefined) existing.major = major;
-    if (gradYear !== undefined) existing.gradYear = gradYear;
-    if (hometown !== undefined) existing.hometown = hometown;
-    if (birthday !== undefined) existing.birthday = birthday;
-    if (bio !== undefined) existing.bio = bio;
-    if (linkedin !== undefined) existing.linkedin = linkedin;
-    if (instagram !== undefined) existing.instagram = instagram;
-    if (phone !== undefined) existing.phone = phone;
-    if (pledgeClass !== undefined) existing.pledgeClass = pledgeClass;
-    existing.updatedAt = now;
-    await db.write();
-    res.json(existing);
+  const existing = await sql`SELECT * FROM profiles WHERE user_id = ${userId} LIMIT 1`;
+
+  if (existing.length > 0) {
+    const p = existing[0];
+    await sql`
+      UPDATE profiles SET
+        name = ${name ?? p.name},
+        major = ${major ?? p.major},
+        grad_year = ${gradYear ?? p.grad_year},
+        hometown = ${hometown ?? p.hometown},
+        birthday = ${birthday ?? p.birthday},
+        bio = ${bio ?? p.bio},
+        linkedin = ${linkedin ?? p.linkedin},
+        instagram = ${instagram ?? p.instagram},
+        phone = ${phone ?? p.phone},
+        pledge_class = ${pledgeClass ?? p.pledge_class},
+        updated_at = ${now}
+      WHERE user_id = ${userId}
+    `;
+    const updated = await sql`SELECT * FROM profiles WHERE user_id = ${userId} LIMIT 1`;
+    res.json(rowToProfile(updated[0]));
   } else {
-    const profile = {
-      id: nanoid(),
-      userId: req.user!.id,
-      name: name || '',
-      major, gradYear, hometown, birthday, bio, linkedin, instagram, phone, pledgeClass,
-      createdAt: now,
-      updatedAt: now,
-    };
-    db.data.profiles.push(profile);
-    await db.write();
-    res.json(profile);
+    const id = nanoid();
+    await sql`
+      INSERT INTO profiles (id, user_id, name, major, grad_year, hometown, birthday, bio, linkedin, instagram, phone, pledge_class, created_at, updated_at)
+      VALUES (${id}, ${userId}, ${name || ''}, ${major ?? null}, ${gradYear}, ${hometown ?? null}, ${birthday ?? null}, ${bio ?? null}, ${linkedin ?? null}, ${instagram ?? null}, ${phone ?? null}, ${pledgeClass ?? null}, ${now}, ${now})
+    `;
+    const inserted = await sql`SELECT * FROM profiles WHERE id = ${id} LIMIT 1`;
+    res.json(rowToProfile(inserted[0]));
   }
 });
 
-// PUT /api/profiles/:id
 router.put('/:id', requireAuth, async (req, res) => {
-  const profile = db.data.profiles.find(p => p.id === req.params.id);
-  if (!profile) { res.status(404).json({ error: 'Profile not found' }); return; }
+  const rows = await sql`SELECT * FROM profiles WHERE id = ${req.params.id} LIMIT 1`;
+  if (rows.length === 0) { res.status(404).json({ error: 'Profile not found' }); return; }
+  const p = rows[0];
 
-  if (profile.userId !== req.user!.id && req.user!.role !== 'admin') {
+  if (p.user_id !== req.user!.id && req.user!.role !== 'admin') {
     res.status(403).json({ error: 'Forbidden' }); return;
   }
 
@@ -85,22 +106,27 @@ router.put('/:id', requireAuth, async (req, res) => {
   const phone = trimStr(req.body.phone, 20);
   const pledgeClass = trimStr(req.body.pledgeClass, 50);
   const photoUrl = trimStr(req.body.photoUrl, 500);
-  const { gradYear } = req.body;
-  if (name !== undefined) profile.name = name;
-  if (major !== undefined) profile.major = major;
-  if (gradYear !== undefined) profile.gradYear = gradYear;
-  if (hometown !== undefined) profile.hometown = hometown;
-  if (birthday !== undefined) profile.birthday = birthday;
-  if (bio !== undefined) profile.bio = bio;
-  if (linkedin !== undefined) profile.linkedin = linkedin;
-  if (instagram !== undefined) profile.instagram = instagram;
-  if (phone !== undefined) profile.phone = phone;
-  if (pledgeClass !== undefined) profile.pledgeClass = pledgeClass;
-  if (photoUrl !== undefined) profile.photoUrl = photoUrl;
-  profile.updatedAt = new Date().toISOString();
-  await db.write();
+  const gradYear = req.body.gradYear;
+  const now = new Date().toISOString();
 
-  res.json(profile);
+  await sql`
+    UPDATE profiles SET
+      name = ${name ?? p.name},
+      major = ${major ?? p.major},
+      grad_year = ${gradYear ?? p.grad_year},
+      hometown = ${hometown ?? p.hometown},
+      birthday = ${birthday ?? p.birthday},
+      bio = ${bio ?? p.bio},
+      linkedin = ${linkedin ?? p.linkedin},
+      instagram = ${instagram ?? p.instagram},
+      phone = ${phone ?? p.phone},
+      pledge_class = ${pledgeClass ?? p.pledge_class},
+      photo_url = ${photoUrl ?? p.photo_url},
+      updated_at = ${now}
+    WHERE id = ${req.params.id}
+  `;
+  const updated = await sql`SELECT * FROM profiles WHERE id = ${req.params.id} LIMIT 1`;
+  res.json(rowToProfile(updated[0]));
 });
 
 export default router;
