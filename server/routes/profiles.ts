@@ -30,7 +30,7 @@ function rowToProfile(r: any) {
   };
 }
 
-router.get('/', requireAuth, async (_req, res) => {
+router.get('/', async (_req, res) => {
   const rows = await sql`SELECT * FROM profiles`;
   res.json(rows.map(rowToProfile));
 });
@@ -51,6 +51,7 @@ router.post('/', requireAuth, async (req, res) => {
   const instagram = trimStr(req.body.instagram, 100);
   const phone = trimStr(req.body.phone, 20);
   const pledgeClass = trimStr(req.body.pledgeClass, 50);
+  const photoUrl = trimStr(req.body.photoUrl, 500);
   const gradYear = req.body.gradYear ?? null;
   const userId = req.user!.id;
   const now = new Date().toISOString();
@@ -71,6 +72,7 @@ router.post('/', requireAuth, async (req, res) => {
         instagram = ${instagram ?? p.instagram},
         phone = ${phone ?? p.phone},
         pledge_class = ${pledgeClass ?? p.pledge_class},
+        photo_url = ${photoUrl ?? p.photo_url},
         updated_at = ${now}
       WHERE user_id = ${userId}
     `;
@@ -79,8 +81,8 @@ router.post('/', requireAuth, async (req, res) => {
   } else {
     const id = nanoid();
     await sql`
-      INSERT INTO profiles (id, user_id, name, major, grad_year, hometown, birthday, bio, linkedin, instagram, phone, pledge_class, created_at, updated_at)
-      VALUES (${id}, ${userId}, ${name || ''}, ${major ?? null}, ${gradYear}, ${hometown ?? null}, ${birthday ?? null}, ${bio ?? null}, ${linkedin ?? null}, ${instagram ?? null}, ${phone ?? null}, ${pledgeClass ?? null}, ${now}, ${now})
+      INSERT INTO profiles (id, user_id, name, major, grad_year, hometown, birthday, bio, linkedin, instagram, phone, pledge_class, photo_url, created_at, updated_at)
+      VALUES (${id}, ${userId}, ${name || ''}, ${major ?? null}, ${gradYear}, ${hometown ?? null}, ${birthday ?? null}, ${bio ?? null}, ${linkedin ?? null}, ${instagram ?? null}, ${phone ?? null}, ${pledgeClass ?? null}, ${photoUrl ?? null}, ${now}, ${now})
     `;
     const inserted = await sql`SELECT * FROM profiles WHERE id = ${id} LIMIT 1`;
     res.json(rowToProfile(inserted[0]));

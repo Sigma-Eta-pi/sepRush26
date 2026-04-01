@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, MapPin, GraduationCap, Calendar, Linkedin, Instagram, Phone, Camera, Upload, X, Search } from 'lucide-react';
+import { User, MapPin, GraduationCap, Calendar, Linkedin, Instagram, Phone, Camera, Upload, X, Search, ChevronDown, Check } from 'lucide-react';
 
 interface MemberProfile {
   id: string;
@@ -219,7 +219,58 @@ function SkeletonCard() {
   );
 }
 
+// ─── Class Dropdown ────────────────────────────────────────────────────────────
+
+const CLASS_OPTIONS = ['Founder', 'Founding Class', 'Alpha Class'];
+
+function ClassDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition flex items-center justify-between cursor-pointer"
+      >
+        <span className={value ? '' : 'text-[#05006C]/40'}>{value || 'Select class...'}</span>
+        <ChevronDown size={16} className={`text-[#05006C]/40 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#05006C]/15 rounded-lg shadow-lg z-20 overflow-hidden">
+          {CLASS_OPTIONS.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => { onChange(opt); setOpen(false); }}
+              className="w-full px-4 py-2.5 text-left text-sm text-[#05006C] hover:bg-[#05006C]/5 transition-colors flex items-center justify-between cursor-pointer"
+            >
+              {opt}
+              {value === opt && <Check size={14} className="text-[#05006C]" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Profile Editor ────────────────────────────────────────────────────────────
+
+function extractLinkedinSlug(url: string): string {
+  const match = url.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
+  if (match) return match[1].replace(/\/$/, '');
+  return '';
+}
 
 function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [loading, setLoading] = useState(true);
@@ -240,6 +291,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [linkedin, setLinkedin] = useState('');
   const [instagram, setInstagram] = useState('');
   const [phone, setPhone] = useState('');
+  const [linkedinPhotoPreview, setLinkedinPhotoPreview] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -260,14 +312,24 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           setLinkedin(p.linkedin || '');
           setInstagram(p.instagram || '');
           setPhone(p.phone || '');
+          if (p.linkedin) {
+            const slug = extractLinkedinSlug(p.linkedin);
+            if (slug) setLinkedinPhotoPreview(`https://unavatar.io/linkedin/${slug}`);
+          }
         }
       } catch {
-        // no existing profile, leave form empty
+        // no existing profile
       } finally {
         setLoading(false);
       }
     })();
   }, [userId, token]);
+
+  // Update LinkedIn photo preview when URL changes
+  useEffect(() => {
+    const slug = extractLinkedinSlug(linkedin);
+    setLinkedinPhotoPreview(slug ? `https://unavatar.io/linkedin/${slug}` : '');
+  }, [linkedin]);
 
   async function handlePhotoUpload(file: File) {
     setUploading(true);
@@ -291,30 +353,27 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) {
-      setError('Name is required');
-      return;
-    }
+    if (!name.trim()) { setError('Name is required'); return; }
+    if (!linkedin.trim()) { setError('LinkedIn URL is required'); return; }
     setSaving(true);
     setError('');
     setSuccess(false);
     try {
+      // If no manually uploaded photo, use LinkedIn photo
+      const finalPhotoUrl = photoUrl || linkedinPhotoPreview || undefined;
       const res = await fetch('/api/profiles', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           name: name.trim(),
-          photoUrl: photoUrl || undefined,
+          photoUrl: finalPhotoUrl,
           major: major.trim() || undefined,
           gradYear: gradYear ? Number(gradYear) : undefined,
           hometown: hometown.trim() || undefined,
           birthday: birthday.trim() || undefined,
           bio: bio.trim() || undefined,
-          pledgeClass: pledgeClass.trim() || undefined,
-          linkedin: linkedin.trim() || undefined,
+          pledgeClass: pledgeClass || undefined,
+          linkedin: linkedin.trim(),
           instagram: instagram.trim() || undefined,
           phone: phone.trim() || undefined,
         }),
@@ -345,6 +404,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
   const inputClass = 'w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition';
   const labelClass = 'block text-[#05006C]/70 text-xs tracking-wider uppercase font-medium mb-1';
+  const displayPhoto = photoUrl || linkedinPhotoPreview;
 
   return (
     <form onSubmit={handleSave} className="bg-white rounded-xl p-6 space-y-4">
@@ -355,8 +415,8 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           onClick={() => fileInputRef.current?.click()}
           className="relative group cursor-pointer"
         >
-          {photoUrl ? (
-            <img src={photoUrl} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
+          {displayPhoto ? (
+            <img src={displayPhoto} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
           ) : (
             <div className="w-24 h-24 rounded-full bg-[#05006C]/10 flex items-center justify-center">
               {name ? (
@@ -385,13 +445,42 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
             if (file) handlePhotoUpload(file);
           }}
         />
-        <span className="text-xs text-[#05006C]/40">Click to upload photo</span>
+        <span className="text-xs text-[#05006C]/40">
+          {linkedinPhotoPreview && !photoUrl ? 'Using LinkedIn photo · Click to upload different photo' : 'Click to upload photo'}
+        </span>
       </div>
 
       {/* Name */}
       <div>
         <label className={labelClass}>Name *</label>
         <input className={inputClass} value={name} onChange={e => setName(e.target.value)} placeholder="Full name" required />
+      </div>
+
+      {/* LinkedIn — mandatory, top position */}
+      <div>
+        <label className={labelClass}>LinkedIn URL *</label>
+        <div className="relative">
+          <Linkedin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
+          <input
+            className={`${inputClass} pl-10`}
+            value={linkedin}
+            onChange={e => setLinkedin(e.target.value)}
+            placeholder="https://linkedin.com/in/yourname"
+            required
+          />
+        </div>
+        {linkedinPhotoPreview && (
+          <p className="text-xs text-[#05006C]/50 mt-1 flex items-center gap-1">
+            <Check size={11} className="text-green-500" />
+            LinkedIn profile photo will be used automatically
+          </p>
+        )}
+      </div>
+
+      {/* Class */}
+      <div>
+        <label className={labelClass}>Class *</label>
+        <ClassDropdown value={pledgeClass} onChange={setPledgeClass} />
       </div>
 
       {/* Major + Grad Year row */}
@@ -424,28 +513,22 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
         <textarea className={`${inputClass} min-h-[100px] resize-y`} value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell everyone about yourself..." />
       </div>
 
-      {/* Pledge Class */}
-      <div>
-        <label className={labelClass}>Pledge Class</label>
-        <input className={inputClass} value={pledgeClass} onChange={e => setPledgeClass(e.target.value)} placeholder="e.g. Alpha" />
-      </div>
-
-      {/* Socials */}
+      {/* Instagram + Phone row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>LinkedIn URL</label>
-          <input className={inputClass} value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="linkedin.com/in/..." />
+          <label className={labelClass}>Instagram</label>
+          <div className="relative">
+            <Instagram size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
+            <input className={`${inputClass} pl-10`} value={instagram} onChange={e => setInstagram(e.target.value)} placeholder="@handle" />
+          </div>
         </div>
         <div>
-          <label className={labelClass}>Instagram</label>
-          <input className={inputClass} value={instagram} onChange={e => setInstagram(e.target.value)} placeholder="@handle" />
+          <label className={labelClass}>Phone</label>
+          <div className="relative">
+            <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
+            <input className={`${inputClass} pl-10`} value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 123-4567" />
+          </div>
         </div>
-      </div>
-
-      {/* Phone */}
-      <div>
-        <label className={labelClass}>Phone</label>
-        <input className={inputClass} value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 123-4567" />
       </div>
 
       {/* Error / Success */}

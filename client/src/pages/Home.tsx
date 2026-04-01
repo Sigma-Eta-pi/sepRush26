@@ -440,9 +440,9 @@ export default function Home() {
                 className="aspect-square flex flex-col items-center justify-center border-2 border-white/20 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-white/10 transition-all duration-300 p-2 group"
               >
                 <img
-                  src={`https://logo.clearbit.com/${company.domain}`}
+                  src={`https://www.google.com/s2/favicons?domain=${company.domain}&sz=64`}
                   alt={company.name}
-                  className="w-8 h-8 object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity"
+                  className="w-8 h-8 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
                     (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
