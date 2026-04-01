@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { motion } from 'framer-motion';
-import { Settings, Trash2, Pencil, Plus, Users, Megaphone, Calendar, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, Trash2, Pencil, Plus, Users, Megaphone, Calendar, X, Check } from 'lucide-react';
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
   const res = await fetch(path, {
@@ -17,6 +17,13 @@ interface MemberUser {
   email: string;
   role: 'active' | 'exec' | 'admin';
   createdAt: string;
+  name?: string | null;
+  pledgeClass?: string | null;
+}
+
+interface ClassItem {
+  id: string;
+  name: string;
 }
 
 interface Update {
@@ -100,6 +107,14 @@ function MembersTab({ token }: { token: string }) {
   const [showAdd, setShowAdd] = useState(false);
   const [addForm, setAddForm] = useState({ email: '', password: '', role: 'active' as MemberUser['role'] });
   const [submitting, setSubmitting] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ email: '', password: '', role: 'active' as MemberUser['role'] });
+  const [editError, setEditError] = useState('');
+  const [classFilter, setClassFilter] = useState('All');
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [showClasses, setShowClasses] = useState(false);
+  const [newClassName, setNewClassName] = useState('');
+  const [classError, setClassError] = useState('');
 
   const fetchMembers = () => {
     setLoading(true);
@@ -109,17 +124,39 @@ function MembersTab({ token }: { token: string }) {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchMembers(); }, [token]);
+  const fetchClasses = () => {
+    apiFetch('/api/classes', token)
+      .then(setClasses)
+      .catch(() => {});
+  };
 
-  const handleRoleChange = async (id: string, role: string) => {
+  useEffect(() => { fetchMembers(); fetchClasses(); }, [token]);
+
+  const openEdit = (m: MemberUser) => {
+    setEditing(m.id);
+    setEditForm({ email: m.email, password: '', role: m.role });
+    setEditError('');
+  };
+
+  const handleEdit = async (id: string) => {
+    if (!editForm.email.trim()) { setEditError('Email is required'); return; }
+    setSubmitting(true);
+    setEditError('');
     try {
-      await apiFetch(`/api/admin/users/${id}`, token, {
+      const updated = await apiFetch(`/api/admin/users/${id}`, token, {
         method: 'PUT',
-        body: JSON.stringify({ role }),
+        body: JSON.stringify({
+          email: editForm.email.trim(),
+          role: editForm.role,
+          ...(editForm.password.trim() ? { password: editForm.password.trim() } : {}),
+        }),
       });
-      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role: role as MemberUser['role'] } : m)));
+      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, email: updated.email, role: updated.role } : m)));
+      setEditing(null);
     } catch (e: any) {
-      alert(e.message);
+      setEditError(e.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -151,20 +188,114 @@ function MembersTab({ token }: { token: string }) {
     }
   };
 
+  const handleAddClass = async () => {
+    const name = newClassName.trim();
+    if (!name) return;
+    setClassError('');
+    try {
+      const created = await apiFetch('/api/classes', token, { method: 'POST', body: JSON.stringify({ name }) });
+      setClasses(prev => [...prev, created]);
+      setNewClassName('');
+    } catch (e: any) {
+      setClassError(e.message);
+    }
+  };
+
+  const handleDeleteClass = async (id: string) => {
+    if (!window.confirm('Delete this class?')) return;
+    try {
+      await apiFetch(`/api/classes/${id}`, token, { method: 'DELETE' });
+      setClasses(prev => prev.filter(c => c.id !== id));
+      if (classFilter === classes.find(c => c.id === id)?.name) setClassFilter('All');
+    } catch (e: any) {
+      alert(e.message);
+    }
+  };
+
+  const inputCls = 'bg-white border border-[#05006C]/15 rounded-lg px-3 py-2 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 w-full';
+
   if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading members...</div>;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
+  const filteredMembers = classFilter === 'All'
+    ? members
+    : members.filter(m => m.pledgeClass === classFilter);
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[#05006C]/60 text-sm font-bold">{members.length} members</span>
-        <button
-          onClick={() => setShowAdd(!showAdd)}
-          className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
-        >
-          <Plus size={16} /> Add Member
-        </button>
+      {/* Header row */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <span className="text-[#05006C]/60 text-sm font-bold">{filteredMembers.length} / {members.length} members</span>
+        <div className="flex gap-2">
+          <button
+            onClick={() => { setShowClasses(s => !s); setShowAdd(false); }}
+            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5"
+          >
+            <Settings size={15} /> Classes
+          </button>
+          <button
+            onClick={() => { setShowAdd(s => !s); setShowClasses(false); }}
+            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
+          >
+            <Plus size={16} /> Add Member
+          </button>
+        </div>
       </div>
+
+      {/* Class filter chips */}
+      <div className="flex flex-wrap gap-1.5 mb-4">
+        {['All', ...classes.map(c => c.name)].map(cls => (
+          <button
+            key={cls}
+            onClick={() => setClassFilter(cls)}
+            className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide transition-colors cursor-pointer ${
+              classFilter === cls
+                ? 'bg-[#05006C] text-[#EEEADE]'
+                : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+            }`}
+          >
+            {cls}
+          </button>
+        ))}
+      </div>
+
+      {/* Manage Classes panel */}
+      <AnimatePresence>
+        {showClasses && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10 overflow-hidden"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[#05006C] font-bold text-sm">MANAGE CLASSES</span>
+              <button onClick={() => setShowClasses(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={16} /></button>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {classes.map(c => (
+                <span key={c.id} className="flex items-center gap-1.5 bg-white border border-[#05006C]/15 rounded-full px-3 py-1 text-xs text-[#05006C] font-medium">
+                  {c.name}
+                  <button onClick={() => handleDeleteClass(c.id)} className="text-[#05006C]/30 hover:text-red-500 transition-colors"><X size={11} /></button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={newClassName}
+                onChange={e => setNewClassName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAddClass()}
+                placeholder="New class name..."
+                className="bg-white border border-[#05006C]/15 rounded-lg px-3 py-2 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 flex-1"
+              />
+              <button onClick={handleAddClass} className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold">
+                Add
+              </button>
+            </div>
+            {classError && <p className="text-red-600 text-xs mt-2">{classError}</p>}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {showAdd && (
         <motion.div
@@ -177,62 +308,111 @@ function MembersTab({ token }: { token: string }) {
             <button onClick={() => setShowAdd(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input
-              type="email"
-              placeholder="Email"
-              value={addForm.email}
+            <input type="email" placeholder="Email" value={addForm.email}
               onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
-              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={addForm.password}
+              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+            <input type="password" placeholder="Password" value={addForm.password}
               onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
-              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]"
-            />
-            <select
-              value={addForm.role}
-              onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
-              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]"
-            >
+              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+            <select value={addForm.role} onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
+              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]">
               <option value="active">Active</option>
               <option value="exec">Exec</option>
               <option value="admin">Admin</option>
             </select>
           </div>
-          <button
-            onClick={handleAdd}
-            disabled={submitting}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50"
-          >
+          <button onClick={handleAdd} disabled={submitting}
+            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50">
             {submitting ? 'Adding...' : 'Add'}
           </button>
         </motion.div>
       )}
 
       <div className="divide-y divide-[#05006C]/10">
-        {members.map((m) => (
-          <div key={m.id} className="flex items-center justify-between py-3 gap-4">
-            <div className="flex-1 min-w-0">
-              <p className="text-[#05006C] text-sm font-medium truncate">{m.email}</p>
-              <p className="text-[#05006C]/40 text-xs">{new Date(m.createdAt).toLocaleDateString()}</p>
-            </div>
-            <select
-              value={m.role}
-              onChange={(e) => handleRoleChange(m.id, e.target.value)}
-              className="bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-3 py-1.5 text-xs text-[#05006C] font-bold"
-            >
-              <option value="active">active</option>
-              <option value="exec">exec</option>
-              <option value="admin">admin</option>
-            </select>
-            <button
-              onClick={() => handleDelete(m.id, m.email)}
-              className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1"
-            >
-              <Trash2 size={13} />
-            </button>
+        {filteredMembers.map((m) => (
+          <div key={m.id}>
+            {/* Normal row */}
+            {editing !== m.id && (
+              <div className="flex items-center justify-between py-3 gap-3">
+                <div className="flex-1 min-w-0">
+                  {m.name && <p className="text-[#05006C] text-sm font-bold truncate">{m.name}</p>}
+                  <p className={`text-[#05006C]/60 truncate ${m.name ? 'text-xs' : 'text-sm font-medium'}`}>{m.email}</p>
+                  {m.pledgeClass && <p className="text-[#05006C]/40 text-xs">{m.pledgeClass}</p>}
+                </div>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                  m.role === 'admin' ? 'bg-purple-100 text-purple-700' :
+                  m.role === 'exec' ? 'bg-blue-100 text-blue-700' :
+                  'bg-[#05006C]/8 text-[#05006C]/60'
+                }`}>{m.role}</span>
+                <button onClick={() => openEdit(m)}
+                  className="border border-[#05006C]/20 text-[#05006C]/60 hover:text-[#05006C] px-2.5 py-1.5 rounded-lg text-xs transition-colors">
+                  <Pencil size={13} />
+                </button>
+                <button onClick={() => handleDelete(m.id, m.email)}
+                  className="bg-red-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold">
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            )}
+
+            {/* Edit row */}
+            <AnimatePresence>
+              {editing === m.id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="py-3 overflow-hidden"
+                >
+                  <div className="bg-[#F5F3EE] rounded-xl p-4 border border-[#05006C]/10 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#05006C] font-bold text-xs tracking-wider uppercase">Edit — {m.email}</span>
+                      <button onClick={() => setEditing(null)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={16} /></button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[#05006C]/50 text-xs mb-1">Email</label>
+                        <input type="email" value={editForm.email}
+                          onChange={(e) => setEditForm((f) => ({ ...f, email: e.target.value }))}
+                          className={inputCls} />
+                      </div>
+                      <div>
+                        <label className="block text-[#05006C]/50 text-xs mb-1">New Password <span className="text-[#05006C]/30">(leave blank to keep)</span></label>
+                        <input type="password" value={editForm.password} placeholder="••••••••"
+                          onChange={(e) => setEditForm((f) => ({ ...f, password: e.target.value }))}
+                          className={inputCls} />
+                      </div>
+                      <div>
+                        <label className="block text-[#05006C]/50 text-xs mb-1">Role</label>
+                        <select value={editForm.role}
+                          onChange={(e) => setEditForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
+                          className={inputCls}>
+                          <option value="active">active</option>
+                          <option value="exec">exec</option>
+                          <option value="admin">admin</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {editError && (
+                      <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2">{editError}</p>
+                    )}
+
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEdit(m.id)} disabled={submitting}
+                        className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 disabled:opacity-50">
+                        <Check size={13} /> {submitting ? 'Saving...' : 'Save'}
+                      </button>
+                      <button onClick={() => setEditing(null)}
+                        className="border border-[#05006C]/20 text-[#05006C]/60 px-3 py-2 rounded-lg text-xs">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ))}
       </div>

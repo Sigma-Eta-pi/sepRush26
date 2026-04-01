@@ -58,6 +58,20 @@ export async function initDb() {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS classes (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      created_at TEXT NOT NULL
+    )
+  `;
+  const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
+  for (const name of defaultClasses) {
+    const cid = nanoid();
+    const now = new Date().toISOString();
+    await sql`INSERT INTO classes (id, name, created_at) VALUES (${cid}, ${name}, ${now}) ON CONFLICT (name) DO NOTHING`;
+  }
+
   const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
   if (admins.length === 0) {
     const hash = await bcrypt.hash('12345!', 10);

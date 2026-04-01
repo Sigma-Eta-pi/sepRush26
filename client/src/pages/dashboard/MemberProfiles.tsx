@@ -221,9 +221,7 @@ function SkeletonCard() {
 
 // ─── Class Dropdown ────────────────────────────────────────────────────────────
 
-const CLASS_OPTIONS = ['Founder', 'Founding Class', 'Alpha Class'];
-
-function ClassDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function ClassDropdown({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -247,7 +245,7 @@ function ClassDropdown({ value, onChange }: { value: string; onChange: (v: strin
       </button>
       {open && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#05006C]/15 rounded-lg shadow-lg z-20 overflow-hidden">
-          {CLASS_OPTIONS.map(opt => (
+          {options.map(opt => (
             <button
               key={opt}
               type="button"
@@ -280,6 +278,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [classOptions, setClassOptions] = useState<string[]>([]);
   const [name, setName] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [major, setMajor] = useState('');
@@ -292,6 +291,13 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [instagram, setInstagram] = useState('');
   const [phone, setPhone] = useState('');
   const [linkedinPhotoPreview, setLinkedinPhotoPreview] = useState('');
+
+  useEffect(() => {
+    fetch('/api/classes')
+      .then(r => r.json())
+      .then((data: { id: string; name: string }[]) => setClassOptions(data.map(d => d.name)))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -489,7 +495,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
       {/* Class */}
       <div>
         <label className={labelClass}>Class *</label>
-        <ClassDropdown value={pledgeClass} onChange={setPledgeClass} />
+        <ClassDropdown value={pledgeClass} onChange={setPledgeClass} options={classOptions} />
       </div>
 
       {/* Major + Grad Year row */}
@@ -574,7 +580,16 @@ export default function MemberProfiles() {
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [classFilter, setClassFilter] = useState('All');
+  const [classes, setClasses] = useState<string[]>([]);
   const [selected, setSelected] = useState<MemberProfile | null>(null);
+
+  useEffect(() => {
+    fetch('/api/classes')
+      .then(r => r.json())
+      .then((data: { id: string; name: string }[]) => setClasses(data.map(d => d.name)))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!token) return;
@@ -583,10 +598,7 @@ export default function MemberProfiles() {
         const res = await fetch('/api/profiles', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (res.ok) {
-          const data = await res.json();
-          setProfiles(data);
-        }
+        if (res.ok) setProfiles(await res.json());
       } catch {
         // fail silently
       } finally {
@@ -595,9 +607,11 @@ export default function MemberProfiles() {
     })();
   }, [token]);
 
-  const filtered = profiles.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = profiles.filter(p => {
+    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchClass = classFilter === 'All' || p.pledgeClass === classFilter;
+    return matchSearch && matchClass;
+  });
 
   return (
     <div>
@@ -628,16 +642,33 @@ export default function MemberProfiles() {
       {/* ALL MEMBERS */}
       {tab === 'members' && (
         <div>
-          {/* Search */}
-          <div className="relative mb-5">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30" />
-            <input
-              type="text"
-              placeholder="Search members..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full sm:w-80 bg-white border border-[#05006C]/15 rounded-lg pl-10 pr-4 py-2.5 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
-            />
+          {/* Search + Class Filter */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+            <div className="relative">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30" />
+              <input
+                type="text"
+                placeholder="Search members..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full sm:w-64 bg-white border border-[#05006C]/15 rounded-lg pl-10 pr-4 py-2.5 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
+              />
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {['All', ...classes].map(cls => (
+                <button
+                  key={cls}
+                  onClick={() => setClassFilter(cls)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors cursor-pointer ${
+                    classFilter === cls
+                      ? 'bg-[#05006C] text-[#EEEADE]'
+                      : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+                  }`}
+                >
+                  {cls}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
