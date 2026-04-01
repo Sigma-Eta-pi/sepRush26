@@ -67,13 +67,13 @@ export default function MeetUs() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Executive Board
             </div>
             <h2
-              className="text-[#1B212C] mb-4"
+              className="text-[#203354] mb-4"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -83,7 +83,7 @@ export default function MeetUs() {
             >
               The Leaders of Epsilon Chapter
             </h2>
-            <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+            <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
               Our executive board is composed of dedicated students who are passionate about entrepreneurship, leadership, and building a thriving community at UCSB.
             </p>
           </div>
@@ -92,11 +92,11 @@ export default function MeetUs() {
             {EXEC_BOARD.map((member, i) => (
               <div
                 key={i}
-                className="group border-4 border-[#1B212C] hover:border-[#D0E4EF] transition-all duration-300 overflow-hidden"
+                className="group border-4 border-[#203354] hover:border-[#D0E4EF] transition-all duration-300 overflow-hidden"
               >
                 <div className="aspect-[3/4] bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative">
                   <div
-                    className="text-[#1B212C] font-bold"
+                    className="text-[#203354] font-bold"
                     style={{
                       fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontSize: "3rem",
@@ -105,20 +105,20 @@ export default function MeetUs() {
                   >
                     {member.initials}
                   </div>
-                  <div className="absolute inset-0 bg-[#1B212C]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-[#203354]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 <div className="p-4 bg-[#EEEADE]">
                   <div
-                    className="text-[#1B212C] font-bold text-sm mb-1"
+                    className="text-[#203354] font-bold text-sm mb-1"
                     style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                   >
                     {member.name}
                   </div>
                   <div
-                    className="text-[#1B212C] text-xs tracking-wide"
+                    className="text-[#203354] text-xs tracking-wide"
                     style={{
-                      fontFamily: "'Glacial Indifference', serif",
+                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontSize: "0.7rem",
                     }}
                   >
@@ -126,7 +126,7 @@ export default function MeetUs() {
                   </div>
                 </div>
 
-                <div className="h-1 bg-[#1B212C] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                <div className="h-1 bg-[#203354] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </div>
             ))}
           </div>
@@ -134,19 +134,19 @@ export default function MeetUs() {
       </section>
 
       {/* Join the Team CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#203354]">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div
             className="text-xs font-bold tracking-widest uppercase mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              color: "#1B212C",
+              color: "#203354",
             }}
           >
             Join Us
           </div>
           <h2
-            className="text-[#1B212C] mb-6"
+            className="text-[#203354] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -157,13 +157,13 @@ export default function MeetUs() {
           >
             Be Part of Our Story
           </h2>
-          <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             We're building the founding class of Sigma Eta Pi at UCSB. Join us and become part of a community of entrepreneurs, innovators, and leaders.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recruitment"
-              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#203354] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -173,7 +173,7 @@ export default function MeetUs() {
             </Link>
             <Link
               href="/about"
-              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#203354] text-[#203354] font-bold rounded-lg transition-all duration-300 hover:bg-[#203354] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",

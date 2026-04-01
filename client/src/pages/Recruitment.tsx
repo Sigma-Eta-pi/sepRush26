@@ -146,10 +146,10 @@ function TimelineItem({ event, index, isLast }: {
           >
             {event.title}
           </h3>
-          <p className="text-[#0C141A]/70 text-sm mb-3" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p className="text-[#0C141A]/70 text-sm mb-3" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             {event.description}
           </p>
-          <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             <span>{event.time}</span>
             <span>{event.location}</span>
           </div>
@@ -161,13 +161,13 @@ function TimelineItem({ event, index, isLast }: {
 
 function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
   return (
-    <div className="border-2 border-[#1B212C]">
+    <div className="border-2 border-[#203354]">
       <button
         onClick={onToggle}
         className="w-full px-6 py-4 flex items-center justify-between bg-[#EEEADE] hover:bg-[#D0E4EF] transition-colors duration-200 group"
       >
         <span
-          className="text-left text-[#1B212C] font-bold group-hover:text-[#0C141A] transition-colors"
+          className="text-left text-[#203354] font-bold group-hover:text-[#0C141A] transition-colors"
           style={{
             fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             fontSize: "0.95rem",
@@ -177,12 +177,12 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
         </span>
         <ChevronDown
           size={20}
-          className={`text-[#1B212C] flex-shrink-0 ml-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+          className={`text-[#203354] flex-shrink-0 ml-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
       {isOpen && (
-        <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#1B212C]">
-          <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+        <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#203354]">
+          <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             {a}
           </p>
         </div>
@@ -212,29 +212,29 @@ export default function Recruitment() {
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
-            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#1B212C] text-[#1B212C] text-xs tracking-widest uppercase"
+            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#203354] text-[#203354] text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
             Winter 2026 Recruitment
           </div>
 
           <h1
-            className="text-[#1B212C] leading-none mb-4"
+            className="text-[#203354] leading-none mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontWeight: 900,
+              fontWeight: 400,
               fontSize: "clamp(3rem, 10vw, 7rem)",
               letterSpacing: "-0.02em",
               textTransform: "uppercase",
             }}
           >
-            Join Our Founding Class
+            Join Our Alpha Class
           </h1>
 
           <p
             className="text-[#0C141A]/80 mb-10 max-w-2xl mx-auto"
             style={{
-              fontFamily: "'Glacial Indifference', serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
               fontWeight: 400,
               letterSpacing: "0.05em",
@@ -248,7 +248,7 @@ export default function Recruitment() {
               href="https://forms.gle/your-application-form"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#203354] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -258,7 +258,7 @@ export default function Recruitment() {
             </a>
             <a
               href="#events"
-              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#203354] text-[#203354] font-bold rounded-lg transition-all duration-300 hover:bg-[#203354] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -270,8 +270,8 @@ export default function Recruitment() {
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <div className="w-px h-8 bg-[#1B212C]/30" />
-          <div className="w-1.5 h-1.5 rounded-full bg-[#1B212C]" />
+          <div className="w-px h-8 bg-[#203354]/30" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#203354]" />
         </div>
       </section>
 
@@ -283,13 +283,13 @@ export default function Recruitment() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Recruitment Schedule
             </div>
             <h2
-              className="text-[#1B212C]"
+              className="text-[#203354]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -320,13 +320,13 @@ export default function Recruitment() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Questions?
             </div>
             <h2
-              className="text-[#1B212C]"
+              className="text-[#203354]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -353,10 +353,10 @@ export default function Recruitment() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#203354]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#1B212C] mb-6"
+            className="text-[#203354] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -366,14 +366,14 @@ export default function Recruitment() {
           >
             Ready to Join?
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Applications for Winter 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
+          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+            Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
           </p>
           <a
-            href="https://forms.gle/your-application-form"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf5q0ClsfWGZsWudRZRqep6eA5ZbLMvfj8yQPYuEl--r5iebA/viewform?usp=send_form"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            className="inline-block px-10 py-5 bg-[#203354] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",

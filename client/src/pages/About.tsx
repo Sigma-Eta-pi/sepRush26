@@ -77,13 +77,13 @@ export default function About() {
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  color: "#1B212C",
+                  color: "#203354",
                 }}
               >
                 Our Story
               </div>
               <h2
-                className="text-[#1B212C] mb-6"
+                className="text-[#203354] mb-6"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
@@ -94,7 +94,7 @@ export default function About() {
               >
                 Empowering the Next Generation of Entrepreneurs
               </h2>
-              <div className="space-y-5 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <div className="space-y-5 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                 <p>
                   Sigma Eta Pi at UCSB is a student-led business entrepreneurship co-ed fraternity that empowers members to take initiative, think big, and turn dreams to realities. Bringing together students from a wide range of majors, our UCSB chapter fosters a supportive community where collaboration, mentorship, and professional growth are central.
                 </p>
@@ -108,7 +108,7 @@ export default function About() {
             </div>
             <div className="space-y-6">
               <div
-                className="aspect-video overflow-hidden border-4 border-[#1B212C]"
+                className="aspect-video overflow-hidden border-4 border-[#203354]"
                 style={{
                   backgroundImage: `url(${BROTHERHOOD_IMG})`,
                   backgroundSize: "cover",
@@ -116,7 +116,7 @@ export default function About() {
                 }}
               />
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#1B212C] text-[#EEEADE] border-4 border-[#1B212C] p-6">
+                <div className="bg-[#203354] text-[#EEEADE] border-4 border-[#203354] p-6">
                   <div
                     className="font-bold mb-1"
                     style={{
@@ -130,7 +130,7 @@ export default function About() {
                     Founded at UCLA
                   </div>
                 </div>
-                <div className="bg-[#1B212C] text-[#EEEADE] border-4 border-[#1B212C] p-6">
+                <div className="bg-[#203354] text-[#EEEADE] border-4 border-[#203354] p-6">
                   <div
                     className="font-bold mb-1"
                     style={{
@@ -155,7 +155,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div
-              className="aspect-video overflow-hidden border-4 border-[#1B212C] order-2 lg:order-1"
+              className="aspect-video overflow-hidden border-4 border-[#203354] order-2 lg:order-1"
               style={{
                 backgroundImage: `url(${INNOVATION_IMG})`,
                 backgroundSize: "cover",
@@ -167,13 +167,13 @@ export default function About() {
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  color: "#1B212C",
+                  color: "#203354",
                 }}
               >
                 National Organization
               </div>
               <h2
-                className="text-[#1B212C] mb-6"
+                className="text-[#203354] mb-6"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
@@ -184,7 +184,7 @@ export default function About() {
               >
                 A Legacy of Entrepreneurial Excellence
               </h2>
-              <div className="space-y-4 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <div className="space-y-4 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                 <p>
                   Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
                 </p>
@@ -208,13 +208,13 @@ export default function About() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Our Values
             </div>
             <h2
-              className="text-[#1B212C]"
+              className="text-[#203354]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -229,11 +229,11 @@ export default function About() {
             {VALUES.map((value, i) => (
               <div
                 key={i}
-                className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
+                className="bg-[#EEEADE] border-4 border-[#203354] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
                 <div className="text-4xl mb-4">{value.icon}</div>
                 <h3
-                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#203354] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
@@ -244,7 +244,7 @@ export default function About() {
                 >
                   {value.title}
                 </h3>
-                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                   {value.description}
                 </p>
               </div>
@@ -254,10 +254,10 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#203354]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#1B212C] mb-6"
+            className="text-[#203354] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -267,13 +267,13 @@ export default function About() {
           >
             Ready to Be Part of Something?
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             Join our founding class and help shape the future of entrepreneurship at UCSB.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recruitment"
-              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#203354] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -283,7 +283,7 @@ export default function About() {
             </Link>
             <Link
               href="/meet-us"
-              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#203354] text-[#203354] font-bold rounded-lg transition-all duration-300 hover:bg-[#203354] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",

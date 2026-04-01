@@ -2,7 +2,7 @@
  * UCSB Sigma Eta Pi — Official Brand Design System
  * Design Philosophy: Professional, Elegant, Timeless
  * Primary: Navy Blue #1B212C, Secondary: Light Cream #EEEADE
- * Typography: Helvetica Now (display) + Glacial Indifference (secondary) + Tangerine (accent)
+ * Typography: Helvetica Now (display/secondary) + Tangerine (accent)
  */
 
 @import "tailwindcss";
@@ -11,7 +11,6 @@
 @custom-variant dark (&:is(.dark *));
 
 /* Sigma Eta Pi Official Brand Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 
 @theme inline {
@@ -171,7 +170,7 @@
   }
 
   .sep-subheading {
-    font-family: 'Glacial Indifference', serif;
+    font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 400;
     color: #0C141A;
   }

@@ -40,7 +40,7 @@ export default function Footer() {
                   className="text-xs leading-none mt-1"
                   style={{
                     color: "#05006C",
-                    fontFamily: "'Glacial Indifference', serif",
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     letterSpacing: "0.1em",
                     fontSize: "0.6rem",
                   }}
@@ -49,7 +49,7 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-            <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+            <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
               UCSB's premier co-ed entrepreneurship fraternity. Cultivating innovative, action-oriented leaders.
             </p>
             <div className="flex items-center gap-4 pt-2">
@@ -99,7 +99,7 @@ export default function Footer() {
                   <Link
                     href={link.href}
                     className="text-[#0C141A]/70 hover:text-[#05006C] text-sm transition-colors"
-                    style={{ fontFamily: "'Glacial Indifference', serif" }}
+                    style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                   >
                     {link.label}
                   </Link>
@@ -122,15 +122,15 @@ export default function Footer() {
               <a
                 href="mailto:exec@ucsbsep.org"
                 className="flex items-center gap-2 text-[#0C141A]/70 hover:text-[#05006C] text-sm transition-colors"
-                style={{ fontFamily: "'Glacial Indifference', serif" }}
+                style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
               >
                 <Mail size={16} className="flex-shrink-0" />
                 exec@ucsbsep.org
               </a>
-              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                 University of California, Santa Barbara
               </p>
-              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                 Santa Barbara, CA 93106
               </p>
             </div>
@@ -154,7 +154,7 @@ export default function Footer() {
           <p
             className="text-[#0C141A]/50 text-xs"
             style={{
-              fontFamily: "'Glacial Indifference', serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
             }}
           >
@@ -163,7 +163,7 @@ export default function Footer() {
           <p
             className="text-[#0C141A]/50 text-xs"
             style={{
-              fontFamily: "'Glacial Indifference', serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
             }}
           >

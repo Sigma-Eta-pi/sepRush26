@@ -131,13 +131,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-4"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Where We Go
             </div>
             <h2
-              className="text-[#1B212C] mb-6"
+              className="text-[#203354] mb-6"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -148,7 +148,7 @@ export default function Careers() {
             >
               Sigma Eta Pi Alumni Are Everywhere
             </h2>
-            <p className="text-[#0C141A]/70 text-base leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+            <p className="text-[#0C141A]/70 text-base leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
               Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.
             </p>
           </div>
@@ -163,13 +163,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Resources
             </div>
             <h2
-              className="text-[#1B212C]"
+              className="text-[#203354]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -184,11 +184,11 @@ export default function Careers() {
             {CAREER_RESOURCES.map((resource, i) => (
               <div
                 key={i}
-                className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
+                className="bg-[#FFFFFF] border-4 border-[#203354] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
                 <div className="text-3xl mb-4">{resource.icon}</div>
                 <h3
-                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#203354] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
@@ -199,7 +199,7 @@ export default function Careers() {
                 >
                   {resource.title}
                 </h3>
-                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                   {resource.description}
                 </p>
               </div>
@@ -216,13 +216,13 @@ export default function Careers() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
+                color: "#203354",
               }}
             >
               Where We Work
             </div>
             <h2
-              className="text-[#1B212C] mb-6"
+              className="text-[#203354] mb-6"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -239,8 +239,8 @@ export default function Careers() {
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-200 border-2 ${
                     activeCategory === cat
-                      ? "border-[#1B212C] bg-[#1B212C] text-[#EEEADE]"
-                      : "border-[#1B212C] text-[#1B212C] hover:bg-[#1B212C]/10"
+                      ? "border-[#203354] bg-[#203354] text-[#EEEADE]"
+                      : "border-[#203354] text-[#203354] hover:bg-[#203354]/10"
                   }`}
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -256,10 +256,10 @@ export default function Careers() {
             {filteredCompanies.map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex flex-col items-center justify-center border-2 border-[#1B212C] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
+                className="aspect-square flex flex-col items-center justify-center border-2 border-[#203354] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
               >
                 <span
-                  className="text-[#1B212C] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#203354] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "0.65rem",
@@ -268,9 +268,9 @@ export default function Careers() {
                   {company.name}
                 </span>
                 <span
-                  className="text-[#1B212C]/50 text-center mt-1 group-hover:text-[#1B212C] transition-colors"
+                  className="text-[#203354]/50 text-center mt-1 group-hover:text-[#203354] transition-colors"
                   style={{
-                    fontFamily: "'Glacial Indifference', serif",
+                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "0.55rem",
                     letterSpacing: "0.1em",
                   }}
@@ -284,10 +284,10 @@ export default function Careers() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#203354]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#1B212C] mb-6"
+            className="text-[#203354] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -297,12 +297,12 @@ export default function Careers() {
           >
             Launch Your Career with SEP
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             Join a network of entrepreneurs and professionals who support each other throughout their careers.
           </p>
           <Link
             href="/recruitment"
-            className="inline-block px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+            className="inline-block px-8 py-4 bg-[#203354] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
