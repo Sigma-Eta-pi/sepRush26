@@ -44,8 +44,24 @@ function LinkedInIcon() {
   );
 }
 
-function ExecCard({ member }: { member: typeof EXEC_BOARD[0] }) {
+function useLinkedinPhoto(slug: string, overrideUrl?: string) {
+  const [photo, setPhoto] = useState<string | null>(overrideUrl || null);
+
+  useEffect(() => {
+    if (overrideUrl) { setPhoto(overrideUrl); return; }
+    fetch(`/api/proxy/linkedin-photo/${slug}`)
+      .then(r => r.json())
+      .then(d => { if (d.url) setPhoto(d.url); })
+      .catch(() => {});
+  }, [slug, overrideUrl]);
+
+  return photo;
+}
+
+function ExecCard({ member, profilePhoto }: { member: typeof EXEC_BOARD[0]; profilePhoto?: string }) {
+  const photo = useLinkedinPhoto(member.slug, profilePhoto);
   const [imgErr, setImgErr] = useState(false);
+
   return (
     <a
       href={`https://www.linkedin.com/in/${member.slug}`}
@@ -53,17 +69,17 @@ function ExecCard({ member }: { member: typeof EXEC_BOARD[0] }) {
       rel="noopener noreferrer"
       className="group border-4 border-[#1B212C] hover:border-[#05006C] transition-all duration-300 overflow-hidden block"
     >
-      <div className="aspect-square bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative overflow-hidden">
-        {!imgErr ? (
+      <div className="aspect-square bg-[#05006C] flex items-center justify-center relative overflow-hidden">
+        {photo && !imgErr ? (
           <img
-            src={`https://unavatar.io/linkedin/${member.slug}`}
+            src={photo}
             alt={member.name}
             className="w-full h-full object-cover"
             onError={() => setImgErr(true)}
           />
         ) : (
           <div
-            className="text-[#1B212C] font-bold"
+            className="text-[#EEEADE] font-bold select-none"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontSize: "2rem",
@@ -101,7 +117,8 @@ function ExecCard({ member }: { member: typeof EXEC_BOARD[0] }) {
 function DynamicMemberCard({ profile }: { profile: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
   const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
-  const photoSrc = profile.photoUrl || (linkedinSlug ? `https://unavatar.io/linkedin/${linkedinSlug}` : null);
+  const proxyPhoto = useLinkedinPhoto(linkedinSlug || '', profile.photoUrl);
+  const photoSrc = proxyPhoto || null;
   const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
 
   const CardInner = (
@@ -254,15 +271,20 @@ export default function MeetUs() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
-            {EXEC_BOARD.map((member, i) => (
-              <ExecCard key={i} member={member} />
-            ))}
+            {EXEC_BOARD.map((member, i) => {
+              const matched = profiles.find(p => {
+                if (!p.linkedin) return false;
+                const m = p.linkedin.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
+                return m && m[1].replace(/\/$/, '') === member.slug;
+              });
+              return <ExecCard key={i} member={member} profilePhoto={matched?.photoUrl} />;
+            })}
           </div>
         </div>
       </section>
 
       {/* Dynamic Members — populated from in-app profiles */}
-      {profiles.length > 0 && (
+      {profiles.filter(p => p.pledgeClass !== 'Founder').length > 0 && (
         <section className="py-20 bg-[#EEEADE]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -292,7 +314,7 @@ export default function MeetUs() {
             </div>
 
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-              {profiles.map((profile) => (
+              {profiles.filter(p => p.pledgeClass !== 'Founder').map((profile) => (
                 <DynamicMemberCard key={profile.id} profile={profile} />
               ))}
             </div>

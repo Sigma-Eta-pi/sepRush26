@@ -312,9 +312,14 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           setLinkedin(p.linkedin || '');
           setInstagram(p.instagram || '');
           setPhone(p.phone || '');
-          if (p.linkedin) {
+          if (p.linkedin && !p.photoUrl) {
             const slug = extractLinkedinSlug(p.linkedin);
-            if (slug) setLinkedinPhotoPreview(`https://unavatar.io/linkedin/${slug}`);
+            if (slug) {
+              fetch(`/api/proxy/linkedin-photo/${slug}`)
+                .then(r => r.json())
+                .then(d => { if (d.url) setLinkedinPhotoPreview(d.url); })
+                .catch(() => {});
+            }
           }
         }
       } catch {
@@ -328,7 +333,11 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   // Update LinkedIn photo preview when URL changes
   useEffect(() => {
     const slug = extractLinkedinSlug(linkedin);
-    setLinkedinPhotoPreview(slug ? `https://unavatar.io/linkedin/${slug}` : '');
+    if (!slug) { setLinkedinPhotoPreview(''); return; }
+    fetch(`/api/proxy/linkedin-photo/${slug}`)
+      .then(r => r.json())
+      .then(d => setLinkedinPhotoPreview(d.url || ''))
+      .catch(() => setLinkedinPhotoPreview(''));
   }, [linkedin]);
 
   async function handlePhotoUpload(file: File) {

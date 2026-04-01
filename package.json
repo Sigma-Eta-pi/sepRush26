@@ -11,7 +11,8 @@
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
-    "seed:founding": "tsx server/seed-founding-class.ts"
+    "seed:founding": "tsx server/seed-founding-class.ts",
+    "seed:exec": "tsx server/seed-exec-board.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
