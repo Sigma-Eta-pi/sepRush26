@@ -144,7 +144,7 @@ export default function Home() {
           </div>
 
           <h1
-            className="text-[#1B212C] leading-none mb-4"
+            className="text-white leading-none mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,

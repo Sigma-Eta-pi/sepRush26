@@ -5,14 +5,12 @@
  * Typography: Helvetica Now (display) + Glacial Indifference (secondary) + Tangerine (accent)
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-
-/* Sigma Eta Pi Official Brand Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
