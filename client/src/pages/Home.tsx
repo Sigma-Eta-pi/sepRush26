@@ -42,12 +42,46 @@ const VALUES = [
 ];
 
 const COMPANIES = [
-  "Google", "Amazon", "Apple", "Microsoft", "Meta", "Tesla", "Salesforce",
-  "Oracle", "IBM", "Intel", "Deloitte", "PwC", "EY", "KPMG", "Accenture",
-  "J.P. Morgan", "Goldman Sachs", "Morgan Stanley", "BlackRock", "Citi",
-  "Y Combinator", "Sequoia", "Andreessen Horowitz", "Stripe", "Airbnb",
-  "Uber", "Lyft", "Snap", "LinkedIn", "Adobe", "Nvidia", "PayPal", "Visa",
-  "SpaceX", "Palantir", "Databricks", "OpenAI", "Figma", "Notion", "Zoom",
+  { name: "Google", domain: "google.com" },
+  { name: "Amazon", domain: "amazon.com" },
+  { name: "Apple", domain: "apple.com" },
+  { name: "Microsoft", domain: "microsoft.com" },
+  { name: "Meta", domain: "meta.com" },
+  { name: "Tesla", domain: "tesla.com" },
+  { name: "Salesforce", domain: "salesforce.com" },
+  { name: "Oracle", domain: "oracle.com" },
+  { name: "IBM", domain: "ibm.com" },
+  { name: "Intel", domain: "intel.com" },
+  { name: "Deloitte", domain: "deloitte.com" },
+  { name: "PwC", domain: "pwc.com" },
+  { name: "EY", domain: "ey.com" },
+  { name: "KPMG", domain: "kpmg.com" },
+  { name: "Accenture", domain: "accenture.com" },
+  { name: "J.P. Morgan", domain: "jpmorgan.com" },
+  { name: "Goldman Sachs", domain: "goldmansachs.com" },
+  { name: "Morgan Stanley", domain: "morganstanley.com" },
+  { name: "BlackRock", domain: "blackrock.com" },
+  { name: "Citi", domain: "citi.com" },
+  { name: "Y Combinator", domain: "ycombinator.com" },
+  { name: "Sequoia", domain: "sequoiacap.com" },
+  { name: "a16z", domain: "a16z.com" },
+  { name: "Stripe", domain: "stripe.com" },
+  { name: "Airbnb", domain: "airbnb.com" },
+  { name: "Uber", domain: "uber.com" },
+  { name: "Lyft", domain: "lyft.com" },
+  { name: "Snap", domain: "snap.com" },
+  { name: "LinkedIn", domain: "linkedin.com" },
+  { name: "Adobe", domain: "adobe.com" },
+  { name: "Nvidia", domain: "nvidia.com" },
+  { name: "PayPal", domain: "paypal.com" },
+  { name: "Visa", domain: "visa.com" },
+  { name: "SpaceX", domain: "spacex.com" },
+  { name: "Palantir", domain: "palantir.com" },
+  { name: "Databricks", domain: "databricks.com" },
+  { name: "OpenAI", domain: "openai.com" },
+  { name: "Figma", domain: "figma.com" },
+  { name: "Notion", domain: "notion.so" },
+  { name: "Zoom", domain: "zoom.us" },
 ];
 
 function useCountUp(target: number, duration: number = 2000, start: boolean = false) {
@@ -403,13 +437,22 @@ export default function Home() {
             {COMPANIES.slice(0, 32).map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex items-center justify-center border-2 border-white/20 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-[#D0E4EF]/10 transition-all duration-300 p-2"
+                className="aspect-square flex flex-col items-center justify-center border-2 border-white/20 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-white/10 transition-all duration-300 p-2 group"
               >
+                <img
+                  src={`https://logo.clearbit.com/${company.domain}`}
+                  alt={company.name}
+                  className="w-8 h-8 object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
+                  }}
+                />
                 <span
-                  className="text-white/70 text-xs font-medium text-center leading-tight"
+                  className="hidden text-white/70 text-xs font-medium text-center leading-tight"
                   style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}
                 >
-                  {company}
+                  {company.name}
                 </span>
               </div>
             ))}

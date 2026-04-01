@@ -10,46 +10,46 @@ import { useState } from "react";
 const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
 
 const COMPANIES = [
-  { name: "Google", category: "Tech" },
-  { name: "Amazon", category: "Tech" },
-  { name: "Apple", category: "Tech" },
-  { name: "Microsoft", category: "Tech" },
-  { name: "Meta", category: "Tech" },
-  { name: "Tesla", category: "Tech" },
-  { name: "Salesforce", category: "Tech" },
-  { name: "Oracle", category: "Tech" },
-  { name: "IBM", category: "Tech" },
-  { name: "Intel", category: "Tech" },
-  { name: "Deloitte", category: "Consulting" },
-  { name: "PwC", category: "Consulting" },
-  { name: "EY", category: "Consulting" },
-  { name: "KPMG", category: "Consulting" },
-  { name: "Accenture", category: "Consulting" },
-  { name: "McKinsey", category: "Consulting" },
-  { name: "J.P. Morgan", category: "Finance" },
-  { name: "Goldman Sachs", category: "Finance" },
-  { name: "Morgan Stanley", category: "Finance" },
-  { name: "BlackRock", category: "Finance" },
-  { name: "Citi", category: "Finance" },
-  { name: "Bank of America", category: "Finance" },
-  { name: "Y Combinator", category: "Venture" },
-  { name: "Sequoia", category: "Venture" },
-  { name: "a16z", category: "Venture" },
-  { name: "Stripe", category: "Fintech" },
-  { name: "Airbnb", category: "Tech" },
-  { name: "Uber", category: "Tech" },
-  { name: "LinkedIn", category: "Tech" },
-  { name: "Adobe", category: "Tech" },
-  { name: "Nvidia", category: "Tech" },
-  { name: "PayPal", category: "Fintech" },
-  { name: "SpaceX", category: "Aerospace" },
-  { name: "Palantir", category: "Tech" },
-  { name: "Databricks", category: "Tech" },
-  { name: "OpenAI", category: "AI" },
-  { name: "Figma", category: "Tech" },
-  { name: "Notion", category: "Tech" },
-  { name: "Zoom", category: "Tech" },
-  { name: "Snap", category: "Tech" },
+  { name: "Google", category: "Tech", domain: "google.com" },
+  { name: "Amazon", category: "Tech", domain: "amazon.com" },
+  { name: "Apple", category: "Tech", domain: "apple.com" },
+  { name: "Microsoft", category: "Tech", domain: "microsoft.com" },
+  { name: "Meta", category: "Tech", domain: "meta.com" },
+  { name: "Tesla", category: "Tech", domain: "tesla.com" },
+  { name: "Salesforce", category: "Tech", domain: "salesforce.com" },
+  { name: "Oracle", category: "Tech", domain: "oracle.com" },
+  { name: "IBM", category: "Tech", domain: "ibm.com" },
+  { name: "Intel", category: "Tech", domain: "intel.com" },
+  { name: "Deloitte", category: "Consulting", domain: "deloitte.com" },
+  { name: "PwC", category: "Consulting", domain: "pwc.com" },
+  { name: "EY", category: "Consulting", domain: "ey.com" },
+  { name: "KPMG", category: "Consulting", domain: "kpmg.com" },
+  { name: "Accenture", category: "Consulting", domain: "accenture.com" },
+  { name: "McKinsey", category: "Consulting", domain: "mckinsey.com" },
+  { name: "J.P. Morgan", category: "Finance", domain: "jpmorgan.com" },
+  { name: "Goldman Sachs", category: "Finance", domain: "goldmansachs.com" },
+  { name: "Morgan Stanley", category: "Finance", domain: "morganstanley.com" },
+  { name: "BlackRock", category: "Finance", domain: "blackrock.com" },
+  { name: "Citi", category: "Finance", domain: "citi.com" },
+  { name: "Bank of America", category: "Finance", domain: "bankofamerica.com" },
+  { name: "Y Combinator", category: "Venture", domain: "ycombinator.com" },
+  { name: "Sequoia", category: "Venture", domain: "sequoiacap.com" },
+  { name: "a16z", category: "Venture", domain: "a16z.com" },
+  { name: "Stripe", category: "Fintech", domain: "stripe.com" },
+  { name: "Airbnb", category: "Tech", domain: "airbnb.com" },
+  { name: "Uber", category: "Tech", domain: "uber.com" },
+  { name: "LinkedIn", category: "Tech", domain: "linkedin.com" },
+  { name: "Adobe", category: "Tech", domain: "adobe.com" },
+  { name: "Nvidia", category: "Tech", domain: "nvidia.com" },
+  { name: "PayPal", category: "Fintech", domain: "paypal.com" },
+  { name: "SpaceX", category: "Aerospace", domain: "spacex.com" },
+  { name: "Palantir", category: "Tech", domain: "palantir.com" },
+  { name: "Databricks", category: "Tech", domain: "databricks.com" },
+  { name: "OpenAI", category: "AI", domain: "openai.com" },
+  { name: "Figma", category: "Tech", domain: "figma.com" },
+  { name: "Notion", category: "Tech", domain: "notion.so" },
+  { name: "Zoom", category: "Tech", domain: "zoom.us" },
+  { name: "Snap", category: "Tech", domain: "snap.com" },
 ];
 
 const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech", "AI", "Aerospace"];
@@ -256,10 +256,19 @@ export default function Careers() {
             {filteredCompanies.map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex flex-col items-center justify-center border-2 border-[#1B212C] bg-[#EEEADE] hover:border-[#D0E4EF] hover:bg-[#D0E4EF] transition-all duration-300 p-3 group"
+                className="aspect-square flex flex-col items-center justify-center border-2 border-[#1B212C] bg-[#EEEADE] hover:border-[#1B212C] hover:bg-white transition-all duration-300 p-3 group"
               >
+                <img
+                  src={`https://logo.clearbit.com/${company.domain}`}
+                  alt={company.name}
+                  className="w-10 h-10 object-contain mb-1"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
+                  }}
+                />
                 <span
-                  className="text-[#1B212C] text-xs font-bold text-center leading-tight group-hover:text-[#0C141A] transition-colors"
+                  className="hidden text-[#1B212C] text-xs font-bold text-center leading-tight"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "0.65rem",
@@ -268,14 +277,14 @@ export default function Careers() {
                   {company.name}
                 </span>
                 <span
-                  className="text-[#1B212C]/50 text-center mt-1 group-hover:text-[#1B212C] transition-colors"
+                  className="text-[#1B212C]/50 text-center group-hover:text-[#1B212C] transition-colors"
                   style={{
                     fontFamily: "'Glacial Indifference', serif",
                     fontSize: "0.55rem",
                     letterSpacing: "0.1em",
                   }}
                 >
-                  {company.category}
+                  {company.name}
                 </span>
               </div>
             ))}

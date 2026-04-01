@@ -11,39 +11,39 @@ const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dC
 
 const RECRUITMENT_EVENTS = [
   {
-    date: "January 15, 2026",
-    title: "Info Session #1",
-    time: "6:00 PM - 7:30 PM",
-    location: "Isla Vista Community Center",
-    description: "Learn about Sigma Eta Pi and what it means to be part of our founding class.",
+    date: "April 6, 2026",
+    title: "Brotherhood Night",
+    time: "",
+    location: "",
+    description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting.",
   },
   {
-    date: "January 22, 2026",
-    title: "Info Session #2",
-    time: "6:00 PM - 7:30 PM",
-    location: "Isla Vista Community Center",
-    description: "Second chance to learn about our fraternity and meet the executive board.",
+    date: "April 7, 2026",
+    title: "Info Night",
+    time: "",
+    location: "",
+    description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like.",
   },
   {
-    date: "January 29, 2026",
-    title: "Networking Event",
-    time: "7:00 PM - 9:00 PM",
-    location: "The Arbor",
-    description: "Casual networking with current members and alumni. Food and drinks provided.",
+    date: "April 8, 2026",
+    title: "Alumni Panel + Application Workshop",
+    time: "",
+    location: "",
+    description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application.",
   },
   {
-    date: "February 5, 2026",
-    title: "Speed Networking",
-    time: "6:00 PM - 8:00 PM",
-    location: "Isla Vista Community Center",
-    description: "Meet members one-on-one and learn about different roles and opportunities.",
+    date: "April 9, 2026",
+    title: "Shark Tank Night",
+    time: "",
+    location: "",
+    description: "Pitch your ideas and show us your entrepreneurial spirit.",
   },
   {
-    date: "February 12, 2026",
-    title: "Final Event",
-    time: "6:00 PM - 9:00 PM",
-    location: "The Arbor",
-    description: "Join us for our final recruitment event before applications close.",
+    date: "April 9, 2026",
+    title: "Applications Due",
+    time: "",
+    location: "",
+    description: "Submit your application by end of day. Info on @ucsbsep on Instagram.",
   },
 ];
 
@@ -66,7 +66,7 @@ const FAQ = [
   },
   {
     q: "When is the application deadline?",
-    a: "Applications for Winter 2026 recruitment close on February 28, 2026. We'll notify applicants of interview dates shortly after.",
+    a: "Applications for Spring 2026 recruitment close on February 28, 2026. We'll notify applicants of interview dates shortly after.",
   },
   {
     q: "What happens after I apply?",
@@ -207,19 +207,19 @@ export default function Recruitment() {
           backgroundPosition: "center top",
         }}
       >
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/55" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#EEEADE]" />
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
-            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#1B212C] text-[#1B212C] text-xs tracking-widest uppercase"
+            className="inline-block mb-6 px-4 py-1.5 border-2 border-white text-white text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
-            Winter 2026 Recruitment
+            Spring 2026 Recruitment
           </div>
 
           <h1
-            className="text-[#1B212C] leading-none mb-4"
+            className="text-white leading-none mb-4"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -228,11 +228,11 @@ export default function Recruitment() {
               textTransform: "uppercase",
             }}
           >
-            Join Our Founding Class
+            Join Our Alpha Class
           </h1>
 
           <p
-            className="text-[#0C141A]/80 mb-10 max-w-2xl mx-auto"
+            className="text-white/85 mb-10 max-w-2xl mx-auto"
             style={{
               fontFamily: "'Glacial Indifference', serif",
               fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
@@ -297,7 +297,7 @@ export default function Recruitment() {
                 textTransform: "uppercase",
               }}
             >
-              Winter 2026 Events
+              Spring 2026 Events
             </h2>
           </div>
 
@@ -367,7 +367,7 @@ export default function Recruitment() {
             Ready to Join?
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Applications for Winter 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
+            Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
           </p>
           <a
             href="https://forms.gle/your-application-form"
