@@ -16,17 +16,14 @@ const INNOVATION_IMG = innovationImg;
 
 const VALUES = [
   {
-    icon: "💡",
     title: "Innovation",
     description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
   },
   {
-    icon: "🤝",
     title: "Brotherhood",
     description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
   },
   {
-    icon: "🚀",
     title: "Leadership",
     description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
   },
@@ -235,7 +232,6 @@ export default function About() {
                 key={i}
                 className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
-                <div className="text-4xl mb-4">{value.icon}</div>
                 <h3
                   className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{

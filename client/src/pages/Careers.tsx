@@ -56,22 +56,18 @@ const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech"
 
 const CAREER_RESOURCES = [
   {
-    icon: "🎯",
     title: "Alumni Network",
     description: "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond.",
   },
   {
-    icon: "📊",
     title: "Professional Workshops",
     description: "Regular workshops on resume building, interview prep, case studies, and startup pitching.",
   },
   {
-    icon: "🤝",
     title: "Industry Panels",
     description: "Hear directly from founders, VCs, and executives about their career journeys and insights.",
   },
   {
-    icon: "💼",
     title: "Recruiting Support",
     description: "Access to exclusive job postings, referrals, and recruiting prep from members at top firms.",
   },
@@ -186,7 +182,6 @@ export default function Careers() {
                 key={i}
                 className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
-                <div className="text-3xl mb-4">{resource.icon}</div>
                 <h3
                   className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{

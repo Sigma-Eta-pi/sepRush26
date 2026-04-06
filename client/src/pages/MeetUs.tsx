@@ -11,17 +11,32 @@ import execHeroBg from "@/images/exec.png";
 const HERO_BG = execHeroBg;
 
 const EXEC_BOARD = [
-  { name: "Piam Parekh", role: "Co-President", initials: "PP", slug: "piamparekh" },
-  { name: "Shiv Dutta", role: "Co-President", initials: "SD", slug: "shiv-dutta" },
-  { name: "Kate Heidenga", role: "VP of Recruitment", initials: "KH", slug: "kateheidenga" },
-  { name: "Huy Nguyen", role: "VP of Finance", initials: "HN", slug: "huynguyen06" },
-  { name: "Sally Hu", role: "VP of Operations", initials: "SH", slug: "sally-huu" },
-  { name: "Julia Jimenea", role: "VP of Public Relations", initials: "JJ", slug: "juliajimenea" },
-  { name: "Saloni Singhal", role: "VP of Programming", initials: "SS", slug: "ssaloni-singhal" },
-  { name: "Christina Sfatcu", role: "VP of Brotherhood", initials: "CS", slug: "christina-sfatcu" },
-  { name: "Vaibhava", role: "VP of Internal Affairs", initials: "V", slug: "" },
-  { name: "Matthew Vasques", role: "VP of External Affairs", initials: "MV", slug: "" },
+  { name: "Piam Parekh",               role: "Co-President",          initials: "PP", slug: "piamparekh" },
+  { name: "Shiv Dutta",                role: "Co-President",          initials: "SD", slug: "shiv-dutta" },
+  { name: "Kate Heidenga",             role: "VP of Recruitment",     initials: "KH", slug: "kateheidenga" },
+  { name: "Huy Nguyen",                role: "VP of Finance",         initials: "HN", slug: "huynguyen06" },
+  { name: "Sally Hu",                  role: "VP of Operations",      initials: "SH", slug: "sally-huu" },
+  { name: "Julia Jimenea",             role: "VP of Public Relations",initials: "JJ", slug: "juliajimenea" },
+  { name: "Saloni Singhal",            role: "VP of Programming",     initials: "SS", slug: "ssaloni-singhal" },
+  { name: "Christina Sfatcu",          role: "VP of Brotherhood",     initials: "CS", slug: "christina-sfatcu" },
+  { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "" },
+  { name: "Matthew Vasques",           role: "VP of External Affairs",initials: "MV", slug: "" },
 ];
+
+// Original 8 founding exec — shown at the bottom with their roles
+const FOUNDERS = [
+  { name: "Piam Parekh",    role: "Co-President",          initials: "PP" },
+  { name: "Shiv Dutta",     role: "Co-President",          initials: "SD" },
+  { name: "Sally Hu",       role: "VP of Operations",      initials: "SH" },
+  { name: "Saloni Singhal", role: "VP of Programming",     initials: "SS" },
+  { name: "Christina Sfatcu",role: "VP of Brotherhood",    initials: "CS" },
+  { name: "Kate Heidenga",  role: "VP of Recruitment",     initials: "KH" },
+  { name: "Huy Nguyen",     role: "VP of Finance",         initials: "HN" },
+  { name: "Julia Jimenea",  role: "VP of Public Relations",initials: "JJ" },
+];
+
+const EXEC_NAMES = new Set(EXEC_BOARD.map(m => m.name));
+const FOUNDER_NAMES = new Set(FOUNDERS.map(f => f.name));
 
 interface MemberProfile {
   id: string;
@@ -47,152 +62,112 @@ function LinkedInIcon() {
   );
 }
 
-function useLinkedinPhoto(slug: string, overrideUrl?: string) {
-  const [photo, setPhoto] = useState<string | null>(overrideUrl || null);
-
-  useEffect(() => {
-    if (overrideUrl) { setPhoto(overrideUrl); return; }
-    fetch(`/api/proxy/linkedin-photo/${slug}`)
-      .then(r => r.json())
-      .then(d => { if (d.url) setPhoto(d.url); })
-      .catch(() => {});
-  }, [slug, overrideUrl]);
-
-  return photo;
-}
-
-function ExecCard({ member, profilePhoto }: { member: typeof EXEC_BOARD[0]; profilePhoto?: string }) {
-  const photo = useLinkedinPhoto(member.slug, profilePhoto);
+// Small exec chip — compact row card
+function ExecChip({ member, photo }: { member: typeof EXEC_BOARD[0]; photo?: string }) {
   const [imgErr, setImgErr] = useState(false);
-
-  return (
-    <a
-      href={`https://www.linkedin.com/in/${member.slug}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group border-4 border-[#1B212C] hover:border-[#05006C] transition-all duration-300 overflow-hidden block"
-    >
-      <div className="aspect-square bg-[#05006C] flex items-center justify-center relative overflow-hidden">
-        {photo && !imgErr ? (
-          <img
-            src={photo}
-            alt={member.name}
-            className="w-full h-full object-cover"
-            onError={() => setImgErr(true)}
-          />
+  const hasPhoto = photo && !imgErr;
+  const inner = (
+    <div className="flex items-center gap-2 px-3 py-2 border border-[#1B212C]/20 bg-[#FFFFFF] hover:bg-[#EEEADE] hover:border-[#05006C] transition-all duration-200 group">
+      <div className="w-8 h-8 rounded-full bg-[#05006C] flex-shrink-0 flex items-center justify-center overflow-hidden">
+        {hasPhoto ? (
+          <img src={photo} alt={member.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
         ) : (
-          <div
-            className="text-[#EEEADE] font-bold select-none"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontSize: "2rem",
-              letterSpacing: "0.05em",
-            }}
-          >
+          <span className="text-[#EEEADE] text-xs font-black" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif" }}>
             {member.initials}
-          </div>
+          </span>
         )}
-        <div className="absolute inset-0 bg-[#05006C]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="w-8 h-8 text-white">
-            <LinkedInIcon />
-          </div>
-        </div>
       </div>
-      <div className="p-3 bg-[#EEEADE]">
-        <div
-          className="text-[#1B212C] font-bold leading-tight mb-0.5"
-          style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: "0.75rem" }}
-        >
+      <div className="min-w-0">
+        <div className="text-[#1B212C] font-bold truncate" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.7rem" }}>
           {member.name}
         </div>
-        <div
-          className="text-[#1B212C]/60 tracking-wide"
-          style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.65rem" }}
-        >
+        <div className="text-[#1B212C]/50 truncate" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}>
           {member.role}
         </div>
       </div>
-      <div className="h-1 bg-[#05006C] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-    </a>
+    </div>
+  );
+
+  if (member.slug) {
+    return (
+      <a href={`https://www.linkedin.com/in/${member.slug}`} target="_blank" rel="noopener noreferrer">
+        {inner}
+      </a>
+    );
+  }
+  return <div>{inner}</div>;
+}
+
+// Medium founder card — shown in the Founders section with role
+function FounderCard({ founder, photo }: { founder: typeof FOUNDERS[0]; photo?: string }) {
+  const [imgErr, setImgErr] = useState(false);
+  const hasPhoto = photo && !imgErr;
+  return (
+    <div className="border-2 border-[#05006C] overflow-hidden">
+      <div className="aspect-square bg-[#05006C] flex items-center justify-center relative overflow-hidden">
+        {hasPhoto ? (
+          <img src={photo} alt={founder.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
+        ) : (
+          <span
+            className="text-[#EEEADE] font-black select-none"
+            style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "2rem" }}
+          >
+            {founder.initials}
+          </span>
+        )}
+      </div>
+      <div className="p-3 bg-[#EEEADE]">
+        <div className="text-[#1B212C] font-black leading-tight mb-0.5" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.8rem" }}>
+          {founder.name}
+        </div>
+        <div className="text-[#05006C]" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.65rem", letterSpacing: "0.05em" }}>
+          {founder.role}
+        </div>
+      </div>
+      <div className="h-0.5 bg-[#05006C]" />
+    </div>
   );
 }
 
-function DynamicMemberCard({ profile }: { profile: MemberProfile }) {
+// Small member card — founding class grid
+function MemberCard({ profile }: { profile: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
   const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
-  const proxyPhoto = useLinkedinPhoto(linkedinSlug || '', profile.photoUrl);
-  const photoSrc = proxyPhoto || null;
   const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+  const hasPhoto = profile.photoUrl && !imgErr;
 
-  const CardInner = (
+  const inner = (
     <>
       <div className="aspect-square bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative overflow-hidden">
-        {photoSrc && !imgErr ? (
-          <img
-            src={photoSrc}
-            alt={profile.name}
-            className="w-full h-full object-cover"
-            onError={() => setImgErr(true)}
-          />
+        {hasPhoto ? (
+          <img src={profile.photoUrl} alt={profile.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
         ) : (
-          <div
-            className="text-[#1B212C] font-bold"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontSize: "1.5rem",
-            }}
-          >
+          <span className="text-[#1B212C] font-bold" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "1.2rem" }}>
             {initials}
-          </div>
+          </span>
         )}
         {linkedinSlug && (
           <div className="absolute inset-0 bg-[#05006C]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div className="w-7 h-7 text-white">
-              <LinkedInIcon />
-            </div>
+            <div className="w-5 h-5 text-white"><LinkedInIcon /></div>
           </div>
         )}
       </div>
-      <div className="p-2 bg-[#EEEADE]">
-        <div
-          className="text-[#1B212C] font-bold text-center leading-tight"
-          style={{
-            fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            fontSize: "0.7rem",
-          }}
-        >
+      <div className="p-1.5 bg-[#EEEADE]">
+        <div className="text-[#1B212C] font-bold text-center leading-tight" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.6rem" }}>
           {profile.name}
         </div>
-        {profile.pledgeClass && (
-          <div
-            className="text-[#1B212C]/50 text-center mt-0.5"
-            style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}
-          >
-            {profile.pledgeClass}
-          </div>
-        )}
       </div>
     </>
   );
 
   if (profile.linkedin) {
     return (
-      <a
-        href={profile.linkedin.startsWith("http") ? profile.linkedin : `https://${profile.linkedin}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group border-2 border-[#1B212C] hover:border-[#05006C] transition-all duration-300 overflow-hidden block"
-      >
-        {CardInner}
+      <a href={profile.linkedin.startsWith("http") ? profile.linkedin : `https://${profile.linkedin}`} target="_blank" rel="noopener noreferrer" className="group border border-[#1B212C]/30 hover:border-[#05006C] transition-all duration-200 overflow-hidden block">
+        {inner}
       </a>
     );
   }
-
-  return (
-    <div className="group border-2 border-[#1B212C] transition-all duration-300 overflow-hidden">
-      {CardInner}
-    </div>
-  );
+  return <div className="group border border-[#1B212C]/30 overflow-hidden">{inner}</div>;
 }
 
 export default function MeetUs() {
@@ -205,170 +180,135 @@ export default function MeetUs() {
       .catch(() => {});
   }, []);
 
+  const profileByName = new Map(profiles.map(p => [p.name, p]));
+
+  // Founding class = Founder pledge class, not an original exec founder
+  const foundingClassMembers = profiles.filter(
+    p => p.pledgeClass === 'Founder' && !FOUNDER_NAMES.has(p.name)
+  );
+
+  // Future pledge classes grouped by class name (non-Founder pledge classes)
+  const futureClasses = profiles.reduce((acc, p) => {
+    if (!p.pledgeClass || p.pledgeClass === 'Founder') return acc;
+    if (!acc[p.pledgeClass]) acc[p.pledgeClass] = [];
+    acc[p.pledgeClass].push(p);
+    return acc;
+  }, {} as Record<string, MemberProfile[]>);
+
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
       <Navbar />
 
-      {/* Page Hero */}
+      {/* Hero */}
       <section
         className="relative h-72 md:h-96 flex items-end overflow-hidden pt-24"
-        style={{
-          backgroundImage: `url(${HERO_BG})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-        }}
+        style={{ backgroundImage: `url(${HERO_BG})`, backgroundSize: "cover", backgroundPosition: "center top" }}
       >
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
-          <div
-            className="text-xs font-bold tracking-widest uppercase mb-2"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              color: "#D0E4EF",
-            }}
-          >
+          <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#D0E4EF" }}>
             Our Team
           </div>
-          <h1
-            className="text-white"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(2.5rem, 6vw, 5rem)",
-              textTransform: "uppercase",
-              lineHeight: 1,
-            }}
-          >
+          <h1 className="text-white" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(2.5rem, 6vw, 5rem)", textTransform: "uppercase", lineHeight: 1 }}>
             Meet the Team
           </h1>
         </div>
       </section>
 
-      {/* Executive Board */}
-      <section className="py-20 bg-[#FFFFFF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div
-              className="text-xs font-bold tracking-widest uppercase mb-3"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
-              }}
-            >
+      {/* Executive Board — compact */}
+      <section className="py-10 bg-[#FFFFFF] border-b border-[#1B212C]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
               Executive Board
             </div>
-            <h2
-              className="text-[#1B212C] mb-4"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                fontWeight: 900,
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                textTransform: "uppercase",
-              }}
-            >
-              The Leaders of Epsilon Chapter
+            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+              Current Leadership
             </h2>
-            <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              Our executive board is composed of dedicated students passionate about entrepreneurship, leadership, and building a thriving community at UCSB.
-            </p>
           </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
-            {EXEC_BOARD.map((member, i) => {
-              const matched = profiles.find(p => {
-                if (!p.linkedin) return false;
-                const m = p.linkedin.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
-                return m && m[1].replace(/\/$/, '') === member.slug;
-              });
-              return <ExecCard key={i} member={member} profilePhoto={matched?.photoUrl} />;
-            })}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+            {EXEC_BOARD.map((member, i) => (
+              <ExecChip key={i} member={member} photo={profileByName.get(member.name)?.photoUrl} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Founder Class */}
-      <section className="py-20 bg-[#EEEADE]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div
-              className="text-xs font-bold tracking-widest uppercase mb-3"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#1B212C",
-              }}
-            >
-              Founder Class
+      {/* Future pledge classes — one section per class, newest first */}
+      {Object.entries(futureClasses).map(([className, members]) => (
+        <section key={className} className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+              <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
+                Pledge Class
+              </div>
+              <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+                {className}
+              </h2>
             </div>
-            <h2
-              className="text-[#1B212C] mb-4"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                fontWeight: 900,
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                textTransform: "uppercase",
-              }}
-            >
-              Building Something New
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+              {members.map(p => <MemberCard key={p.id} profile={p} />)}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      {/* Founding Class — non-exec founding members */}
+      <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
+              Pledge Class
+            </div>
+            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+              Founding Class
             </h2>
-            <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              The members who started it all — the founder class of Sigma Eta Pi at UC Santa Barbara.
+          </div>
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+            {foundingClassMembers.map(p => <MemberCard key={p.id} profile={p} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Founders — original 8 exec with roles */}
+      <section className="py-16 bg-[#FFFFFF] border-b-4 border-[#05006C]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#05006C" }}>
+              The Beginning
+            </div>
+            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.5rem, 3vw, 2.5rem)", textTransform: "uppercase" }}>
+              Founders
+            </h2>
+            <p className="text-[#0C141A]/50 mt-2 max-w-xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.9rem" }}>
+              The eight who built Sigma Eta Pi Epsilon Chapter from the ground up.
             </p>
           </div>
-
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-            {profiles.filter(p => p.pledgeClass === 'Founder').map((profile) => (
-              <DynamicMemberCard key={profile.id} profile={profile} />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {FOUNDERS.map((founder, i) => (
+              <FounderCard key={i} founder={founder} photo={profileByName.get(founder.name)?.photoUrl} />
             ))}
           </div>
         </div>
       </section>
 
       {/* Join CTA */}
-      <section className="py-20 bg-[#FFFFFF] border-t-4 border-[#1B212C]">
+      <section className="py-20 bg-[#EEEADE]">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div
-            className="text-xs font-bold tracking-widest uppercase mb-4"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              color: "#1B212C",
-            }}
-          >
+          <div className="text-xs font-bold tracking-widest uppercase mb-4" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
             Join Us
           </div>
-          <h2
-            className="text-[#1B212C] mb-6"
-            style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(2rem, 5vw, 4rem)",
-              textTransform: "uppercase",
-              lineHeight: 1,
-            }}
-          >
+          <h2 className="text-[#1B212C] mb-6" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(2rem, 5vw, 4rem)", textTransform: "uppercase", lineHeight: 1 }}>
             Be Part of Our Story
           </h2>
           <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
             We're building the founder class of Sigma Eta Pi at UCSB. Join us and become part of a community of entrepreneurs, innovators, and leaders.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/recruitment"
-              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                letterSpacing: "0.05em",
-              }}
-            >
+            <Link href="/recruitment" className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", letterSpacing: "0.05em" }}>
               APPLY NOW
             </Link>
-            <Link
-              href="/about"
-              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
-              style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                letterSpacing: "0.05em",
-              }}
-            >
+            <Link href="/about" className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", letterSpacing: "0.05em" }}>
               LEARN MORE
             </Link>
           </div>

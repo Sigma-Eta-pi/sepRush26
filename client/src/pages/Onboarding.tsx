@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import sepLogo from '@/images/sep-logo.png';
-
-const STEPS = [
-  { id: 'welcome', label: 'Welcome', icon: User },
-  { id: 'basics', label: 'Your Info', icon: User },
-  { id: 'background', label: 'Background', icon: MapPin },
-  { id: 'bio', label: 'About You', icon: BookOpen },
-];
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
   const res = await fetch(path, {
@@ -22,29 +15,66 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 }
 
 export default function Onboarding() {
-  const { user, token, markOnboardingComplete } = useAuth();
+  const { user, token, firstLogin, markOnboardingComplete, markPasswordChanged } = useAuth();
   const [, navigate] = useLocation();
-  const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Steps depend on whether this is a first login (needs password change)
+  const STEPS = [
+    ...(firstLogin ? [{ id: 'password', label: 'Set Password', icon: Lock }] : []),
+    { id: 'welcome', label: 'Welcome', icon: User },
+    { id: 'basics', label: 'Your Info', icon: User },
+    { id: 'background', label: 'Background', icon: MapPin },
+    { id: 'bio', label: 'About You', icon: BookOpen },
+  ];
+
+  const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [form, setForm] = useState({
-    name: '',
-    major: '',
-    gradYear: '',
-    pledgeClass: '',
-    hometown: '',
-    birthday: '',
-    bio: '',
-    linkedin: '',
-    instagram: '',
-    phone: '',
+    name: '', major: '', gradYear: '', pledgeClass: '',
+    hometown: '', birthday: '', bio: '', linkedin: '', instagram: '', phone: '',
   });
 
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setForm(f => ({ ...f, [k]: e.target.value }));
+  const set = (k: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm(f => ({ ...f, [k]: e.target.value }));
 
   const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-[#EEEADE] placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/50 text-sm transition-colors';
+
+  const currentStepId = STEPS[step]?.id;
+
+  const canNext = () => {
+    if (currentStepId === 'password') {
+      return newPassword.length >= 8 && newPassword === confirmPassword;
+    }
+    if (currentStepId === 'basics') return !!form.name.trim();
+    return true;
+  };
+
+  const handlePasswordStep = async () => {
+    if (newPassword.length < 8) { setError('Password must be at least 8 characters'); return; }
+    if (newPassword !== confirmPassword) { setError('Passwords do not match'); return; }
+    setSubmitting(true);
+    setError('');
+    try {
+      await apiFetch('/api/auth/change-password', token!, {
+        method: 'POST',
+        body: JSON.stringify({ newPassword }),
+      });
+      markPasswordChanged();
+      setDirection(1);
+      setStep(s => s + 1);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleFinish = async () => {
     if (!form.name.trim()) { setError('Name is required'); return; }
@@ -74,28 +104,31 @@ export default function Onboarding() {
     }
   };
 
-  const canNext = () => {
-    if (step === 1 && !form.name.trim()) return false;
-    return true;
+  const goNext = async () => {
+    if (!canNext()) return;
+    setError('');
+    if (currentStepId === 'password') { await handlePasswordStep(); return; }
+    setDirection(1);
+    setStep(s => s + 1);
   };
+
+  const goPrev = () => { setError(''); setDirection(-1); setStep(s => s - 1); };
+
+  const isLast = step === STEPS.length - 1;
 
   const currentYear = new Date().getFullYear();
   const gradYears = Array.from({ length: 8 }, (_, i) => String(currentYear + i - 1));
 
   const slideVariants = {
-    enter: (direction: number) => ({ x: direction > 0 ? 40 : -40, opacity: 0 }),
+    enter: (d: number) => ({ x: d > 0 ? 40 : -40, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (direction: number) => ({ x: direction < 0 ? 40 : -40, opacity: 0 }),
+    exit: (d: number) => ({ x: d < 0 ? 40 : -40, opacity: 0 }),
   };
-  const [direction, setDirection] = useState(1);
-
-  const goNext = () => { if (!canNext()) return; setDirection(1); setStep(s => s + 1); };
-  const goPrev = () => { setDirection(-1); setStep(s => s - 1); };
 
   return (
     <div className="min-h-screen bg-[#05006C] flex items-center justify-center px-4">
       <div className="w-full max-w-lg">
-        {/* Progress */}
+        {/* Progress dots */}
         <div className="flex items-center justify-center gap-2 mb-8">
           {STEPS.map((s, i) => (
             <div key={s.id} className="flex items-center gap-2">
@@ -107,7 +140,7 @@ export default function Onboarding() {
                 {i < step ? <Check size={14} /> : <s.icon size={14} />}
               </div>
               {i < STEPS.length - 1 && (
-                <div className={`h-px w-8 transition-all ${i < step ? 'bg-[#EEEADE]' : 'bg-white/20'}`} />
+                <div className={`h-px w-6 transition-all ${i < step ? 'bg-[#EEEADE]' : 'bg-white/20'}`} />
               )}
             </div>
           ))}
@@ -125,14 +158,57 @@ export default function Onboarding() {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="p-8"
             >
-              {step === 0 && (
+              {/* ── PASSWORD STEP ── */}
+              {currentStepId === 'password' && (
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <Lock size={20} className="text-[#EEEADE]" />
+                    <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide">Set Your Password</h2>
+                  </div>
+                  <p className="text-[#EEEADE]/50 text-sm mb-6">
+                    You're using a temporary password. Choose a personal one to secure your account.
+                  </p>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">New Password</label>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={e => setNewPassword(e.target.value)}
+                        placeholder="At least 8 characters"
+                        className={inputCls}
+                        autoFocus
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Confirm Password</label>
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        placeholder="Repeat your password"
+                        className={inputCls}
+                        onKeyDown={e => e.key === 'Enter' && canNext() && goNext()}
+                      />
+                    </div>
+                    {confirmPassword && newPassword !== confirmPassword && (
+                      <p className="text-red-400 text-xs">Passwords don't match</p>
+                    )}
+                    {confirmPassword && newPassword === confirmPassword && newPassword.length >= 8 && (
+                      <p className="text-green-400 text-xs">Looks good!</p>
+                    )}
+                  </div>
+                  {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
+                </div>
+              )}
+
+              {/* ── WELCOME STEP ── */}
+              {currentStepId === 'welcome' && (
                 <div className="text-center">
                   <div className="w-20 h-20 mx-auto mb-6">
                     <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
                   </div>
-                  <h1 className="text-[#EEEADE] font-bold text-2xl tracking-wide mb-3">
-                    Welcome to SEP Epsilon
-                  </h1>
+                  <h1 className="text-[#EEEADE] font-bold text-2xl tracking-wide mb-3">Welcome to SEP Epsilon</h1>
                   <p className="text-[#EEEADE]/60 text-sm leading-relaxed mb-2">
                     Hey {user?.email?.split('@')[0]}, let's set up your profile so your brothers can get to know you.
                   </p>
@@ -140,13 +216,14 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {step === 1 && (
+              {/* ── BASICS STEP ── */}
+              {currentStepId === 'basics' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">Your Info</h2>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Full Name *</label>
-                      <input value={form.name} onChange={set('name')} placeholder="Your full name" className={inputCls} />
+                      <input value={form.name} onChange={set('name')} placeholder="Your full name" className={inputCls} autoFocus />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
@@ -170,7 +247,8 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {step === 2 && (
+              {/* ── BACKGROUND STEP ── */}
+              {currentStepId === 'background' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">Background</h2>
                   <div className="space-y-4">
@@ -190,19 +268,14 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {step === 3 && (
+              {/* ── BIO STEP ── */}
+              {currentStepId === 'bio' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">About You</h2>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Bio</label>
-                      <textarea
-                        value={form.bio}
-                        onChange={set('bio')}
-                        placeholder="Tell your brothers a bit about yourself..."
-                        rows={3}
-                        className={`${inputCls} resize-none`}
-                      />
+                      <textarea value={form.bio} onChange={set('bio')} placeholder="Tell your brothers a bit about yourself..." rows={3} className={`${inputCls} resize-none`} />
                     </div>
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">LinkedIn</label>
@@ -220,19 +293,19 @@ export default function Onboarding() {
           </AnimatePresence>
 
           <div className="px-8 pb-8 flex items-center justify-between">
-            {step > 0 ? (
+            {step > 0 && currentStepId !== 'password' ? (
               <button onClick={goPrev} className="flex items-center gap-1.5 text-[#EEEADE]/50 hover:text-[#EEEADE] text-sm transition-colors">
                 <ChevronLeft size={16} /> Back
               </button>
             ) : <div />}
 
-            {step < STEPS.length - 1 ? (
+            {!isLast ? (
               <button
                 onClick={goNext}
-                disabled={!canNext()}
+                disabled={!canNext() || submitting}
                 className="flex items-center gap-1.5 bg-[#EEEADE] text-[#05006C] font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-40 hover:bg-white transition-colors"
               >
-                Next <ChevronRight size={16} />
+                {submitting ? 'Saving...' : <>{currentStepId === 'password' ? 'Set Password' : 'Next'} <ChevronRight size={16} /></>}
               </button>
             ) : (
               <button

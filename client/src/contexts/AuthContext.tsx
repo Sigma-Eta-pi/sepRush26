@@ -16,7 +16,9 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   needsOnboarding: boolean;
+  firstLogin: boolean;
   markOnboardingComplete: () => void;
+  markPasswordChanged: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -32,20 +34,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [firstLogin, setFirstLogin] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('sep_auth_token');
     const savedUser = localStorage.getItem('sep_auth_user');
     const savedOnboarding = localStorage.getItem('sep_needs_onboarding');
+    const savedFirstLogin = localStorage.getItem('sep_first_login');
     if (savedToken && savedUser) {
       try {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
         setNeedsOnboarding(savedOnboarding === 'true');
+        setFirstLogin(savedFirstLogin === 'true');
       } catch {
         localStorage.removeItem('sep_auth_token');
         localStorage.removeItem('sep_auth_user');
         localStorage.removeItem('sep_needs_onboarding');
+        localStorage.removeItem('sep_first_login');
       }
     }
     setIsLoading(false);
@@ -65,9 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('sep_auth_token', data.token);
     localStorage.setItem('sep_auth_user', JSON.stringify(data.user));
     localStorage.setItem('sep_needs_onboarding', String(!!data.needsOnboarding));
+    localStorage.setItem('sep_first_login', String(!!data.firstLogin));
     setToken(data.token);
     setUser(data.user);
     setNeedsOnboarding(!!data.needsOnboarding);
+    setFirstLogin(!!data.firstLogin);
     return { needsOnboarding: !!data.needsOnboarding };
   };
 
@@ -75,18 +83,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('sep_auth_token');
     localStorage.removeItem('sep_auth_user');
     localStorage.removeItem('sep_needs_onboarding');
+    localStorage.removeItem('sep_first_login');
     setToken(null);
     setUser(null);
     setNeedsOnboarding(false);
+    setFirstLogin(false);
   };
 
   const markOnboardingComplete = () => {
     setNeedsOnboarding(false);
+    setFirstLogin(false);
     localStorage.setItem('sep_needs_onboarding', 'false');
+    localStorage.setItem('sep_first_login', 'false');
+  };
+
+  const markPasswordChanged = () => {
+    setFirstLogin(false);
+    localStorage.setItem('sep_first_login', 'false');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading, isAuthenticated: user !== null && token !== null, needsOnboarding, markOnboardingComplete }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoading, isAuthenticated: user !== null && token !== null, needsOnboarding, firstLogin, markOnboardingComplete, markPasswordChanged }}>
       {children}
     </AuthContext.Provider>
   );

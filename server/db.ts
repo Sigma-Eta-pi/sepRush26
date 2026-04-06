@@ -86,6 +86,8 @@ export async function initDb() {
       used INTEGER NOT NULL DEFAULT 0
     )
   `;
+  // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
 
   const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
   for (const name of defaultClasses) {

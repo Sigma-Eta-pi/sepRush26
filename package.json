@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"vite --host\" \"tsx watch server/api.ts\"",
     "server": "tsx watch server/api.ts",
-    "build": "vite build",
+    "build": "vite build && pnpm run build:server",
+    "build:server": "esbuild server/api.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external",
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
