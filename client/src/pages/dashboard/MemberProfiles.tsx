@@ -588,7 +588,16 @@ export default function MemberProfiles() {
     })();
   }, [token]);
 
-  const filtered = profiles.filter(p => {
+  // Deduplicate by userId — keep most recently updated profile per user
+  const uniqueProfiles = Array.from(
+    profiles.reduce((map, p) => {
+      const ex = map.get(p.userId);
+      if (!ex || p.updatedAt > ex.updatedAt) map.set(p.userId, p);
+      return map;
+    }, new Map<string, MemberProfile>()).values()
+  );
+
+  const filtered = uniqueProfiles.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
     const matchClass = classFilter === 'All' || p.pledgeClass === classFilter;
     return matchSearch && matchClass;

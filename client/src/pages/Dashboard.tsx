@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
 import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe, ListTodo } from 'lucide-react';
@@ -152,7 +153,17 @@ export default function Dashboard() {
             Welcome back, {user?.email}
           </div>
         )}
-        {renderContent()}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={path}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+          >
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

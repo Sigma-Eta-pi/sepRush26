@@ -89,15 +89,24 @@ export async function initDb() {
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
 
-  // One-time cleanup: clear auto-generated linkedin + photos for active members pending onboarding
+  // Fix pledge_class: founding class members (non-exec) were seeded as 'Founder', correct to 'Founding Class'
+  try {
+    await sql`
+      UPDATE profiles SET pledge_class = 'Founding Class'
+      WHERE pledge_class = 'Founder'
+      AND user_id IN (SELECT id FROM users WHERE role NOT IN ('exec', 'admin'))
+    `;
+  } catch (e) { console.error('pledge_class migration failed:', e); }
+
+  // Clear auto-generated linkedin + photos for active members pending onboarding
   try {
     await sql`
       UPDATE profiles SET linkedin = NULL, photo_url = NULL
-      WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role = 'active')
+      WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role NOT IN ('exec', 'admin'))
     `;
   } catch (e) { console.error('linkedin/photo cleanup migration failed:', e); }
 
-  // One-time dedup: remove duplicate profile rows, keeping the most recently updated per user
+  // Dedup: remove duplicate profile rows, keeping the most recently updated per user
   try {
     await sql`
       WITH ranked AS (
