@@ -110,38 +110,7 @@ function ExecChip({ member, photo }: { member: typeof EXEC_BOARD[0]; photo?: str
   return <div>{inner}</div>;
 }
 
-// Medium founder card — shown in the Founders section with role
-function FounderCard({ founder, photo }: { founder: typeof FOUNDERS[0]; photo?: string }) {
-  const [imgErr, setImgErr] = useState(false);
-  const hasPhoto = photo && !imgErr;
-  return (
-    <div className="border-2 border-[#05006C] overflow-hidden">
-      <div className="aspect-square bg-[#05006C] flex items-center justify-center relative overflow-hidden">
-        {hasPhoto ? (
-          <img src={photo} alt={founder.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
-        ) : (
-          <span
-            className="text-[#EEEADE] font-black select-none"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "2rem" }}
-          >
-            {founder.initials}
-          </span>
-        )}
-      </div>
-      <div className="p-3 bg-[#EEEADE]">
-        <div className="text-[#1B212C] font-black leading-tight mb-0.5" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.8rem" }}>
-          {founder.name}
-        </div>
-        <div className="text-[#05006C]" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.65rem", letterSpacing: "0.05em" }}>
-          {founder.role}
-        </div>
-      </div>
-      <div className="h-0.5 bg-[#05006C]" />
-    </div>
-  );
-}
-
-// Small member card — founding class grid
+// Small member card — founding class + founders grid
 function MemberCard({ profile }: { profile: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
   const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
@@ -296,24 +265,28 @@ export default function MeetUs() {
         </div>
       </section>
 
-      {/* Founders — original 8 exec with roles */}
-      <section className="py-16 bg-[#FFFFFF] border-b-4 border-[#05006C]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#05006C" }}>
-              The Beginning
+      {/* Founders — original 8 exec */}
+      <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
+              Pledge Class
             </div>
-            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.5rem, 3vw, 2.5rem)", textTransform: "uppercase" }}>
+            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
               Founders
             </h2>
-            <p className="text-[#0C141A]/50 mt-2 max-w-xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.9rem" }}>
-              The eight who built Sigma Eta Pi Epsilon Chapter from the ground up.
-            </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {FOUNDERS.map((founder, i) => (
-              <FounderCard key={i} founder={founder} photo={profileByName.get(founder.name)?.photoUrl} />
-            ))}
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+            {FOUNDERS.map((founder, i) => {
+              const profile = profileByName.get(founder.name) ?? {
+                id: founder.name,
+                userId: '',
+                name: founder.name,
+                createdAt: '',
+                updatedAt: '',
+              };
+              return <MemberCard key={i} profile={profile} />;
+            })}
           </div>
         </div>
       </section>
