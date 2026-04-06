@@ -21,7 +21,7 @@ const EXEC_BOARD = [
   { name: 'Saloni Singhal',            email: 'salonisinghal@ucsb.edu',   role: 'exec', linkedin: 'https://www.linkedin.com/in/ssaloni-singhal/' },
   { name: 'Christina Sfatcu',          email: 'sfatcu@ucsb.edu',          role: 'exec', linkedin: 'https://www.linkedin.com/in/christina-sfatcu/' },
   { name: 'Vaibhava Sri Rajesh Khanna',email: 'vaibhavasri@ucsb.edu',     role: 'exec', linkedin: '' },
-  { name: 'Matthew Roman Vasquez',     email: 'mrvasquez@ucsb.edu',       role: 'exec', linkedin: '' },
+  { name: 'Matthew Vasquez',     email: 'mrvasquez@ucsb.edu',       role: 'exec', linkedin: '' },
 ];
 
 async function seed() {

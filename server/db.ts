@@ -154,7 +154,7 @@ export async function initDb() {
       'saloni singhal':            'salonisinghal@ucsb.edu',
       'christina sfatcu':          'sfatcu@ucsb.edu',
       'vaibhava sri rajesh khanna':'vaibhavasri@ucsb.edu',
-      'matthew roman vasquez':     'mrvasquez@ucsb.edu',
+      'matthew vasquez':     'mrvasquez@ucsb.edu',
       'aaron ramirez':             'aaronramirez@ucsb.edu',
       'amaya bratcher':            'amayabratcher@ucsb.edu',
       'ariana tran':               'arianatran@ucsb.edu',

@@ -30,7 +30,7 @@ const MEMBERS = [
   { name: 'Madigan Escobar',            email: 'madigan@ucsb.edu' },
   { name: 'Mariana França Pires',       email: 'marianafrancapires@ucsb.edu' },
   { name: 'Matthew Chang',              email: 'matthew_chang@ucsb.edu' },
-  { name: 'Matthew Roman Vasquez',      email: 'mrvasquez@ucsb.edu' },
+  { name: 'Matthew Vasquez',      email: 'mrvasquez@ucsb.edu' },
   { name: 'Nina Rossi',                 email: 'ninarossi@ucsb.edu' },
   { name: 'Nirvaan Patel',              email: 'nirvaan_patel@ucsb.edu' },
   { name: 'Noah de la Rionda',          email: 'noahdelarionda@ucsb.edu' },

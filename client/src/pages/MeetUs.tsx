@@ -20,7 +20,7 @@ const EXEC_BOARD = [
   { name: "Saloni Singhal",            role: "VP of Programming",     initials: "SS", slug: "ssaloni-singhal" },
   { name: "Christina Sfatcu",          role: "VP of Brotherhood",     initials: "CS", slug: "christina-sfatcu" },
   { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "" },
-  { name: "Matthew Roman Vasquez",      role: "VP of External Affairs",initials: "MV", slug: "" },
+  { name: "Matthew Vasquez",      role: "VP of External Affairs",initials: "MV", slug: "" },
 ];
 
 // Original 8 founding exec — shown at the bottom with their roles
