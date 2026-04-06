@@ -23,12 +23,12 @@ router.get('/users', requireAdmin, async (_req, res) => {
   })));
 });
 
-// Update role/email only — no password field exposed to admin
+// Update role/email/pledgeClass — no password field exposed to admin
 router.put('/users/:id', requireAdmin, async (req, res) => {
   const rows = await sql`SELECT id, email, role FROM users WHERE id = ${req.params.id} LIMIT 1`;
   if (rows.length === 0) { res.status(404).json({ error: 'User not found' }); return; }
 
-  const { role, email } = req.body;
+  const { role, email, pledgeClass } = req.body;
   const u = rows[0];
 
   if (role && !['active', 'exec', 'admin'].includes(role)) {
@@ -42,7 +42,13 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
   const newRole = role ?? u.role;
   const newEmail = email?.trim() || u.email;
   await sql`UPDATE users SET role = ${newRole}, email = ${newEmail} WHERE id = ${req.params.id}`;
-  res.json({ id: u.id, email: newEmail, role: newRole });
+
+  if (pledgeClass !== undefined) {
+    const val = pledgeClass?.trim() || null;
+    await sql`UPDATE profiles SET pledge_class = ${val} WHERE user_id = ${req.params.id}`;
+  }
+
+  res.json({ id: u.id, email: newEmail, role: newRole, pledgeClass: pledgeClass ?? null });
 });
 
 // Send password reset email

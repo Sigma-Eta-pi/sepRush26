@@ -114,7 +114,7 @@ function MembersTab({ token }: { token: string }) {
   const [addForm, setAddForm] = useState({ email: '', role: 'active' as MemberUser['role'] });
   const [submitting, setSubmitting] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ email: '', role: 'active' as MemberUser['role'] });
+  const [editForm, setEditForm] = useState({ email: '', role: 'active' as MemberUser['role'], pledgeClass: '' });
   const [editError, setEditError] = useState('');
   const [classFilter, setClassFilter] = useState('All');
   const [classes, setClasses] = useState<ClassItem[]>([]);
@@ -139,7 +139,7 @@ function MembersTab({ token }: { token: string }) {
 
   const openEdit = (m: MemberUser) => {
     setEditing(m.id);
-    setEditForm({ email: m.email, role: m.role });
+    setEditForm({ email: m.email, role: m.role, pledgeClass: m.pledgeClass || '' });
     setEditError('');
   };
 
@@ -150,9 +150,9 @@ function MembersTab({ token }: { token: string }) {
     try {
       const updated = await apiFetch(`/api/admin/users/${id}`, token, {
         method: 'PUT',
-        body: JSON.stringify({ email: editForm.email.trim(), role: editForm.role }),
+        body: JSON.stringify({ email: editForm.email.trim(), role: editForm.role, pledgeClass: editForm.pledgeClass }),
       });
-      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, email: updated.email, role: updated.role } : m)));
+      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, email: updated.email, role: updated.role, pledgeClass: updated.pledgeClass ?? m.pledgeClass } : m)));
       setEditing(null);
     } catch (e: any) {
       setEditError(e.message);
@@ -387,7 +387,7 @@ function MembersTab({ token }: { token: string }) {
                       <button onClick={() => setEditing(null)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={16} /></button>
                     </div>
                     <p className="text-[#05006C]/40 text-xs">To change their password, use the "Reset PW" button — it sends a secure email link.</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
                         <label className="block text-[#05006C]/50 text-xs mb-1">Email</label>
                         <input type="email" value={editForm.email}
@@ -402,6 +402,15 @@ function MembersTab({ token }: { token: string }) {
                           <option value="active">active</option>
                           <option value="exec">exec</option>
                           <option value="admin">admin</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[#05006C]/50 text-xs mb-1">Class</label>
+                        <select value={editForm.pledgeClass}
+                          onChange={(e) => setEditForm((f) => ({ ...f, pledgeClass: e.target.value }))}
+                          className={inputCls}>
+                          <option value="">— none —</option>
+                          {classes.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                         </select>
                       </div>
                     </div>

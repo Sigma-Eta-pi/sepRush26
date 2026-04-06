@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock } from 'lucide-react';
@@ -34,6 +34,14 @@ export default function Onboarding() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [linkedinPhoto, setLinkedinPhoto] = useState('');
+  const [classOptions, setClassOptions] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch('/api/classes')
+      .then(r => r.json())
+      .then((data: { id: string; name: string }[]) => setClassOptions(data.map(d => d.name)))
+      .catch(() => {});
+  }, []);
   const [form, setForm] = useState({
     name: '', major: '', gradYear: '', pledgeClass: '',
     hometown: '', birthday: '', bio: '', linkedin: '', instagram: '', phone: '',
@@ -272,7 +280,10 @@ export default function Onboarding() {
                     </div>
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Pledge Class</label>
-                      <input value={form.pledgeClass} onChange={set('pledgeClass')} placeholder="e.g. Alpha Class" className={inputCls} />
+                      <select value={form.pledgeClass} onChange={set('pledgeClass')} className={inputCls}>
+                        <option value="">Select class...</option>
+                        {classOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
                     </div>
                   </div>
                 </div>

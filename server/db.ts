@@ -124,6 +124,12 @@ export async function initDb() {
     await sql`INSERT INTO classes (id, name, created_at) VALUES (${cid}, ${name}, ${now}) ON CONFLICT (name) DO NOTHING`;
   }
 
+  // Ensure exec@ucsbsep.org always has role='admin' (may have been seeded as 'editor')
+  await sql`UPDATE users SET role = 'admin' WHERE email = 'exec@ucsbsep.org' AND role != 'admin'`;
+
+  // Fix any lowercase 'founder' pledge_class entries
+  await sql`UPDATE profiles SET pledge_class = 'Founder' WHERE pledge_class = 'founder'`;
+
   const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
   if (admins.length === 0) {
     const hash = await bcrypt.hash('12345!', 10);
