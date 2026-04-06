@@ -11,6 +11,7 @@ import updateRoutes from './routes/updates.js';
 import eventRoutes from './routes/events.js';
 import adminRoutes from './routes/admin.js';
 import uploadRoutes from './routes/upload.js';
+import taskRoutes from './routes/tasks.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,23 +30,20 @@ async function startServer() {
   app.use(express.json());
   app.use(cookieParser());
 
-  // Serve uploads
   app.use('/uploads', express.static(uploadsDir));
 
-  // Mount API routes
   app.use('/api/auth', authRoutes);
   app.use('/api/profiles', profileRoutes);
   app.use('/api/updates', updateRoutes);
   app.use('/api/events', eventRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/upload', uploadRoutes);
+  app.use('/api/tasks', taskRoutes);
 
-  // 404 for unknown /api routes
   app.all('/api/*', (_req, res) => {
     res.status(404).json({ error: 'Not found' });
   });
 
-  // Serve static files from dist/public in production
   const staticPath =
     process.env.NODE_ENV === 'production'
       ? path.resolve(__dirname, 'public')
@@ -53,7 +51,6 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Handle client-side routing - serve index.html for all routes
   app.get('*', (_req, res) => {
     res.sendFile(path.join(staticPath, 'index.html'));
   });

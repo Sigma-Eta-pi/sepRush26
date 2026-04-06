@@ -48,9 +48,23 @@ export interface CalendarEvent {
   createdAt: string;
 }
 
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  assignedTo: string;
+  assignedToName?: string;
+  assignedBy: string;
+  assignedByName: string;
+  dueDate?: string;
+  status: 'pending' | 'in_progress' | 'done';
+  createdAt: string;
+}
+
 export interface DbSchema {
   users: User[];
   profiles: MemberProfile[];
   updates: Update[];
   events: CalendarEvent[];
+  tasks: Task[];
 }

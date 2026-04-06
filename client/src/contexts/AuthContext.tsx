@@ -11,10 +11,12 @@ export interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ needsOnboarding: boolean }>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
+  needsOnboarding: boolean;
+  markOnboardingComplete: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -25,23 +27,25 @@ export function useAuth() {
   return ctx;
 }
 
-// NOTE: localStorage is used for token storage for simplicity.
-// For higher security, consider httpOnly cookies in production.
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('sep_auth_token');
     const savedUser = localStorage.getItem('sep_auth_user');
+    const savedOnboarding = localStorage.getItem('sep_needs_onboarding');
     if (savedToken && savedUser) {
       try {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
+        setNeedsOnboarding(savedOnboarding === 'true');
       } catch {
         localStorage.removeItem('sep_auth_token');
         localStorage.removeItem('sep_auth_user');
+        localStorage.removeItem('sep_needs_onboarding');
       }
     }
     setIsLoading(false);
@@ -54,25 +58,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({ email, password }),
     });
     if (!res.ok) {
-      const data = await res.json().catch(() => ({ message: 'Login failed' }));
-      throw new Error(data.message || 'Login failed');
+      const data = await res.json().catch(() => ({ error: 'Login failed' }));
+      throw new Error(data.error || 'Login failed');
     }
     const data = await res.json();
     localStorage.setItem('sep_auth_token', data.token);
     localStorage.setItem('sep_auth_user', JSON.stringify(data.user));
+    localStorage.setItem('sep_needs_onboarding', String(!!data.needsOnboarding));
     setToken(data.token);
     setUser(data.user);
+    setNeedsOnboarding(!!data.needsOnboarding);
+    return { needsOnboarding: !!data.needsOnboarding };
   };
 
   const logout = () => {
     localStorage.removeItem('sep_auth_token');
     localStorage.removeItem('sep_auth_user');
+    localStorage.removeItem('sep_needs_onboarding');
     setToken(null);
     setUser(null);
+    setNeedsOnboarding(false);
+  };
+
+  const markOnboardingComplete = () => {
+    setNeedsOnboarding(false);
+    localStorage.setItem('sep_needs_onboarding', 'false');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading, isAuthenticated: user !== null && token !== null }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoading, isAuthenticated: user !== null && token !== null, needsOnboarding, markOnboardingComplete }}>
       {children}
     </AuthContext.Provider>
   );

@@ -20,8 +20,8 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     try {
       setError('');
-      await auth.login(data.email, data.password);
-      navigate('/dashboard');
+      const result = await auth.login(data.email, data.password);
+      navigate(result.needsOnboarding ? '/onboarding' : '/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed');
     }

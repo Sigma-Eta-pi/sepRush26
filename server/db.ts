@@ -57,7 +57,6 @@ export async function initDb() {
       created_at TEXT NOT NULL
     )
   `;
-
   await sql`
     CREATE TABLE IF NOT EXISTS classes (
       id TEXT PRIMARY KEY,
@@ -65,6 +64,29 @@ export async function initDb() {
       created_at TEXT NOT NULL
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS tasks (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT,
+      assigned_to TEXT NOT NULL,
+      assigned_by TEXT NOT NULL,
+      assigned_by_name TEXT NOT NULL,
+      due_date TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      token TEXT NOT NULL UNIQUE,
+      expires_at TEXT NOT NULL,
+      used INTEGER NOT NULL DEFAULT 0
+    )
+  `;
+
   const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
   for (const name of defaultClasses) {
     const cid = nanoid();
