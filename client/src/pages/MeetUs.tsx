@@ -170,25 +170,33 @@ export default function MeetUs() {
     }
   }
 
-  // Founding class = any founding pledge class value, not an original founder exec — deduplicated by name
+  const normalize = (s: string) => s.toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
+  // Founding class = any founding pledge class value, not an original founder exec — deduplicated
   const foundingClassMembers = Array.from(
     profiles
       .filter(p => FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? '') && !FOUNDER_NAMES.has(p.name))
+      .sort((a, b) => ((b.photoUrl ? 2 : 0) + (b.linkedin ? 1 : 0)) - ((a.photoUrl ? 2 : 0) + (a.linkedin ? 1 : 0)))
       .reduce((map, p) => {
-        const ex = map.get(p.name);
-        if (!ex || (!ex.photoUrl && !ex.linkedin && (p.photoUrl || p.linkedin))) map.set(p.name, p);
+        const key = normalize(p.name);
+        if (!map.has(key)) map.set(key, p);
         return map;
       }, new Map<string, MemberProfile>())
       .values()
   );
 
-  // Future pledge classes = non-founding pledge classes, grouped by name
+  // Future pledge classes = non-founding pledge classes, grouped and deduplicated by normalized name
   const futureClasses = profiles.reduce((acc, p) => {
     if (!p.pledgeClass || FOUNDING_CLASS_VALUES.has(p.pledgeClass)) return acc;
-    if (!acc[p.pledgeClass]) acc[p.pledgeClass] = [];
-    acc[p.pledgeClass].push(p);
+    if (!acc[p.pledgeClass]) acc[p.pledgeClass] = new Map<string, MemberProfile>();
+    const key = normalize(p.name);
+    const ex = acc[p.pledgeClass].get(key);
+    if (!ex || (p.photoUrl && !ex.photoUrl)) acc[p.pledgeClass].set(key, p);
     return acc;
-  }, {} as Record<string, MemberProfile[]>);
+  }, {} as Record<string, Map<string, MemberProfile>>);
+  const futureClassesArr = Object.fromEntries(
+    Object.entries(futureClasses).map(([cls, map]) => [cls, Array.from(map.values())])
+  ) as Record<string, MemberProfile[]>;
 
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
@@ -230,7 +238,7 @@ export default function MeetUs() {
       </section>
 
       {/* Future pledge classes — one section per class, newest first */}
-      {Object.entries(futureClasses).map(([className, members]) => (
+      {Object.entries(futureClassesArr).map(([className, members]) => (
         <section key={className} className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">

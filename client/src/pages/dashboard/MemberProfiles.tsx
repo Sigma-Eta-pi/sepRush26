@@ -588,14 +588,17 @@ export default function MemberProfiles() {
     })();
   }, [token]);
 
-  // Deduplicate by userId — keep most recently updated profile per user
-  const uniqueProfiles = Array.from(
-    profiles.reduce((map, p) => {
-      const ex = map.get(p.userId);
-      if (!ex || p.updatedAt > ex.updatedAt) map.set(p.userId, p);
-      return map;
-    }, new Map<string, MemberProfile>()).values()
-  );
+  // Deduplicate — prefer profiles with more data, then dedup by userId then by name
+  const score = (p: MemberProfile) => (p.photoUrl ? 2 : 0) + (p.linkedin ? 1 : 0);
+  const sorted = profiles.slice().sort((a, b) => score(b) - score(a) || b.updatedAt.localeCompare(a.updatedAt));
+  const byUserId = new Map<string, MemberProfile>();
+  for (const p of sorted) if (!byUserId.has(p.userId)) byUserId.set(p.userId, p);
+  const byName = new Map<string, MemberProfile>();
+  for (const p of byUserId.values()) {
+    const key = p.name.toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    if (!byName.has(key)) byName.set(key, p);
+  }
+  const uniqueProfiles = Array.from(byName.values());
 
   const filtered = uniqueProfiles.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
