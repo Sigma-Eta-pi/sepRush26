@@ -14,7 +14,6 @@ export async function initDb() {
       created_at TEXT NOT NULL
     )
   `;
-  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
   await sql`
     CREATE TABLE IF NOT EXISTS profiles (
       id TEXT PRIMARY KEY,
@@ -90,21 +89,24 @@ export async function initDb() {
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
 
-  // Clear auto-generated linkedin + photos for active members who haven't completed onboarding
-  await sql`
-    UPDATE profiles SET linkedin = NULL, photo_url = NULL
-    WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role = 'active')
-  `;
+  // One-time cleanup: clear auto-generated linkedin + photos for active members pending onboarding
+  try {
+    await sql`
+      UPDATE profiles SET linkedin = NULL, photo_url = NULL
+      WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role = 'active')
+    `;
+  } catch (e) { console.error('linkedin/photo cleanup migration failed:', e); }
 
-  // Remove duplicate profiles — keep the most recently updated row per user
-  await sql`
-    DELETE FROM profiles
-    WHERE id NOT IN (
-      SELECT DISTINCT ON (user_id) id
-      FROM profiles
-      ORDER BY user_id, updated_at DESC
-    )
-  `;
+  // One-time dedup: remove duplicate profile rows, keeping the most recently updated per user
+  try {
+    await sql`
+      WITH ranked AS (
+        SELECT id, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC, id DESC) AS rn
+        FROM profiles
+      )
+      DELETE FROM profiles WHERE id IN (SELECT id FROM ranked WHERE rn > 1)
+    `;
+  } catch (e) { console.error('profile dedup migration failed:', e); }
 
   const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
   for (const name of defaultClasses) {

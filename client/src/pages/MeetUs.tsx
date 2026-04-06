@@ -301,7 +301,7 @@ export default function MeetUs() {
             Be Part of Our Story
           </h2>
           <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            We're building the founder class of Sigma Eta Pi at UCSB. Join us and become part of a community of entrepreneurs, innovators, and leaders.
+            Sigma Eta Pi is UCSB's premier entrepreneurship fraternity — a community of builders, founders, and leaders shaping the future of business and technology.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/recruitment" className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", letterSpacing: "0.05em" }}>
