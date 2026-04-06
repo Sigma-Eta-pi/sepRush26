@@ -19,6 +19,7 @@ export default function Onboarding() {
   const [, navigate] = useLocation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [direction, setDirection] = useState(1);
 
   // Steps depend on whether this is a first login (needs password change)
   const STEPS = [
@@ -30,11 +31,8 @@ export default function Onboarding() {
   ];
 
   const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState(1);
-
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
   const [form, setForm] = useState({
     name: '', major: '', gradYear: '', pledgeClass: '',
     hometown: '', birthday: '', bio: '', linkedin: '', instagram: '', phone: '',
@@ -47,11 +45,10 @@ export default function Onboarding() {
   const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-[#EEEADE] placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/50 text-sm transition-colors';
 
   const currentStepId = STEPS[step]?.id;
+  const isLast = step === STEPS.length - 1;
 
   const canNext = () => {
-    if (currentStepId === 'password') {
-      return newPassword.length >= 8 && newPassword === confirmPassword;
-    }
+    if (currentStepId === 'password') return newPassword.length >= 8 && newPassword === confirmPassword;
     if (currentStepId === 'basics') return !!form.name.trim();
     return true;
   };
@@ -114,10 +111,7 @@ export default function Onboarding() {
 
   const goPrev = () => { setError(''); setDirection(-1); setStep(s => s - 1); };
 
-  const isLast = step === STEPS.length - 1;
-
-  const currentYear = new Date().getFullYear();
-  const gradYears = Array.from({ length: 8 }, (_, i) => String(currentYear + i - 1));
+  const gradYears = Array.from({ length: 8 }, (_, i) => String(new Date().getFullYear() + i - 1));
 
   const slideVariants = {
     enter: (d: number) => ({ x: d > 0 ? 40 : -40, opacity: 0 }),
@@ -158,7 +152,7 @@ export default function Onboarding() {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="p-8"
             >
-              {/* ── PASSWORD STEP ── */}
+              {/* PASSWORD STEP */}
               {currentStepId === 'password' && (
                 <div>
                   <div className="flex items-center gap-3 mb-6">
@@ -202,7 +196,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {/* ── WELCOME STEP ── */}
+              {/* WELCOME STEP */}
               {currentStepId === 'welcome' && (
                 <div className="text-center">
                   <div className="w-20 h-20 mx-auto mb-6">
@@ -216,7 +210,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {/* ── BASICS STEP ── */}
+              {/* BASICS STEP */}
               {currentStepId === 'basics' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">Your Info</h2>
@@ -247,7 +241,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {/* ── BACKGROUND STEP ── */}
+              {/* BACKGROUND STEP */}
               {currentStepId === 'background' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">Background</h2>
@@ -268,7 +262,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {/* ── BIO STEP ── */}
+              {/* BIO STEP */}
               {currentStepId === 'bio' && (
                 <div>
                   <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-6">About You</h2>
@@ -308,20 +302,15 @@ export default function Onboarding() {
                 {submitting ? 'Saving...' : <>{currentStepId === 'password' ? 'Set Password' : 'Next'} <ChevronRight size={16} /></>}
               </button>
             ) : (
-              <button
-                onClick={handleFinish}
-                disabled={submitting}
-                className="flex items-center gap-1.5 bg-[#EEEADE] text-[#05006C] font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-50 hover:bg-white transition-colors"
-              >
+              <button onClick={handleFinish} disabled={submitting}
+                className="flex items-center gap-1.5 bg-[#EEEADE] text-[#05006C] font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-50 hover:bg-white transition-colors">
                 {submitting ? 'Saving...' : <><Check size={16} /> Finish Setup</>}
               </button>
             )}
           </div>
         </div>
 
-        <p className="text-center text-[#EEEADE]/30 text-xs mt-4">
-          You can update your profile anytime from the Members section.
-        </p>
+        <p className="text-center text-[#EEEADE]/30 text-xs mt-4">You can update your profile anytime from the Members section.</p>
       </div>
     </div>
   );

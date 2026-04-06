@@ -38,6 +38,18 @@ const FOUNDERS = [
 const EXEC_NAMES = new Set(EXEC_BOARD.map(m => m.name));
 const FOUNDER_NAMES = new Set(FOUNDERS.map(f => f.name));
 
+// Founding pledge class values (DB may have either spelling)
+const FOUNDING_CLASS_VALUES = new Set(['Founder', 'Founding Class', 'founding class', 'founder']);
+
+// Match exec member to profile — handles partial name mismatches
+function matchExecProfile(memberName: string, profiles: MemberProfile[]): MemberProfile | undefined {
+  const lower = memberName.toLowerCase();
+  return profiles.find(p => {
+    const pLower = p.name.toLowerCase();
+    return pLower === lower || pLower.startsWith(lower) || lower.startsWith(pLower.split(' ')[0]);
+  });
+}
+
 interface MemberProfile {
   id: string;
   userId: string;
@@ -68,7 +80,7 @@ function ExecChip({ member, photo }: { member: typeof EXEC_BOARD[0]; photo?: str
   const hasPhoto = photo && !imgErr;
   const inner = (
     <div className="flex items-center gap-2 px-3 py-2 border border-[#1B212C]/20 bg-[#FFFFFF] hover:bg-[#EEEADE] hover:border-[#05006C] transition-all duration-200 group">
-      <div className="w-8 h-8 rounded-full bg-[#05006C] flex-shrink-0 flex items-center justify-center overflow-hidden">
+      <div className="w-10 h-10 rounded-full bg-[#05006C] flex-shrink-0 flex items-center justify-center overflow-hidden">
         {hasPhoto ? (
           <img src={photo} alt={member.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
         ) : (
@@ -182,14 +194,14 @@ export default function MeetUs() {
 
   const profileByName = new Map(profiles.map(p => [p.name, p]));
 
-  // Founding class = Founder pledge class, not an original exec founder
+  // Founding class = any founding pledge class value, not an original founder exec
   const foundingClassMembers = profiles.filter(
-    p => p.pledgeClass === 'Founder' && !FOUNDER_NAMES.has(p.name)
+    p => FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? '') && !FOUNDER_NAMES.has(p.name)
   );
 
-  // Future pledge classes grouped by class name (non-Founder pledge classes)
+  // Future pledge classes = non-founding pledge classes, grouped by name
   const futureClasses = profiles.reduce((acc, p) => {
-    if (!p.pledgeClass || p.pledgeClass === 'Founder') return acc;
+    if (!p.pledgeClass || FOUNDING_CLASS_VALUES.has(p.pledgeClass)) return acc;
     if (!acc[p.pledgeClass]) acc[p.pledgeClass] = [];
     acc[p.pledgeClass].push(p);
     return acc;
@@ -228,7 +240,7 @@ export default function MeetUs() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {EXEC_BOARD.map((member, i) => (
-              <ExecChip key={i} member={member} photo={profileByName.get(member.name)?.photoUrl} />
+              <ExecChip key={i} member={member} photo={matchExecProfile(member.name, profiles)?.photoUrl} />
             ))}
           </div>
         </div>

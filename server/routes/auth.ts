@@ -75,7 +75,6 @@ router.post('/register', requireAdmin, async (req, res) => {
   res.json({ user: { id, email: email.trim(), role, createdAt: now }, inviteSent: true });
 });
 
-// Validate a reset token
 router.get('/reset-password/:token', async (req, res) => {
   const rows = await sql`
     SELECT prt.*, u.email FROM password_reset_tokens prt

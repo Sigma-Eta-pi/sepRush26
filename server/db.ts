@@ -14,6 +14,7 @@ export async function initDb() {
       created_at TEXT NOT NULL
     )
   `;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
   await sql`
     CREATE TABLE IF NOT EXISTS profiles (
       id TEXT PRIMARY KEY,
@@ -100,8 +101,8 @@ export async function initDb() {
   if (admins.length === 0) {
     const hash = await bcrypt.hash('12345!', 10);
     await sql`
-      INSERT INTO users (id, email, password_hash, role, created_at)
-      VALUES (${nanoid()}, 'exec@ucsbsep.org', ${hash}, 'admin', ${new Date().toISOString()})
+      INSERT INTO users (id, email, password_hash, role, created_at, first_login)
+      VALUES (${nanoid()}, 'exec@ucsbsep.org', ${hash}, 'admin', ${new Date().toISOString()}, 1)
       ON CONFLICT (email) DO NOTHING
     `;
   }
