@@ -254,10 +254,10 @@ export default function Home() {
               startCount={statsVisible}
             />
             <StatCard
-              value={350}
+              value={15}
               suffix="+"
               label="Chapters Nationwide"
-              description="Sigma Eta Pi spans hundreds of chapters across the country, offering a powerful network of entrepreneurs, founders, and innovators."
+              description="Sigma Eta Pi spans chapters across the country, offering a powerful network of entrepreneurs, founders, and innovators."
               startCount={statsVisible}
             />
           </div>

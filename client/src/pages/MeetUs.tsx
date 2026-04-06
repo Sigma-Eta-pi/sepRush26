@@ -19,8 +19,8 @@ const EXEC_BOARD = [
   { name: "Julia Jimenea",             role: "VP of Public Relations",initials: "JJ", slug: "juliajimenea" },
   { name: "Saloni Singhal",            role: "VP of Programming",     initials: "SS", slug: "ssaloni-singhal" },
   { name: "Christina Sfatcu",          role: "VP of Brotherhood",     initials: "CS", slug: "christina-sfatcu" },
-  { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "" },
-  { name: "Matthew Vasquez",      role: "VP of External Affairs",initials: "MV", slug: "" },
+  { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "vaibhava-rajesh-0674a5210" },
+  { name: "Matthew Vasquez",           role: "VP of External Affairs",initials: "MV", slug: "matthewrvasquez" },
 ];
 
 // Original 8 founding exec — shown at the bottom with their roles
@@ -75,9 +75,15 @@ function LinkedInIcon() {
 }
 
 // Small exec chip — compact row card
-function ExecChip({ member, photo }: { member: typeof EXEC_BOARD[0]; photo?: string }) {
+function ExecChip({ member, profile }: { member: typeof EXEC_BOARD[0]; profile?: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
+  const photo = profile?.photoUrl;
   const hasPhoto = photo && !imgErr;
+  // Use profile LinkedIn first, fall back to hardcoded slug
+  const linkedinUrl = profile?.linkedin
+    ? (profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`)
+    : member.slug ? `https://www.linkedin.com/in/${member.slug}` : null;
+
   const inner = (
     <div className="flex items-center gap-2 px-3 py-2 border border-[#1B212C]/20 bg-[#FFFFFF] hover:bg-[#EEEADE] hover:border-[#05006C] transition-all duration-200 group">
       <div className="w-10 h-10 rounded-full bg-[#05006C] flex-shrink-0 flex items-center justify-center overflow-hidden">
@@ -100,9 +106,9 @@ function ExecChip({ member, photo }: { member: typeof EXEC_BOARD[0]; photo?: str
     </div>
   );
 
-  if (member.slug) {
+  if (linkedinUrl) {
     return (
-      <a href={`https://www.linkedin.com/in/${member.slug}`} target="_blank" rel="noopener noreferrer">
+      <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
         {inner}
       </a>
     );
@@ -231,7 +237,7 @@ export default function MeetUs() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {EXEC_BOARD.map((member, i) => (
-              <ExecChip key={i} member={member} photo={matchExecProfile(member.name, profiles)?.photoUrl} />
+              <ExecChip key={i} member={member} profile={matchExecProfile(member.name, profiles)} />
             ))}
           </div>
         </div>

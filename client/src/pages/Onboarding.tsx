@@ -1,9 +1,55 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import sepLogo from '@/images/sep-logo.png';
+
+function CustomSelect({ value, onChange, options, placeholder, className }: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { label: string; value: string }[];
+  placeholder?: string;
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handle(e: MouseEvent) { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); }
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, []);
+  const selected = options.find(o => o.value === value);
+  return (
+    <div ref={ref} className={`relative ${className ?? ''}`}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-[#EEEADE] focus:outline-none focus:border-[#EEEADE]/50 text-sm transition-colors flex items-center justify-between"
+      >
+        <span className={selected ? '' : 'text-[#EEEADE]/30'}>{selected ? selected.label : (placeholder ?? 'Select...')}</span>
+        <ChevronDown size={16} className={`text-[#EEEADE]/50 transition-transform shrink-0 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-[#05006C] border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden max-h-52 overflow-y-auto">
+          {options.map(o => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`w-full px-4 py-2.5 text-left text-sm transition-colors flex items-center justify-between ${
+                value === o.value ? 'bg-white/20 text-[#EEEADE]' : 'text-[#EEEADE]/70 hover:bg-white/10 hover:text-[#EEEADE]'
+              }`}
+            >
+              {o.label}
+              {value === o.value && <Check size={13} className="text-[#EEEADE]" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
   const res = await fetch(path, {
@@ -250,10 +296,12 @@ export default function Onboarding() {
                       </div>
                       <div>
                         <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Grad Year</label>
-                        <select value={form.gradYear} onChange={set('gradYear')} className={inputCls}>
-                          <option value="">Select...</option>
-                          {gradYears.map(y => <option key={y} value={y}>{y}</option>)}
-                        </select>
+                        <CustomSelect
+                          value={form.gradYear}
+                          onChange={v => setForm(f => ({ ...f, gradYear: v }))}
+                          options={gradYears.map(y => ({ label: y, value: y }))}
+                          placeholder="Select..."
+                        />
                       </div>
                     </div>
                     <div>
@@ -280,10 +328,12 @@ export default function Onboarding() {
                     </div>
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Class</label>
-                      <select value={form.pledgeClass} onChange={set('pledgeClass')} className={inputCls}>
-                        <option value="">Select class...</option>
-                        {classOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                      </select>
+                      <CustomSelect
+                        value={form.pledgeClass}
+                        onChange={v => setForm(f => ({ ...f, pledgeClass: v }))}
+                        options={classOptions.map(c => ({ label: c, value: c }))}
+                        placeholder="Select class..."
+                      />
                     </div>
                   </div>
                 </div>
