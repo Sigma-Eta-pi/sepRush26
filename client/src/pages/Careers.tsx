@@ -10,46 +10,46 @@ import { useState } from "react";
 const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
 
 const COMPANIES = [
-  { name: "Google", category: "Tech", domain: "google.com", icon: "google" },
-  { name: "Amazon", category: "Tech", domain: "amazon.com", icon: "amazon" },
-  { name: "Apple", category: "Tech", domain: "apple.com", icon: "apple" },
-  { name: "Microsoft", category: "Tech", domain: "microsoft.com", icon: "microsoft" },
-  { name: "Meta", category: "Tech", domain: "meta.com", icon: "meta" },
-  { name: "Tesla", category: "Tech", domain: "tesla.com", icon: "tesla" },
-  { name: "Salesforce", category: "Tech", domain: "salesforce.com", icon: "salesforce" },
-  { name: "Oracle", category: "Tech", domain: "oracle.com", icon: "oracle" },
-  { name: "IBM", category: "Tech", domain: "ibm.com", icon: "ibm" },
-  { name: "Intel", category: "Tech", domain: "intel.com", icon: "intel" },
-  { name: "Deloitte", category: "Consulting", domain: "deloitte.com", icon: "deloitte" },
-  { name: "PwC", category: "Consulting", domain: "pwc.com", icon: "pwc" },
-  { name: "EY", category: "Consulting", domain: "ey.com", icon: "ey" },
-  { name: "KPMG", category: "Consulting", domain: "kpmg.com", icon: "kpmg" },
-  { name: "Accenture", category: "Consulting", domain: "accenture.com", icon: "accenture" },
+  { name: "Google", category: "Tech", domain: "google.com" },
+  { name: "Amazon", category: "Tech", domain: "amazon.com" },
+  { name: "Apple", category: "Tech", domain: "apple.com" },
+  { name: "Microsoft", category: "Tech", domain: "microsoft.com" },
+  { name: "Meta", category: "Tech", domain: "meta.com" },
+  { name: "Tesla", category: "Tech", domain: "tesla.com" },
+  { name: "Salesforce", category: "Tech", domain: "salesforce.com" },
+  { name: "Oracle", category: "Tech", domain: "oracle.com" },
+  { name: "IBM", category: "Tech", domain: "ibm.com" },
+  { name: "Intel", category: "Tech", domain: "intel.com" },
+  { name: "Deloitte", category: "Consulting", domain: "deloitte.com" },
+  { name: "PwC", category: "Consulting", domain: "pwc.com" },
+  { name: "EY", category: "Consulting", domain: "ey.com" },
+  { name: "KPMG", category: "Consulting", domain: "kpmg.com" },
+  { name: "Accenture", category: "Consulting", domain: "accenture.com" },
   { name: "McKinsey", category: "Consulting", domain: "mckinsey.com" },
-  { name: "J.P. Morgan", category: "Finance", domain: "jpmorgan.com", icon: "jpmorgan" },
+  { name: "J.P. Morgan", category: "Finance", domain: "jpmorgan.com" },
   { name: "Goldman Sachs", category: "Finance", domain: "goldmansachs.com" },
   { name: "Morgan Stanley", category: "Finance", domain: "morganstanley.com" },
   { name: "BlackRock", category: "Finance", domain: "blackrock.com" },
   { name: "Citi", category: "Finance", domain: "citi.com" },
   { name: "Bank of America", category: "Finance", domain: "bankofamerica.com" },
-  { name: "Y Combinator", category: "Venture", domain: "ycombinator.com", icon: "ycombinator" },
+  { name: "Y Combinator", category: "Venture", domain: "ycombinator.com" },
   { name: "Sequoia", category: "Venture", domain: "sequoiacap.com" },
   { name: "a16z", category: "Venture", domain: "a16z.com" },
-  { name: "Stripe", category: "Fintech", domain: "stripe.com", icon: "stripe" },
-  { name: "Airbnb", category: "Tech", domain: "airbnb.com", icon: "airbnb" },
-  { name: "Uber", category: "Tech", domain: "uber.com", icon: "uber" },
-  { name: "LinkedIn", category: "Tech", domain: "linkedin.com", icon: "linkedin" },
-  { name: "Adobe", category: "Tech", domain: "adobe.com", icon: "adobe" },
-  { name: "Nvidia", category: "Tech", domain: "nvidia.com", icon: "nvidia" },
-  { name: "PayPal", category: "Fintech", domain: "paypal.com", icon: "paypal" },
-  { name: "SpaceX", category: "Aerospace", domain: "spacex.com", icon: "spacex" },
-  { name: "Palantir", category: "Tech", domain: "palantir.com", icon: "palantir" },
-  { name: "Databricks", category: "Tech", domain: "databricks.com", icon: "databricks" },
-  { name: "OpenAI", category: "AI", domain: "openai.com", icon: "openai" },
-  { name: "Figma", category: "Tech", domain: "figma.com", icon: "figma" },
-  { name: "Notion", category: "Tech", domain: "notion.so", icon: "notion" },
-  { name: "Zoom", category: "Tech", domain: "zoom.us", icon: "zoom" },
-  { name: "Snap", category: "Tech", domain: "snap.com", icon: "snapchat" },
+  { name: "Stripe", category: "Fintech", domain: "stripe.com" },
+  { name: "Airbnb", category: "Tech", domain: "airbnb.com" },
+  { name: "Uber", category: "Tech", domain: "uber.com" },
+  { name: "LinkedIn", category: "Tech", domain: "linkedin.com" },
+  { name: "Adobe", category: "Tech", domain: "adobe.com" },
+  { name: "Nvidia", category: "Tech", domain: "nvidia.com" },
+  { name: "PayPal", category: "Fintech", domain: "paypal.com" },
+  { name: "SpaceX", category: "Aerospace", domain: "spacex.com" },
+  { name: "Palantir", category: "Tech", domain: "palantir.com" },
+  { name: "Databricks", category: "Tech", domain: "databricks.com" },
+  { name: "OpenAI", category: "AI", domain: "openai.com" },
+  { name: "Figma", category: "Tech", domain: "figma.com" },
+  { name: "Notion", category: "Tech", domain: "notion.so" },
+  { name: "Zoom", category: "Tech", domain: "zoom.us" },
+  { name: "Snap", category: "Tech", domain: "snap.com" },
 ];
 
 const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech", "AI", "Aerospace"];
@@ -253,26 +253,11 @@ export default function Careers() {
                 key={i}
                 className="aspect-square flex flex-col items-center justify-center border-2 border-[#1B212C] bg-[#EEEADE] hover:border-[#1B212C] hover:bg-white transition-all duration-300 p-3 group"
               >
-                {company.icon ? (
-                  <img
-                    src={`https://cdn.simpleicons.org/${company.icon}`}
-                    alt={company.name}
-                    className="w-9 h-9 object-contain mb-1"
-                    onError={(e) => {
-                      const el = e.target as HTMLImageElement;
-                      el.style.display = "none";
-                      (el.nextElementSibling as HTMLElement)?.style.setProperty("display", "flex");
-                    }}
-                  />
-                ) : null}
-                <div
-                  className="w-9 h-9 rounded bg-[#05006C] items-center justify-center mb-1 flex-shrink-0"
-                  style={{ display: company.icon ? "none" : "flex" }}
-                >
-                  <span className="text-white font-black text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif" }}>
-                    {company.name[0]}
-                  </span>
-                </div>
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${company.domain}&sz=64`}
+                  alt={company.name}
+                  className="w-9 h-9 object-contain mb-1"
+                />
                 <span
                   className="text-[#1B212C]/50 text-center group-hover:text-[#1B212C] transition-colors"
                   style={{

@@ -78,8 +78,8 @@ export default function Onboarding() {
     setSubmitting(true);
     setError('');
     try {
-      await apiFetch('/api/profiles/me', token!, {
-        method: 'PUT',
+      await apiFetch('/api/profiles', token!, {
+        method: 'POST',
         body: JSON.stringify({
           name: form.name.trim(),
           major: form.major || undefined,

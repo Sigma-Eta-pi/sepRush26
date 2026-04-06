@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -29,13 +29,11 @@ const suspenseFallback = (
 function Router() {
   const [location] = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
+    <motion.div
         key={location}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.18, ease: "easeInOut" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
       >
         <Switch>
           <Route path={"/"} component={Home} />
@@ -76,7 +74,6 @@ function Router() {
           <Route component={NotFound} />
         </Switch>
       </motion.div>
-    </AnimatePresence>
   );
 }
 
