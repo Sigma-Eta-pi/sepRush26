@@ -18,7 +18,7 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 interface MemberUser {
   id: string;
   email: string;
-  role: 'active' | 'exec' | 'admin';
+  role: 'active' | 'exec' | 'admin' | 'editor';
   createdAt: string;
   name?: string | null;
   pledgeClass?: string | null;
@@ -334,6 +334,7 @@ function MembersTab({ token }: { token: string }) {
               <option value="active">Active</option>
               <option value="exec">Exec</option>
               <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
             </select>
           </div>
           <button onClick={handleAdd} disabled={submitting}
@@ -357,6 +358,7 @@ function MembersTab({ token }: { token: string }) {
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                   m.role === 'admin' ? 'bg-red-100 text-red-700' :
                   m.role === 'exec' ? 'bg-yellow-100 text-yellow-700' :
+                  m.role === 'editor' ? 'bg-purple-100 text-purple-700' :
                   'bg-[#05006C]/8 text-[#05006C]/60'
                 }`}>{m.role}</span>
 
@@ -418,6 +420,7 @@ function MembersTab({ token }: { token: string }) {
                           <option value="active">active</option>
                           <option value="exec">exec</option>
                           <option value="admin">admin</option>
+                          <option value="editor">editor</option>
                         </select>
                       </div>
                       <div>

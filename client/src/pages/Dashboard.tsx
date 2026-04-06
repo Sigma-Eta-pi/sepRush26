@@ -39,7 +39,9 @@ export default function Dashboard() {
     ? 'bg-yellow-400 text-yellow-900'
     : user?.role === 'admin'
       ? 'bg-red-500 text-white'
-      : 'bg-slate-400 text-white';
+      : user?.role === 'editor'
+        ? 'bg-purple-500 text-white'
+        : 'bg-slate-400 text-white';
 
   const handleLogout = () => {
     logout();

@@ -6,8 +6,32 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
 import { useState } from "react";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
+
+const defaultCareersContent = {
+  hero: {
+    title: "Our Careers",
+    bg_image: "",
+  },
+  intro: {
+    label: "Where We Go",
+    title: "Sigma Eta Pi Alumni Are Everywhere",
+    description: "Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.",
+  },
+  resources: [
+    { title: "Alumni Network", description: "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond." },
+    { title: "Professional Workshops", description: "Regular workshops on resume building, interview prep, case studies, and startup pitching." },
+    { title: "Industry Panels", description: "Hear directly from founders, VCs, and executives about their career journeys and insights." },
+    { title: "Recruiting Support", description: "Access to exclusive job postings, referrals, and recruiting prep from members at top firms." },
+  ],
+  cta: {
+    title: "Launch Your Career with SEP",
+    description: "Join a network of entrepreneurs and professionals who support each other throughout their careers.",
+    cta: "APPLY NOW",
+  },
+};
 
 const COMPANIES = [
   { name: "Google", category: "Tech", domain: "google.com" },
@@ -54,27 +78,9 @@ const COMPANIES = [
 
 const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech", "AI", "Aerospace"];
 
-const CAREER_RESOURCES = [
-  {
-    title: "Alumni Network",
-    description: "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond.",
-  },
-  {
-    title: "Professional Workshops",
-    description: "Regular workshops on resume building, interview prep, case studies, and startup pitching.",
-  },
-  {
-    title: "Industry Panels",
-    description: "Hear directly from founders, VCs, and executives about their career journeys and insights.",
-  },
-  {
-    title: "Recruiting Support",
-    description: "Access to exclusive job postings, referrals, and recruiting prep from members at top firms.",
-  },
-];
-
 export default function Careers() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { content } = useSiteContent('careers', defaultCareersContent);
 
   const filteredCompanies = activeCategory === "All"
     ? COMPANIES
@@ -88,7 +94,7 @@ export default function Careers() {
       <section
         className="relative h-72 md:h-96 flex items-end overflow-hidden pt-24"
         style={{
-          backgroundImage: `url(${CAREERS_BG})`,
+          backgroundImage: `url(${content.hero.bg_image || CAREERS_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -114,7 +120,7 @@ export default function Careers() {
               lineHeight: 1,
             }}
           >
-            Our Careers
+            {content.hero.title}
           </h1>
         </div>
       </section>
@@ -130,7 +136,7 @@ export default function Careers() {
                 color: "#1B212C",
               }}
             >
-              Where We Go
+              {content.intro.label}
             </div>
             <h2
               className="text-[#1B212C] mb-6"
@@ -142,10 +148,10 @@ export default function Careers() {
                 lineHeight: 1.1,
               }}
             >
-              Sigma Eta Pi Alumni Are Everywhere
+              {content.intro.title}
             </h2>
             <p className="text-[#0C141A]/70 text-base leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.
+              {content.intro.description}
             </p>
           </div>
         </div>
@@ -177,7 +183,7 @@ export default function Careers() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {CAREER_RESOURCES.map((resource, i) => (
+            {content.resources.map((resource, i) => (
               <div
                 key={i}
                 className="bg-[#FFFFFF] border-4 border-[#1B212C] p-6 hover:bg-[#D0E4EF] transition-all duration-300 group"
@@ -286,10 +292,10 @@ export default function Careers() {
               textTransform: "uppercase",
             }}
           >
-            Launch Your Career with SEP
+            {content.cta.title}
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join a network of entrepreneurs and professionals who support each other throughout their careers.
+            {content.cta.description}
           </p>
           <Link
             href="/recruitment"
@@ -299,7 +305,7 @@ export default function Careers() {
               letterSpacing: "0.05em",
             }}
           >
-            APPLY NOW
+            {content.cta.cta}
           </Link>
         </div>
       </section>

@@ -7,8 +7,46 @@ import Footer from "@/components/Footer";
 import { ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import heroBg from "@/images/hero.JPG";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const HERO_BG = heroBg;
+
+const defaultRecruitmentContent = {
+  hero: {
+    title: "Join Our Alpha Class",
+    badge: "Spring 2026 Recruitment",
+    subtitle: "Be part of something from the very beginning. Help us build Sigma Eta Pi's legacy at UCSB.",
+    cta_primary: "APPLY NOW",
+    cta_primary_href: "https://forms.gle/your-application-form",
+    cta_secondary: "VIEW EVENTS",
+    bg_image: "",
+  },
+  events_section: {
+    label: "Recruitment Schedule",
+    title: "Spring 2026 Events",
+  },
+  events: [
+    { date: "April 6, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
+    { date: "April 7, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
+    { date: "April 8, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
+    { date: "April 9, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
+    { date: "April 9, 2026", title: "Applications Due", time: "", location: "", description: "Submit your application by end of day. Info on @ucsbsep on Instagram." },
+  ],
+  faq_section: {
+    label: "Questions?",
+    title: "Frequently Asked Questions",
+  },
+  faq: [
+    { q: "What is Sigma Eta Pi?", a: "Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. We focus on collaboration, mentorship, and practical entrepreneurial skills." },
+    { q: "Do I need to be a business major to join?", a: "No! Sigma Eta Pi welcomes students from all majors. We believe diversity of thought and background strengthens our community. Whether you're an engineer, designer, marketer, or anything else, you belong here." },
+    { q: "What is the time commitment?", a: "We understand you're busy. Most members commit 5-10 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities." },
+    { q: "Is there a membership fee?", a: "Yes, there are membership dues to support chapter operations, events, and resources. We work to keep costs reasonable and offer payment plans if needed. Contact us for specific details." },
+    { q: "When is the application deadline?", a: "Applications for Spring 2026 recruitment close on February 28, 2026. We'll notify applicants of interview dates shortly after." },
+    { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
+    { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community." },
+    { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions." },
+  ],
+};
 
 const RECRUITMENT_EVENTS = [
   {
@@ -194,6 +232,7 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
 
 export default function Recruitment() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
+  const { content } = useSiteContent('recruitment', defaultRecruitmentContent);
 
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
@@ -203,7 +242,7 @@ export default function Recruitment() {
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24"
         style={{
-          backgroundImage: `url(${HERO_BG})`,
+          backgroundImage: `url(${content.hero.bg_image || HERO_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}
@@ -216,7 +255,7 @@ export default function Recruitment() {
             className="inline-block mb-6 px-4 py-1.5 border-2 border-white text-white text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
-            Spring 2026 Recruitment
+            {content.hero.badge}
           </div>
 
           <h1
@@ -229,7 +268,7 @@ export default function Recruitment() {
               textTransform: "uppercase",
             }}
           >
-            Join Our Alpha Class
+            {content.hero.title}
           </h1>
 
           <p
@@ -241,12 +280,12 @@ export default function Recruitment() {
               letterSpacing: "0.05em",
             }}
           >
-            Be part of something from the very beginning. Help us build Sigma Eta Pi's legacy at UCSB.
+            {content.hero.subtitle}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="https://forms.gle/your-application-form"
+              href={content.hero.cta_primary_href}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
@@ -255,7 +294,7 @@ export default function Recruitment() {
                 letterSpacing: "0.05em",
               }}
             >
-              APPLY NOW
+              {content.hero.cta_primary}
             </a>
             <a
               href="#events"
@@ -265,7 +304,7 @@ export default function Recruitment() {
                 letterSpacing: "0.05em",
               }}
             >
-              VIEW EVENTS
+              {content.hero.cta_secondary}
             </a>
           </div>
         </div>
@@ -287,7 +326,7 @@ export default function Recruitment() {
                 color: "#1B212C",
               }}
             >
-              Recruitment Schedule
+              {content.events_section.label}
             </div>
             <h2
               className="text-[#1B212C]"
@@ -298,7 +337,7 @@ export default function Recruitment() {
                 textTransform: "uppercase",
               }}
             >
-              Spring 2026 Events
+              {content.events_section.title}
             </h2>
           </div>
 
@@ -306,8 +345,8 @@ export default function Recruitment() {
             {/* Vertical timeline line */}
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#05006C]/20 -translate-x-1/2" />
 
-            {RECRUITMENT_EVENTS.map((event, i) => (
-              <TimelineItem key={i} event={event} index={i} isLast={i === RECRUITMENT_EVENTS.length - 1} />
+            {(content.events as typeof RECRUITMENT_EVENTS).map((event, i) => (
+              <TimelineItem key={i} event={event} index={i} isLast={i === (content.events as typeof RECRUITMENT_EVENTS).length - 1} />
             ))}
           </div>
         </div>
@@ -324,7 +363,7 @@ export default function Recruitment() {
                 color: "#1B212C",
               }}
             >
-              Questions?
+              {content.faq_section.label}
             </div>
             <h2
               className="text-[#1B212C]"
@@ -335,12 +374,12 @@ export default function Recruitment() {
                 textTransform: "uppercase",
               }}
             >
-              Frequently Asked Questions
+              {content.faq_section.title}
             </h2>
           </div>
 
           <div className="space-y-3">
-            {FAQ.map((item, i) => (
+            {(content.faq as typeof FAQ).map((item, i) => (
               <FAQItem
                 key={i}
                 q={item.q}
@@ -371,7 +410,7 @@ export default function Recruitment() {
             Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
           </p>
           <a
-            href="https://forms.gle/your-application-form"
+            href={content.hero.cta_primary_href}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
@@ -380,7 +419,7 @@ export default function Recruitment() {
               letterSpacing: "0.05em",
             }}
           >
-            APPLY NOW
+            {content.hero.cta_primary}
           </a>
         </div>
       </section>

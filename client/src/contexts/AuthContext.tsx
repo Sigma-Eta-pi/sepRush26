@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
-export type UserRole = 'active' | 'exec' | 'admin';
+export type UserRole = 'active' | 'exec' | 'admin' | 'editor';
 
 export interface AuthUser {
   id: string;
@@ -11,7 +11,7 @@ export interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<{ needsOnboarding: boolean }>;
+  login: (email: string, password: string) => Promise<{ needsOnboarding: boolean; role: UserRole }>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user);
     setNeedsOnboarding(!!data.needsOnboarding);
     setFirstLogin(!!data.firstLogin);
-    return { needsOnboarding: !!data.needsOnboarding };
+    return { needsOnboarding: !!data.needsOnboarding, role: data.user.role as UserRole };
   };
 
   const logout = () => {

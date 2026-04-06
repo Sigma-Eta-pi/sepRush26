@@ -86,6 +86,15 @@ export async function initDb() {
       used INTEGER NOT NULL DEFAULT 0
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS site_content (
+      id TEXT PRIMARY KEY,
+      page TEXT UNIQUE NOT NULL,
+      content_json TEXT NOT NULL,
+      updated_by TEXT,
+      updated_at TEXT NOT NULL
+    )
+  `;
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
 

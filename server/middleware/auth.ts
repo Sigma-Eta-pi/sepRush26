@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
 import type { UserRole } from '../types.js';
 
+// SECURITY WARNING: JWT_SECRET must be set via env var in production.
+// The fallback below is dev-only — any token signed with it is forgeable by anyone who reads this source.
 const JWT_SECRET = process.env.JWT_SECRET || 'sep-jwt-secret-dev-CHANGE-THIS-IN-PRODUCTION-min-32-chars';
 
 declare global {
@@ -34,6 +36,16 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
   requireAuth(req, res, () => {
     if (req.user?.role !== 'admin') {
       res.status(403).json({ error: 'Admin required' }); return;
+    }
+    next();
+  });
+}
+
+export function requireEditor(req: Request, res: Response, next: NextFunction): void {
+  requireAuth(req, res, () => {
+    const role = req.user?.role;
+    if (role !== 'editor' && role !== 'admin') {
+      res.status(403).json({ error: 'Editor or admin required' }); return;
     }
     next();
   });

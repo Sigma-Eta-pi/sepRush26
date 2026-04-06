@@ -31,7 +31,7 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
   const { role, email, pledgeClass } = req.body;
   const u = rows[0];
 
-  if (role && !['active', 'exec', 'admin'].includes(role)) {
+  if (role && !['active', 'exec', 'admin', 'editor'].includes(role)) {
     res.status(400).json({ error: 'Invalid role' }); return;
   }
   if (email && email !== u.email) {

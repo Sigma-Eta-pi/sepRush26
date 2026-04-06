@@ -5,6 +5,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 import brotherhoodImg from "@/images/brotherhood.png";
 import innovationImg from "@/images/innovation.png";
@@ -14,22 +15,57 @@ const ABOUT_BG = leadershipImg;
 const BROTHERHOOD_IMG = brotherhoodImg;
 const INNOVATION_IMG = innovationImg;
 
-const VALUES = [
-  {
-    title: "Innovation",
-    description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+const defaultAboutContent = {
+  hero: { title: "All About Our Chapter", label: "About Us", bg_image: "" },
+  story: {
+    label: "Our Story",
+    title: "Empowering the Next Generation of Entrepreneurs",
+    p1: "Sigma Eta Pi at UCSB is a student-led business entrepreneurship co-ed fraternity that empowers members to take initiative, think big, and turn dreams to realities. Bringing together students from a wide range of majors, our UCSB chapter fosters a supportive community where collaboration, mentorship, and professional growth are central.",
+    p2: "Founded in 2026, Sigma Eta Pi at UCSB provides opportunities to engage with startup ecosystems, connect with experienced entrepreneurs, and gain hands-on experience in business and innovation.",
+    p3: "At UCSB, our events reflect the balance between professionalism and brotherhood. From date parties and retreats to senior send-offs, entrepreneurship panels, and professional workshops, Sigma Eta Pi offers a vibrant and enriching experience for its members, preparing them to succeed academically, professionally, and personally.",
+    founded_year: "2010",
+    founded_label: "Founded at UCLA",
+    ventures_count: "21+",
+    ventures_label: "Ventures Launched",
+    brotherhood_image: "",
   },
-  {
-    title: "Brotherhood",
-    description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
+  national: {
+    label: "National Organization",
+    title: "A Legacy of Entrepreneurial Excellence",
+    p1: "Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.",
+    p2: "Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.",
+    p3: "Across its chapters, members have launched over 21 ventures, including projects backed by Y Combinator, ventures acquired for $90 million, and initiatives that hosted the nation's largest hackathon.",
+    innovation_image: "",
   },
-  {
-    title: "Leadership",
-    description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+  values: {
+    label: "Our Values",
+    title: "What We Stand For",
+    items: [
+      {
+        title: "Innovation",
+        description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+      },
+      {
+        title: "Brotherhood",
+        description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
+      },
+      {
+        title: "Leadership",
+        description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+      },
+    ],
   },
-];
+  cta: {
+    title: "Ready to Be Part of Something?",
+    description: "Join our founder class and help shape the future of entrepreneurship at UCSB.",
+    cta_primary: "APPLY NOW",
+    cta_secondary: "MEET THE TEAM",
+  },
+};
 
 export default function About() {
+  const { content } = useSiteContent("about", defaultAboutContent);
+
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
       <Navbar />
@@ -38,7 +74,7 @@ export default function About() {
       <section
         className="relative h-72 md:h-96 flex items-end overflow-hidden pt-24"
         style={{
-          backgroundImage: `url(${ABOUT_BG})`,
+          backgroundImage: `url(${content.hero?.bg_image || ABOUT_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -52,7 +88,7 @@ export default function About() {
               color: "#D0E4EF",
             }}
           >
-            About Us
+            {content.hero.label}
           </div>
           <h1
             className="text-white"
@@ -64,7 +100,7 @@ export default function About() {
               lineHeight: 1,
             }}
           >
-            All About Our Chapter
+            {content.hero.title}
           </h1>
         </div>
       </section>
@@ -81,7 +117,7 @@ export default function About() {
                   color: "#1B212C",
                 }}
               >
-                Our Story
+                {content.story.label}
               </div>
               <h2
                 className="text-[#1B212C] mb-6"
@@ -93,25 +129,19 @@ export default function About() {
                   lineHeight: 1.1,
                 }}
               >
-                Empowering the Next Generation of Entrepreneurs
+                {content.story.title}
               </h2>
               <div className="space-y-5 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                <p>
-                  Sigma Eta Pi at UCSB is a student-led business entrepreneurship co-ed fraternity that empowers members to take initiative, think big, and turn dreams to realities. Bringing together students from a wide range of majors, our UCSB chapter fosters a supportive community where collaboration, mentorship, and professional growth are central.
-                </p>
-                <p>
-                  Founded in 2026, Sigma Eta Pi at UCSB provides opportunities to engage with startup ecosystems, connect with experienced entrepreneurs, and gain hands-on experience in business and innovation.
-                </p>
-                <p>
-                  At UCSB, our events reflect the balance between professionalism and brotherhood. From date parties and retreats to senior send-offs, entrepreneurship panels, and professional workshops, Sigma Eta Pi offers a vibrant and enriching experience for its members, preparing them to succeed academically, professionally, and personally.
-                </p>
+                <p>{content.story.p1}</p>
+                <p>{content.story.p2}</p>
+                <p>{content.story.p3}</p>
               </div>
             </div>
             <div className="space-y-6">
               <div
                 className="aspect-video overflow-hidden border-4 border-[#1B212C]"
                 style={{
-                  backgroundImage: `url(${BROTHERHOOD_IMG})`,
+                  backgroundImage: `url(${content.story?.brotherhood_image || BROTHERHOOD_IMG})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -125,10 +155,10 @@ export default function About() {
                       fontSize: "2.5rem",
                     }}
                   >
-                    2010
+                    {content.story.founded_year}
                   </div>
                   <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
-                    Founded at UCLA
+                    {content.story.founded_label}
                   </div>
                 </div>
                 <div className="bg-[#1B212C] text-[#EEEADE] border-4 border-[#1B212C] p-6">
@@ -139,10 +169,10 @@ export default function About() {
                       fontSize: "2.5rem",
                     }}
                   >
-                    21+
+                    {content.story.ventures_count}
                   </div>
                   <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
-                    Ventures Launched
+                    {content.story.ventures_label}
                   </div>
                 </div>
               </div>
@@ -158,7 +188,7 @@ export default function About() {
             <div
               className="aspect-video overflow-hidden border-4 border-[#1B212C] order-2 lg:order-1"
               style={{
-                backgroundImage: `url(${INNOVATION_IMG})`,
+                backgroundImage: `url(${content.national?.innovation_image || INNOVATION_IMG})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -171,7 +201,7 @@ export default function About() {
                   color: "#1B212C",
                 }}
               >
-                National Organization
+                {content.national.label}
               </div>
               <h2
                 className="text-[#1B212C] mb-6"
@@ -183,18 +213,12 @@ export default function About() {
                   lineHeight: 1.1,
                 }}
               >
-                A Legacy of Entrepreneurial Excellence
+                {content.national.title}
               </h2>
               <div className="space-y-4 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                <p>
-                  Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
-                </p>
-                <p>
-                  Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.
-                </p>
-                <p>
-                  Across its chapters, members have launched over 21 ventures, including projects backed by Y Combinator, ventures acquired for $90 million, and initiatives that hosted the nation's largest hackathon.
-                </p>
+                <p>{content.national.p1}</p>
+                <p>{content.national.p2}</p>
+                <p>{content.national.p3}</p>
               </div>
             </div>
           </div>
@@ -212,7 +236,7 @@ export default function About() {
                 color: "#1B212C",
               }}
             >
-              Our Values
+              {content.values.label}
             </div>
             <h2
               className="text-[#1B212C]"
@@ -223,11 +247,11 @@ export default function About() {
                 textTransform: "uppercase",
               }}
             >
-              What We Stand For
+              {content.values.title}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {VALUES.map((value, i) => (
+            {content.values.items.map((value, i) => (
               <div
                 key={i}
                 className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
@@ -265,10 +289,10 @@ export default function About() {
               textTransform: "uppercase",
             }}
           >
-            Ready to Be Part of Something?
+            {content.cta.title}
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join our founder class and help shape the future of entrepreneurship at UCSB.
+            {content.cta.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -279,7 +303,7 @@ export default function About() {
                 letterSpacing: "0.05em",
               }}
             >
-              APPLY NOW
+              {content.cta.cta_primary}
             </Link>
             <Link
               href="/meet-us"
@@ -289,7 +313,7 @@ export default function About() {
                 letterSpacing: "0.05em",
               }}
             >
-              MEET THE TEAM
+              {content.cta.cta_secondary}
             </Link>
           </div>
         </div>
