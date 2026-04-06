@@ -12,19 +12,17 @@ import { sql } from './db.js';
 const DEFAULT_PASSWORD = 'UCsep2025!';
 
 const EXEC_BOARD = [
-  { name: 'Piam Parekh',      role: 'exec', slug: 'piamparekh',      linkedin: 'https://www.linkedin.com/in/piamparekh/' },
-  { name: 'Shiv Dutta',       role: 'exec', slug: 'shiv-dutta',       linkedin: 'https://www.linkedin.com/in/shiv-dutta/' },
-  { name: 'Kate Heidenga',    role: 'exec', slug: 'kateheidenga',     linkedin: 'https://www.linkedin.com/in/kateheidenga/' },
-  { name: 'Huy Nguyen',       role: 'exec', slug: 'huynguyen06',      linkedin: 'https://www.linkedin.com/in/huynguyen06/' },
-  { name: 'Sally Hu',         role: 'exec', slug: 'sally-huu',        linkedin: 'https://www.linkedin.com/in/sally-huu/' },
-  { name: 'Julia Jimenea',    role: 'exec', slug: 'juliajimenea',     linkedin: 'https://www.linkedin.com/in/juliajimenea/' },
-  { name: 'Saloni Singhal',   role: 'exec', slug: 'ssaloni-singhal',  linkedin: 'https://www.linkedin.com/in/ssaloni-singhal/' },
-  { name: 'Christina Sfatcu', role: 'exec', slug: 'christina-sfatcu', linkedin: 'https://www.linkedin.com/in/christina-sfatcu/' },
+  { name: 'Piam Parekh',               email: 'jparekh@ucsb.edu',        role: 'exec', linkedin: 'https://www.linkedin.com/in/piamparekh/' },
+  { name: 'Shiv Dutta',                email: 'shiv749@ucsb.edu',         role: 'exec', linkedin: 'https://www.linkedin.com/in/shiv-dutta/' },
+  { name: 'Kate Heidenga',             email: 'kheidenga@ucsb.edu',       role: 'exec', linkedin: 'https://www.linkedin.com/in/kateheidenga/' },
+  { name: 'Huy Nguyen',                email: 'huy_nguyen@ucsb.edu',      role: 'exec', linkedin: 'https://www.linkedin.com/in/huynguyen06/' },
+  { name: 'Sally Hu',                  email: 'shu971@ucsb.edu',          role: 'exec', linkedin: 'https://www.linkedin.com/in/sally-huu/' },
+  { name: 'Julia Jimenea',             email: 'juliajimenea@ucsb.edu',    role: 'exec', linkedin: 'https://www.linkedin.com/in/juliajimenea/' },
+  { name: 'Saloni Singhal',            email: 'salonisinghal@ucsb.edu',   role: 'exec', linkedin: 'https://www.linkedin.com/in/ssaloni-singhal/' },
+  { name: 'Christina Sfatcu',          email: 'sfatcu@ucsb.edu',          role: 'exec', linkedin: 'https://www.linkedin.com/in/christina-sfatcu/' },
+  { name: 'Vaibhava Sri Rajesh Khanna',email: 'vaibhavasri@ucsb.edu',     role: 'exec', linkedin: '' },
+  { name: 'Matthew Roman Vasquez',     email: 'mrvasquez@ucsb.edu',       role: 'exec', linkedin: '' },
 ];
-
-function toEmail(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '.') + '@ucsbsep.org';
-}
 
 async function seed() {
   const hash = await bcrypt.hash(DEFAULT_PASSWORD, 10);
@@ -33,7 +31,7 @@ async function seed() {
   let skipped = 0;
 
   for (const member of EXEC_BOARD) {
-    const email = toEmail(member.name);
+    const email = member.email;
     const userId = nanoid();
     const profileId = nanoid();
 
@@ -52,7 +50,7 @@ async function seed() {
 
     await sql`
       INSERT INTO profiles (id, user_id, name, pledge_class, linkedin, created_at, updated_at)
-      VALUES (${profileId}, ${userId}, ${member.name}, 'Founder', ${member.linkedin}, ${now}, ${now})
+      VALUES (${profileId}, ${userId}, ${member.name}, 'Founder', ${member.linkedin || null}, ${now}, ${now})
       ON CONFLICT DO NOTHING
     `;
 

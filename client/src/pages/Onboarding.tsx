@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Sparkles } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import sepLogo from '@/images/sep-logo.png';
 
 const STEPS = [
-  { id: 'welcome', label: 'Welcome', icon: Sparkles },
+  { id: 'welcome', label: 'Welcome', icon: User },
   { id: 'basics', label: 'Your Info', icon: User },
   { id: 'background', label: 'Background', icon: MapPin },
   { id: 'bio', label: 'About You', icon: BookOpen },
@@ -126,8 +127,8 @@ export default function Onboarding() {
             >
               {step === 0 && (
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#EEEADE]/10 flex items-center justify-center mx-auto mb-6">
-                    <Sparkles size={32} className="text-[#EEEADE]" />
+                  <div className="w-20 h-20 mx-auto mb-6">
+                    <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }} />
                   </div>
                   <h1 className="text-[#EEEADE] font-bold text-2xl tracking-wide mb-3">
                     Welcome to SEP Epsilon

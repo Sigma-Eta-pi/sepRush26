@@ -8,22 +8,9 @@ import MemberProfiles from './dashboard/MemberProfiles';
 import ConnectionsFinder from './dashboard/ConnectionsFinder';
 import AlumniFinder from './dashboard/AlumniFinder';
 import TasksView from './dashboard/TasksView';
+import sepLogo from '@/images/sep-logo.png';
 
 const AdminPanel = lazy(() => import('./dashboard/AdminPanel'));
-
-function SepLogoSmall() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-      <path d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z" fill="none" stroke="#EEEADE" strokeWidth="2"/>
-      <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="#EEEADE" opacity="0.9"/>
-      <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="#EEEADE" opacity="0.9"/>
-      <ellipse cx="50" cy="58" rx="12" ry="18" fill="#EEEADE" opacity="0.9"/>
-      <circle cx="50" cy="38" r="8" fill="#EEEADE"/>
-      <path d="M50 41 L55 44 L50 46 Z" fill="#05006C"/>
-      <circle cx="53" cy="37" r="1.5" fill="#05006C"/>
-    </svg>
-  );
-}
 
 const navItems = [
   { label: 'Updates', icon: Megaphone, href: '/dashboard/updates' },
@@ -91,7 +78,7 @@ export default function Dashboard() {
         {/* Logo */}
         <div className="px-6 pt-6 pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <SepLogoSmall />
+            <img src={sepLogo} alt="SEP" className="w-9 h-9 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }} />
             <div>
               <div className="text-[#EEEADE] font-bold text-sm tracking-widest">SIGMA ETA PI</div>
               <div className="text-[#EEEADE]/50 text-xs tracking-wider">EPSILON CHAPTER</div>
