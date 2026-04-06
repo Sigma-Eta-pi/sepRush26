@@ -136,47 +136,98 @@ export async function initDb() {
     `;
   }
 
-  // Migrate @ucsbsep.org accounts → merge into matching @ucsb.edu accounts by profile name
+  // Migrate @ucsbsep.org accounts → correct @ucsb.edu emails (hardcoded from seed data)
   try {
+    const NAME_TO_EMAIL: Record<string, string> = {
+      'piam parekh':               'jparekh@ucsb.edu',
+      'shiv dutta':                'shiv749@ucsb.edu',
+      'kate heidenga':             'kheidenga@ucsb.edu',
+      'huy nguyen':                'huy_nguyen@ucsb.edu',
+      'sally hu':                  'shu971@ucsb.edu',
+      'julia jimenea':             'juliajimenea@ucsb.edu',
+      'saloni singhal':            'salonisinghal@ucsb.edu',
+      'christina sfatcu':          'sfatcu@ucsb.edu',
+      'vaibhava sri rajesh khanna':'vaibhavasri@ucsb.edu',
+      'matthew roman vasquez':     'mrvasquez@ucsb.edu',
+      'aaron ramirez':             'aaronramirez@ucsb.edu',
+      'amaya bratcher':            'amayabratcher@ucsb.edu',
+      'ariana tran':               'arianatran@ucsb.edu',
+      'brooke namie bradley':      'bnbradley@ucsb.edu',
+      'clay griffin':              'claygriffin@ucsb.edu',
+      'daysi recinos':             'drecinos@ucsb.edu',
+      'deepthy mukkara':           'deepthymukkara@ucsb.edu',
+      'henry snow':                'hhs@ucsb.edu',
+      'jack larson':               'jacklarson@umail.ucsb.edu',
+      'jean kalaw':                'kalaw@ucsb.edu',
+      'julio bermudez':            'juliobermudez@ucsb.edu',
+      'kai abutin':                'kaiabutin@ucsb.edu',
+      'katelyn nguyen':            'katelyntnguyen@ucsb.edu',
+      'kyra chagarlamudi':         'kcamudi@ucsb.edu',
+      'luke patterson':            'lukepatterson@ucsb.edu',
+      'madigan escobar':           'madigan@ucsb.edu',
+      'mariana franca pires':      'marianafrancapires@ucsb.edu',
+      'mariana frança pires':      'marianafrancapires@ucsb.edu',
+      'matthew chang':             'matthew_chang@ucsb.edu',
+      'nina rossi':                'ninarossi@ucsb.edu',
+      'nirvaan patel':             'nirvaan_patel@ucsb.edu',
+      'noah de la rionda':         'noahdelarionda@ucsb.edu',
+      'om kulkarni':               'om77@ucsb.edu',
+      'preston chung':             'preston_chung@ucsb.edu',
+      'raiyan khan':               'raiyan@ucsb.edu',
+      'rohan kamdar':              'rohankamdar@ucsb.edu',
+      'ryan nguyen':               'r_nguyen@ucsb.edu',
+      'samrita sivakumar':         'smrita@ucsb.edu',
+      'savannah rivera':           'savannah_rivera@ucsb.edu',
+      'sudiksha kaushik':          'skaushik@ucsb.edu',
+      'tyler pintor':              'tpintor@ucsb.edu',
+    };
+
     const sepUsers = await sql`
-      SELECT u.id AS user_id, u.email, p.id AS profile_id, p.name, p.photo_url, p.linkedin
+      SELECT u.id AS user_id, u.email, p.id AS profile_id, p.name, p.photo_url, p.linkedin, p.pledge_class
       FROM users u
       LEFT JOIN profiles p ON p.user_id = u.id
       WHERE u.email LIKE '%@ucsbsep.org' AND u.email != 'exec@ucsbsep.org'
     `;
+
     for (const sep of sepUsers) {
-      if (!sep.name) {
-        // No profile — just delete the orphan account
+      const nameKey = (sep.name ?? '').toLowerCase().trim();
+      const targetEmail = NAME_TO_EMAIL[nameKey];
+
+      if (!targetEmail) {
+        // No mapping found — delete orphan
+        if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
+        await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
         await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
         continue;
       }
-      const match = await sql`
+
+      // Check if a @ucsb.edu account already exists for this email
+      const existing = await sql`
         SELECT u.id AS user_id, p.id AS profile_id, p.photo_url, p.linkedin
-        FROM users u
-        LEFT JOIN profiles p ON p.user_id = u.id
-        WHERE u.email LIKE '%@ucsb.edu'
-        AND lower(trim(p.name)) = lower(trim(${sep.name}))
-        LIMIT 1
+        FROM users u LEFT JOIN profiles p ON p.user_id = u.id
+        WHERE u.email = ${targetEmail} LIMIT 1
       `;
-      if (match.length > 0) {
-        const edu = match[0];
-        // Transfer photo/linkedin to @ucsb.edu profile if it doesn't have them
-        if (edu.profile_id) {
+
+      if (existing.length > 0) {
+        // Merge: transfer photo/linkedin to existing @ucsb.edu account if missing
+        if (existing[0].profile_id) {
           await sql`
             UPDATE profiles SET
-              photo_url = COALESCE(photo_url, ${sep.photo_url ?? null}),
-              linkedin  = COALESCE(linkedin,  ${sep.linkedin  ?? null})
-            WHERE id = ${edu.profile_id}
+              photo_url   = COALESCE(photo_url,  ${sep.photo_url  ?? null}),
+              linkedin    = COALESCE(linkedin,   ${sep.linkedin   ?? null})
+            WHERE id = ${existing[0].profile_id}
           `;
         }
-        // Delete @ucsbsep.org profile and user
         if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
         await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
         await sql`DELETE FROM tasks WHERE assigned_to = ${sep.user_id}`;
         await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
+      } else {
+        // No existing @ucsb.edu account — update the email directly
+        await sql`UPDATE users SET email = ${targetEmail} WHERE id = ${sep.user_id}`;
       }
     }
-  } catch (e) { console.error('ucsbsep.org merge migration failed:', e); }
+  } catch (e) { console.error('ucsbsep.org email migration failed:', e); }
 
   // Ensure admin profile is always named "Admin Account" with no personal data
   await sql`
