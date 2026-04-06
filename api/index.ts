@@ -11,7 +11,7 @@ import taskRouter from '../server/routes/tasks.js';
 import classesRouter from '../server/routes/classes.js';
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRouter);

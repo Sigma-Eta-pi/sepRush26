@@ -264,11 +264,6 @@ function ClassDropdown({ value, onChange, options }: { value: string; onChange: 
 
 // ─── Profile Editor ────────────────────────────────────────────────────────────
 
-function extractLinkedinSlug(url: string): string {
-  const match = url.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
-  if (match) return match[1].replace(/\/$/, '');
-  return '';
-}
 
 function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [loading, setLoading] = useState(true);
@@ -290,7 +285,6 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [linkedin, setLinkedin] = useState('');
   const [instagram, setInstagram] = useState('');
   const [phone, setPhone] = useState('');
-  const [linkedinPhotoPreview, setLinkedinPhotoPreview] = useState('');
 
   useEffect(() => {
     fetch('/api/classes')
@@ -318,15 +312,6 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           setLinkedin(p.linkedin || '');
           setInstagram(p.instagram || '');
           setPhone(p.phone || '');
-          if (p.linkedin && !p.photoUrl) {
-            const slug = extractLinkedinSlug(p.linkedin);
-            if (slug) {
-              fetch(`/api/proxy/linkedin-photo/${slug}`)
-                .then(r => r.json())
-                .then(d => { if (d.url) setLinkedinPhotoPreview(d.url); })
-                .catch(() => {});
-            }
-          }
         }
       } catch {
         // no existing profile
@@ -336,15 +321,6 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
     })();
   }, [userId, token]);
 
-  // Update LinkedIn photo preview when URL changes
-  useEffect(() => {
-    const slug = extractLinkedinSlug(linkedin);
-    if (!slug) { setLinkedinPhotoPreview(''); return; }
-    fetch(`/api/proxy/linkedin-photo/${slug}`)
-      .then(r => r.json())
-      .then(d => setLinkedinPhotoPreview(d.url || ''))
-      .catch(() => setLinkedinPhotoPreview(''));
-  }, [linkedin]);
 
   async function handlePhotoUpload(file: File) {
     setUploading(true);
@@ -375,7 +351,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
     setSuccess(false);
     try {
       // If no manually uploaded photo, use LinkedIn photo
-      const finalPhotoUrl = photoUrl || linkedinPhotoPreview || undefined;
+      const finalPhotoUrl = photoUrl || undefined;
       const res = await fetch('/api/profiles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -419,7 +395,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
   const inputClass = 'w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition';
   const labelClass = 'block text-[#05006C]/70 text-xs tracking-wider uppercase font-medium mb-1';
-  const displayPhoto = photoUrl || linkedinPhotoPreview;
+  const displayPhoto = photoUrl;
 
   return (
     <form onSubmit={handleSave} className="bg-white rounded-xl p-6 space-y-4">
@@ -461,7 +437,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           }}
         />
         <span className="text-xs text-[#05006C]/40">
-          {linkedinPhotoPreview && !photoUrl ? 'Using LinkedIn photo · Click to upload different photo' : 'Click to upload photo'}
+          {'Click to upload photo'}
         </span>
       </div>
 
@@ -484,12 +460,6 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
             required
           />
         </div>
-        {linkedinPhotoPreview && (
-          <p className="text-xs text-[#05006C]/50 mt-1 flex items-center gap-1">
-            <Check size={11} className="text-green-500" />
-            LinkedIn profile photo will be used automatically
-          </p>
-        )}
       </div>
 
       {/* Class */}
