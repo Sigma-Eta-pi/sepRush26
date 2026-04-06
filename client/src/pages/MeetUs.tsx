@@ -18,6 +18,8 @@ const EXEC_BOARD = [
   { name: "Julia Jimenea", role: "VP of Public Relations", initials: "JJ", slug: "juliajimenea" },
   { name: "Saloni Singhal", role: "VP of Programming", initials: "SS", slug: "ssaloni-singhal" },
   { name: "Christina Sfatcu", role: "VP of Brotherhood", initials: "CS", slug: "christina-sfatcu" },
+  { name: "Vaibhava", role: "VP of Internal Affairs", initials: "V", slug: "" },
+  { name: "Matthew Vasques", role: "VP of External Affairs", initials: "MV", slug: "" },
 ];
 
 interface MemberProfile {
@@ -295,7 +297,7 @@ export default function MeetUs() {
                   color: "#1B212C",
                 }}
               >
-                Founding Class
+                Founder Class
               </div>
               <h2
                 className="text-[#1B212C] mb-4"
@@ -309,12 +311,12 @@ export default function MeetUs() {
                 Building Something New
               </h2>
               <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                The members who started it all — the founding class of Sigma Eta Pi at UC Santa Barbara.
+                The members who started it all — the founder class of Sigma Eta Pi at UC Santa Barbara.
               </p>
             </div>
 
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-              {profiles.filter(p => p.pledgeClass !== 'Founder').map((profile) => (
+              {profiles.filter(p => p.pledgeClass === 'Founder').map((profile) => (
                 <DynamicMemberCard key={profile.id} profile={profile} />
               ))}
             </div>
@@ -347,7 +349,7 @@ export default function MeetUs() {
             Be Part of Our Story
           </h2>
           <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            We're building the founding class of Sigma Eta Pi at UCSB. Join us and become part of a community of entrepreneurs, innovators, and leaders.
+            We're building the founder class of Sigma Eta Pi at UCSB. Join us and become part of a community of entrepreneurs, innovators, and leaders.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

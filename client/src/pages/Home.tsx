@@ -566,10 +566,10 @@ export default function Home() {
               lineHeight: 1,
             }}
           >
-            Join Our Founding Class
+            Join Our Founder Class
           </h2>
           <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            As we relaunch at UCSB, we can't wait to meet our founding class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.
+            As we relaunch at UCSB, we can't wait to meet our founder class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.
           </p>
           <Link
             href="/recruitment"

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import sepLogo from "@/images/sep-logo.png";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -30,7 +31,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 flex-shrink-0">
-                <SepLogo />
+                <img src={sepLogo} alt="Sigma Eta Pi" className="w-full h-full object-contain" />
               </div>
               <div className="hidden sm:block">
                 <div
@@ -180,45 +181,3 @@ export default function Navbar() {
   );
 }
 
-function SepLogo() {
-  return (
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Official Sigma Eta Pi Eagle Logo */}
-      <g>
-        {/* Shield outline */}
-        <path
-          d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z"
-          fill="none"
-          stroke="#EEEADE"
-          strokeWidth="2"
-        />
-        {/* Wings */}
-        <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="#EEEADE" opacity="0.95" />
-        <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="#EEEADE" opacity="0.95" />
-        {/* Body */}
-        <ellipse cx="50" cy="58" rx="12" ry="18" fill="#EEEADE" opacity="0.95" />
-        {/* Head */}
-        <circle cx="50" cy="38" r="8" fill="#EEEADE" />
-        {/* Beak */}
-        <path d="M50 41 L55 44 L50 46 Z" fill="#05006C" />
-        {/* Eye */}
-        <circle cx="53" cy="37" r="1.5" fill="#05006C" />
-        {/* Tail feathers */}
-        <path d="M44 74 L50 82 L56 74" fill="#EEEADE" opacity="0.9" />
-        {/* Greek letters ΣΗΠ */}
-        <text
-          x="50"
-          y="68"
-          textAnchor="middle"
-          fill="#05006C"
-          fontSize="8"
-          fontFamily="serif"
-          fontWeight="bold"
-          opacity="0.9"
-        >
-          ΣΗΠ
-        </text>
-      </g>
-    </svg>
-  );
-}

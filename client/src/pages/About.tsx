@@ -268,7 +268,7 @@ export default function About() {
             Ready to Be Part of Something?
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join our founding class and help shape the future of entrepreneurship at UCSB.
+            Join our founder class and help shape the future of entrepreneurship at UCSB.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
