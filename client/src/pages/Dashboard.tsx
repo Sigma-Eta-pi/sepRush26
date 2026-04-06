@@ -1,12 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
-import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe } from 'lucide-react';
+import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe, ListTodo } from 'lucide-react';
 import Updates from './dashboard/Updates';
 import CalendarView from './dashboard/CalendarView';
 import MemberProfiles from './dashboard/MemberProfiles';
 import ConnectionsFinder from './dashboard/ConnectionsFinder';
 import AlumniFinder from './dashboard/AlumniFinder';
+import TasksView from './dashboard/TasksView';
 
 const AdminPanel = lazy(() => import('./dashboard/AdminPanel'));
 
@@ -28,6 +29,7 @@ const navItems = [
   { label: 'Updates', icon: Megaphone, href: '/dashboard/updates' },
   { label: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
   { label: 'Members', icon: Users, href: '/dashboard/members' },
+  { label: 'My Tasks', icon: ListTodo, href: '/dashboard/tasks' },
   { label: 'Connections', icon: Zap, href: '/dashboard/connections' },
   { label: 'Alumni', icon: GraduationCap, href: '/dashboard/alumni' },
 ];
@@ -65,6 +67,8 @@ export default function Dashboard() {
         return <CalendarView />;
       case 'members':
         return <MemberProfiles />;
+      case 'tasks':
+        return <TasksView />;
       case 'connections':
         return <ConnectionsFinder />;
       case 'alumni':
@@ -121,7 +125,7 @@ export default function Dashboard() {
               }`}
             >
               <Settings size={18} />
-              Admin
+              {user?.role === 'admin' ? 'Admin Panel' : 'Exec Panel'}
             </Link>
           )}
         </nav>

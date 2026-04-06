@@ -8,14 +8,17 @@ import { Link } from "wouter";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import heroBg from "@/images/hikephoto.png";
-import careersBg from "@/images/bruintank.png"
+import heroBg from "@/images/hero.JPG";
+import careersBg from "@/images/exec.png";
+import brotherhoodImg from "@/images/brotherhood.png";
+import innovationImg from "@/images/innovation.png";
+import leadershipImg from "@/images/leadership.JPG";
 
 const HERO_BG = heroBg;
 const CAREERS_BG = careersBg;
-const BROTHERHOOD_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-brotherhood-FBLsWtvH52zdAHRAWhKhwz.webp";
-const INNOVATION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-innovation-Y8mrMA9TsjTcWgPnvxRjyd.webp";
-const ABOUT_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-about-bg-Sx7XK3mHc53GjCcs5HyE2K.webp";
+const BROTHERHOOD_IMG = brotherhoodImg;
+const INNOVATION_IMG = innovationImg;
+const ABOUT_BG = leadershipImg;
 
 const VALUES = [
   {

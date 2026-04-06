@@ -6,9 +6,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
 
-const ABOUT_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-about-bg-Sx7XK3mHc53GjCcs5HyE2K.webp";
-const BROTHERHOOD_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-brotherhood-FBLsWtvH52zdAHRAWhKhwz.webp";
-const INNOVATION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-innovation-Y8mrMA9TsjTcWgPnvxRjyd.webp";
+import brotherhoodImg from "@/images/brotherhood.png";
+import innovationImg from "@/images/innovation.png";
+import leadershipImg from "@/images/leadership.JPG";
+
+const ABOUT_BG = leadershipImg;
+const BROTHERHOOD_IMG = brotherhoodImg;
+const INNOVATION_IMG = innovationImg;
 
 const VALUES = [
   {

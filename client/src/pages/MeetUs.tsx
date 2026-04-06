@@ -6,8 +6,9 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
+import execHeroBg from "@/images/exec.png";
 
-const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-hero-bg-QdjE5NSyrfDKbv92hvh9eH.webp";
+const HERO_BG = execHeroBg;
 
 const EXEC_BOARD = [
   { name: "Piam Parekh", role: "Co-President", initials: "PP", slug: "piamparekh" },

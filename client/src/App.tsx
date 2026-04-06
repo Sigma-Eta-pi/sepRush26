@@ -13,9 +13,11 @@ import MeetUs from "./pages/MeetUs";
 import Careers from "./pages/Careers";
 import Recruitment from "./pages/Recruitment";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
 
 function Router() {
   return (
@@ -26,6 +28,16 @@ function Router() {
       <Route path={"/careers"} component={Careers} />
       <Route path={"/recruitment"} component={Recruitment} />
       <Route path="/active-login" component={Login} />
+      <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/onboarding">
+        {() => (
+          <ProtectedRoute>
+            <Suspense fallback={<div className="min-h-screen bg-[#05006C] flex items-center justify-center"><div className="text-[#EEEADE]">Loading...</div></div>}>
+              <Onboarding />
+            </Suspense>
+          </ProtectedRoute>
+        )}
+      </Route>
       <Route path="/dashboard">
         {() => (
           <ProtectedRoute>
