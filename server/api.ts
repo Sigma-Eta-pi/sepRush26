@@ -12,6 +12,7 @@ import adminRouter from './routes/admin.js';
 import uploadRouter from './routes/upload.js';
 import proxyRouter from './routes/proxy.js';
 import classesRouter from './routes/classes.js';
+import tasksRouter from './routes/tasks.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +46,7 @@ async function start() {
   app.use('/api/upload', uploadRouter);
   app.use('/api/proxy', proxyRouter);
   app.use('/api/classes', classesRouter);
+  app.use('/api/tasks', tasksRouter);
 
   const port = parseInt(process.env.API_PORT || '3456');
   app.listen(port, () => console.log(`SEP API running on http://localhost:${port}`));
