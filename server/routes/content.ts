@@ -42,8 +42,8 @@ router.put('/:page', requireEditor, async (req, res) => {
   const content = req.body;
   const contentJson = JSON.stringify(content);
   // SECURITY: reject oversized payloads to prevent DB bloat / DoS
-  if (contentJson.length > 500_000) {
-    res.status(413).json({ error: 'Content payload too large (max 500 KB)' });
+  if (contentJson.length > 15_000_000) {
+    res.status(413).json({ error: 'Content payload too large (max 15 MB)' });
     return;
   }
   const now = new Date().toISOString();
