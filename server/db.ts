@@ -133,7 +133,7 @@ export async function initDb() {
     await sql`INSERT INTO classes (id, name, created_at) VALUES (${cid}, ${name}, ${now}) ON CONFLICT (name) DO NOTHING`;
   }
 
-  // Ensure exec@ucsbsep.org always has role='admin' (may have been seeded as 'editor')
+  // Restore exec account to admin if accidentally changed
   await sql`UPDATE users SET role = 'admin' WHERE email = 'exec@ucsbsep.org' AND role != 'admin'`;
 
   // Fix any lowercase 'founder' pledge_class entries

@@ -31,6 +31,9 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
   const { role, email, pledgeClass } = req.body;
   const u = rows[0];
 
+  if (req.user!.id === req.params.id && role && role !== u.role) {
+    res.status(403).json({ error: 'Cannot change your own role' }); return;
+  }
   if (role && !['active', 'exec', 'admin', 'editor'].includes(role)) {
     res.status(400).json({ error: 'Invalid role' }); return;
   }

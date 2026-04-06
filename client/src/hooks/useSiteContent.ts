@@ -38,32 +38,52 @@ export function useSiteContent<T>(page: string, defaultContent: T): { content: T
     }
   }
 
+  async function fetchAndApply(setter: (v: T) => void) {
+    try {
+      const res = await fetch(`/api/content/${page}`);
+      if (!res.ok) throw new Error("non-ok");
+      const db = await res.json();
+      const merged = deepMerge(defaultContent, db);
+      setter(merged);
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({ data: db, ts: Date.now() }));
+      } catch { /* quota */ }
+    } catch {
+      // silently fall back to current value
+    }
+  }
+
   const cached = getCached();
   const [content, setContent] = useState<T>(cached ? deepMerge(defaultContent, cached) : defaultContent);
   const [isLoading, setIsLoading] = useState(!cached);
 
   useEffect(() => {
-    if (cached) return;
+    if (cached) {
+      setIsLoading(false);
+      return;
+    }
     let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch(`/api/content/${page}`);
-        if (!res.ok) throw new Error("non-ok");
-        const db = await res.json();
-        if (!cancelled) {
-          const merged = deepMerge(defaultContent, db);
-          setContent(merged);
-          try {
-            sessionStorage.setItem(cacheKey, JSON.stringify({ data: db, ts: Date.now() }));
-          } catch { /* quota */ }
-        }
-      } catch {
-        // silently fall back to defaults
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    })();
+    fetchAndApply((v) => { if (!cancelled) setContent(v); })
+      .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  // Cross-tab cache bust: when the editor saves, it sets localStorage 'sep_content_bust'
+  // which triggers a storage event in all other open tabs — they clear cache and refetch
+  useEffect(() => {
+    const handler = (e: StorageEvent) => {
+      if (e.key !== 'sep_content_bust') return;
+      try {
+        const { page: p } = JSON.parse(e.newValue || '{}');
+        if (p === page) {
+          sessionStorage.removeItem(cacheKey);
+          fetchAndApply(setContent);
+        }
+      } catch { /* ignore */ }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 

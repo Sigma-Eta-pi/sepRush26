@@ -632,6 +632,8 @@ export default function EditorPage() {
       if (res.ok) {
         toast.success('Page saved successfully');
         setHasChanges(false);
+        // Bust sessionStorage cache in all open tabs so the live site updates immediately
+        localStorage.setItem('sep_content_bust', JSON.stringify({ page: activePage, ts: Date.now() }));
       } else {
         toast.error('Failed to save page');
       }
@@ -749,9 +751,15 @@ export default function EditorPage() {
         {/* Actions */}
         <div className="flex items-center gap-2">
           <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+          >
+            Dashboard
+          </button>
+          <button
             onClick={() => {
               const path = PAGE_TABS.find((t) => t.key === activePage)?.path ?? '/';
-              window.open(path, '_blank');
+              window.open(path, `sep_preview_${activePage}`);
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
           >
