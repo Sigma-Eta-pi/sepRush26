@@ -122,6 +122,7 @@ function MembersTab({ token }: { token: string }) {
   const [newClassName, setNewClassName] = useState('');
   const [classError, setClassError] = useState('');
   const [resetStatus, setResetStatus] = useState<Record<string, string>>({});
+  const [search, setSearch] = useState('');
 
   const fetchMembers = () => {
     setLoading(true);
@@ -227,7 +228,12 @@ function MembersTab({ token }: { token: string }) {
   if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading members...</div>;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
-  const filteredMembers = classFilter === 'All' ? members : members.filter(m => m.pledgeClass === classFilter);
+  const filteredMembers = members.filter(m => {
+    const matchClass = classFilter === 'All' || m.pledgeClass === classFilter;
+    const q = search.toLowerCase();
+    const matchSearch = !q || (m.name || '').toLowerCase().includes(q) || m.email.toLowerCase().includes(q);
+    return matchClass && matchSearch;
+  });
 
   return (
     <div>
@@ -247,6 +253,16 @@ function MembersTab({ token }: { token: string }) {
             <Plus size={16} /> Add Member
           </button>
         </div>
+      </div>
+
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full sm:w-72 bg-white border border-[#05006C]/15 rounded-lg px-4 py-2 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
+        />
       </div>
 
       <div className="flex flex-wrap gap-1.5 mb-4">

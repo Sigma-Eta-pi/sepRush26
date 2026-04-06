@@ -20,7 +20,7 @@ const EXEC_BOARD = [
   { name: "Saloni Singhal",            role: "VP of Programming",     initials: "SS", slug: "ssaloni-singhal" },
   { name: "Christina Sfatcu",          role: "VP of Brotherhood",     initials: "CS", slug: "christina-sfatcu" },
   { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "" },
-  { name: "Matthew Vasques",           role: "VP of External Affairs",initials: "MV", slug: "" },
+  { name: "Matthew Roman Vasquez",      role: "VP of External Affairs",initials: "MV", slug: "" },
 ];
 
 // Original 8 founding exec — shown at the bottom with their roles
@@ -242,9 +242,6 @@ export default function MeetUs() {
         <section key={className} className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
-              <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
-                Pledge Class
-              </div>
               <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
                 {className}
               </h2>
@@ -260,9 +257,6 @@ export default function MeetUs() {
       <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
-              Pledge Class
-            </div>
             <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
               Founding Class
             </h2>
@@ -277,9 +271,6 @@ export default function MeetUs() {
       <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
-              Pledge Class
-            </div>
             <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
               Founders
             </h2>

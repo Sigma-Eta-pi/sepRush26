@@ -279,7 +279,7 @@ export default function Onboarding() {
                       <input type="date" value={form.birthday} onChange={set('birthday')} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Pledge Class</label>
+                      <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Class</label>
                       <select value={form.pledgeClass} onChange={set('pledgeClass')} className={inputCls}>
                         <option value="">Select class...</option>
                         {classOptions.map(c => <option key={c} value={c}>{c}</option>)}
