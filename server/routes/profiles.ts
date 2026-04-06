@@ -51,7 +51,7 @@ router.post('/', requireAuth, async (req, res) => {
   const instagram = trimStr(req.body.instagram, 100);
   const phone = trimStr(req.body.phone, 20);
   const pledgeClass = trimStr(req.body.pledgeClass, 50);
-  const photoUrl = trimStr(req.body.photoUrl, 500);
+  const photoUrl = typeof req.body.photoUrl === 'string' ? req.body.photoUrl : undefined;
   const gradYear = req.body.gradYear ?? null;
   const userId = req.user!.id;
   const now = new Date().toISOString();
@@ -107,7 +107,7 @@ router.put('/:id', requireAuth, async (req, res) => {
   const instagram = trimStr(req.body.instagram, 100);
   const phone = trimStr(req.body.phone, 20);
   const pledgeClass = trimStr(req.body.pledgeClass, 50);
-  const photoUrl = trimStr(req.body.photoUrl, 500);
+  const photoUrl = typeof req.body.photoUrl === 'string' ? req.body.photoUrl : undefined;
   const gradYear = req.body.gradYear;
   const now = new Date().toISOString();
 

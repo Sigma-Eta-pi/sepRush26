@@ -49,8 +49,8 @@ async function seed() {
     }
 
     await sql`
-      INSERT INTO profiles (id, user_id, name, pledge_class, linkedin, created_at, updated_at)
-      VALUES (${profileId}, ${userId}, ${member.name}, 'Founder', ${member.linkedin || null}, ${now}, ${now})
+      INSERT INTO profiles (id, user_id, name, pledge_class, created_at, updated_at)
+      VALUES (${profileId}, ${userId}, ${member.name}, 'Founder', ${now}, ${now})
       ON CONFLICT DO NOTHING
     `;
 

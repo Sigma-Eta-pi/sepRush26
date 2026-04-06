@@ -33,14 +33,29 @@ export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [linkedinPhoto, setLinkedinPhoto] = useState('');
   const [form, setForm] = useState({
     name: '', major: '', gradYear: '', pledgeClass: '',
     hometown: '', birthday: '', bio: '', linkedin: '', instagram: '', phone: '',
   });
 
   const set = (k: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       setForm(f => ({ ...f, [k]: e.target.value }));
+      if (k === 'linkedin') {
+        const val = e.target.value;
+        const match = val.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
+        if (match) {
+          const slug = match[1].replace(/\/$/, '');
+          fetch(`/api/proxy/linkedin-photo/${slug}`)
+            .then(r => r.json())
+            .then(d => { if (d.url) setLinkedinPhoto(d.url); })
+            .catch(() => {});
+        } else {
+          setLinkedinPhoto('');
+        }
+      }
+    };
 
   const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-[#EEEADE] placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/50 text-sm transition-colors';
 
@@ -91,6 +106,7 @@ export default function Onboarding() {
           linkedin: form.linkedin || undefined,
           instagram: form.instagram || undefined,
           phone: form.phone || undefined,
+          photoUrl: linkedinPhoto || undefined,
         }),
       });
       markOnboardingComplete();
@@ -273,7 +289,13 @@ export default function Onboarding() {
                     </div>
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">LinkedIn</label>
-                      <input value={form.linkedin} onChange={set('linkedin')} placeholder="linkedin.com/in/..." className={inputCls} />
+                      <div className="flex items-center gap-3">
+                        <input value={form.linkedin} onChange={set('linkedin')} placeholder="linkedin.com/in/yourname" className={`${inputCls} flex-1`} />
+                        {linkedinPhoto && (
+                          <img src={linkedinPhoto} alt="LinkedIn photo" className="w-10 h-10 rounded-full object-cover border-2 border-green-400 shrink-0" />
+                        )}
+                      </div>
+                      {linkedinPhoto && <p className="text-green-400 text-xs mt-1">Profile photo found — will be used on your member card.</p>}
                     </div>
                     <div>
                       <label className="block text-[#EEEADE]/60 text-xs uppercase tracking-wider mb-1.5">Instagram</label>

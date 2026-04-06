@@ -192,11 +192,25 @@ export default function MeetUs() {
       .catch(() => {});
   }, []);
 
-  const profileByName = new Map(profiles.map(p => [p.name, p]));
+  // Build name → profile map; prefer profiles that have a photo or linkedin over bare ones
+  const profileByName = new Map<string, MemberProfile>();
+  for (const p of profiles) {
+    const existing = profileByName.get(p.name);
+    if (!existing || (!existing.photoUrl && !existing.linkedin && (p.photoUrl || p.linkedin))) {
+      profileByName.set(p.name, p);
+    }
+  }
 
-  // Founding class = any founding pledge class value, not an original founder exec
-  const foundingClassMembers = profiles.filter(
-    p => FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? '') && !FOUNDER_NAMES.has(p.name)
+  // Founding class = any founding pledge class value, not an original founder exec — deduplicated by name
+  const foundingClassMembers = Array.from(
+    profiles
+      .filter(p => FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? '') && !FOUNDER_NAMES.has(p.name))
+      .reduce((map, p) => {
+        const ex = map.get(p.name);
+        if (!ex || (!ex.photoUrl && !ex.linkedin && (p.photoUrl || p.linkedin))) map.set(p.name, p);
+        return map;
+      }, new Map<string, MemberProfile>())
+      .values()
   );
 
   // Future pledge classes = non-founding pledge classes, grouped by name

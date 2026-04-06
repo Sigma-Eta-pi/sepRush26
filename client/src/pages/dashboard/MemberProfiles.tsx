@@ -285,6 +285,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [linkedin, setLinkedin] = useState('');
   const [instagram, setInstagram] = useState('');
   const [phone, setPhone] = useState('');
+  const [linkedinPhoto, setLinkedinPhoto] = useState('');
 
   useEffect(() => {
     fetch('/api/classes')
@@ -312,6 +313,16 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           setLinkedin(p.linkedin || '');
           setInstagram(p.instagram || '');
           setPhone(p.phone || '');
+          if (p.linkedin && !p.photoUrl) {
+            const match = p.linkedin.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
+            if (match) {
+              const slug = match[1].replace(/\/$/, '');
+              fetch(`/api/proxy/linkedin-photo/${slug}`)
+                .then(r => r.json())
+                .then(d => { if (d.url) setLinkedinPhoto(d.url); })
+                .catch(() => {});
+            }
+          }
         }
       } catch {
         // no existing profile
@@ -351,7 +362,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
     setSuccess(false);
     try {
       // If no manually uploaded photo, use LinkedIn photo
-      const finalPhotoUrl = photoUrl || undefined;
+      const finalPhotoUrl = photoUrl || linkedinPhoto || undefined;
       const res = await fetch('/api/profiles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -395,7 +406,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
   const inputClass = 'w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition';
   const labelClass = 'block text-[#05006C]/70 text-xs tracking-wider uppercase font-medium mb-1';
-  const displayPhoto = photoUrl;
+  const displayPhoto = photoUrl || linkedinPhoto;
 
   return (
     <form onSubmit={handleSave} className="bg-white rounded-xl p-6 space-y-4">
@@ -437,7 +448,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           }}
         />
         <span className="text-xs text-[#05006C]/40">
-          {'Click to upload photo'}
+          {linkedinPhoto && !photoUrl ? 'Using LinkedIn photo · Click to upload a different one' : 'Click to upload photo'}
         </span>
       </div>
 

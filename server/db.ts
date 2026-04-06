@@ -90,6 +90,23 @@ export async function initDb() {
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
 
+  // Clear auto-generated linkedin URLs for active members who haven't completed onboarding
+  await sql`
+    UPDATE profiles SET linkedin = NULL
+    WHERE linkedin IS NOT NULL
+    AND user_id IN (SELECT id FROM users WHERE first_login = 1 AND role = 'active')
+  `;
+
+  // Remove duplicate profiles — keep the most recently updated row per user
+  await sql`
+    DELETE FROM profiles
+    WHERE id NOT IN (
+      SELECT DISTINCT ON (user_id) id
+      FROM profiles
+      ORDER BY user_id, updated_at DESC
+    )
+  `;
+
   const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
   for (const name of defaultClasses) {
     const cid = nanoid();
