@@ -286,44 +286,42 @@ export default function MeetUs() {
         </div>
       </section>
 
-      {/* Dynamic Members — populated from in-app profiles */}
-      {profiles.filter(p => p.pledgeClass === 'Founder').length > 0 && (
-        <section className="py-20 bg-[#EEEADE]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <div
-                className="text-xs font-bold tracking-widest uppercase mb-3"
-                style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  color: "#1B212C",
-                }}
-              >
-                Founder Class
-              </div>
-              <h2
-                className="text-[#1B212C] mb-4"
-                style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  fontWeight: 900,
-                  fontSize: "clamp(2rem, 4vw, 3rem)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Building Something New
-              </h2>
-              <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                The members who started it all — the founder class of Sigma Eta Pi at UC Santa Barbara.
-              </p>
+      {/* Founder Class */}
+      <section className="py-20 bg-[#EEEADE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-3"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#1B212C",
+              }}
+            >
+              Founder Class
             </div>
-
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-              {profiles.filter(p => p.pledgeClass === 'Founder').map((profile) => (
-                <DynamicMemberCard key={profile.id} profile={profile} />
-              ))}
-            </div>
+            <h2
+              className="text-[#1B212C] mb-4"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontWeight: 900,
+                fontSize: "clamp(2rem, 4vw, 3rem)",
+                textTransform: "uppercase",
+              }}
+            >
+              Building Something New
+            </h2>
+            <p className="text-[#0C141A]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              The members who started it all — the founder class of Sigma Eta Pi at UC Santa Barbara.
+            </p>
           </div>
-        </section>
-      )}
+
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+            {profiles.filter(p => p.pledgeClass === 'Founder').map((profile) => (
+              <DynamicMemberCard key={profile.id} profile={profile} />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Join CTA */}
       <section className="py-20 bg-[#FFFFFF] border-t-4 border-[#1B212C]">

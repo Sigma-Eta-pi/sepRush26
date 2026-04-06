@@ -78,7 +78,7 @@ export default function ResetPassword() {
       >
         <div className="flex flex-col items-center mb-8">
           <div className="w-[72px] h-[72px] mb-4">
-            <img src={sepLogo} alt="Sigma Eta Pi" className="w-full h-full object-contain" />
+            <img src={sepLogo} alt="Sigma Eta Pi" className="w-full h-full object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
           </div>
           <h1 className="text-[#EEEADE] font-bold text-xl tracking-widest uppercase">
             {done ? 'Password Set!' : 'Set Your Password'}

@@ -8,6 +8,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'The Youngest';
+  src: url('./fonts/The Youngest Script-Rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));

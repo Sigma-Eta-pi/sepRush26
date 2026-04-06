@@ -174,7 +174,7 @@ export default function Home() {
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
-            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#1B212C] text-[#1B212C] text-xs tracking-widest uppercase"
+            className="inline-block mb-6 px-4 py-1.5 border-2 border-[#EEEADE] text-[#EEEADE] text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
             Epsilon Chapter · UCSB
@@ -183,20 +183,19 @@ export default function Home() {
           <h1
             className="text-white leading-none mb-4"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(3.5rem, 10vw, 8rem)",
-              letterSpacing: "-0.02em",
-              textTransform: "uppercase",
+              fontFamily: "'The Youngest', cursive",
+              fontWeight: 400,
+              fontSize: "clamp(3rem, 9vw, 8rem)",
+              letterSpacing: "0.02em",
             }}
           >
-            SIGMA ETA PI
+            Sigma Eta Pi
           </h1>
 
           <p
-            className="text-[#0C141A]/80 mb-10 max-w-2xl mx-auto"
+            className="text-white mb-10 max-w-2xl mx-auto mt-4"
             style={{
-              fontFamily: "'Glacial Indifference', serif",
+              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
               fontWeight: 400,
               letterSpacing: "0.05em",
@@ -208,17 +207,18 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/recruitment"
-              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 font-bold rounded-lg transition-all duration-300 hover:opacity-90 text-sm text-[#EEEADE]"
               style={{
+                background: "#203354",
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
-              JOIN OUR FOUNDING CLASS
+              JOIN OUR ALPHA CLASS
             </Link>
             <Link
               href="/about"
-              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#EEEADE] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#203354] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",

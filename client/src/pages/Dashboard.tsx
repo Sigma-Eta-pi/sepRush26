@@ -78,7 +78,7 @@ export default function Dashboard() {
         {/* Logo */}
         <div className="px-6 pt-6 pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <img src={sepLogo} alt="SEP" className="w-9 h-9 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }} />
+            <img src={sepLogo} alt="SEP" className="w-9 h-9 object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
             <div>
               <div className="text-[#EEEADE] font-bold text-sm tracking-widest">SIGMA ETA PI</div>
               <div className="text-[#EEEADE]/50 text-xs tracking-wider">EPSILON CHAPTER</div>

@@ -128,7 +128,7 @@ export default function Onboarding() {
               {step === 0 && (
                 <div className="text-center">
                   <div className="w-20 h-20 mx-auto mb-6">
-                    <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }} />
+                    <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
                   </div>
                   <h1 className="text-[#EEEADE] font-bold text-2xl tracking-wide mb-3">
                     Welcome to SEP Epsilon
