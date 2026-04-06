@@ -31,7 +31,11 @@ function rowToProfile(r: any) {
 }
 
 router.get('/', async (_req, res) => {
-  const rows = await sql`SELECT * FROM profiles`;
+  const rows = await sql`
+    SELECT p.* FROM profiles p
+    JOIN users u ON u.id = p.user_id
+    WHERE u.role != 'admin'
+  `;
   res.json(rows.map(rowToProfile));
 });
 

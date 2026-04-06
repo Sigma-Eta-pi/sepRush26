@@ -127,10 +127,28 @@ export async function initDb() {
   const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
   if (admins.length === 0) {
     const hash = await bcrypt.hash('12345!', 10);
+    const adminId = nanoid();
+    const now = new Date().toISOString();
     await sql`
       INSERT INTO users (id, email, password_hash, role, created_at, first_login)
-      VALUES (${nanoid()}, 'exec@ucsbsep.org', ${hash}, 'admin', ${new Date().toISOString()}, 1)
+      VALUES (${adminId}, 'exec@ucsbsep.org', ${hash}, 'admin', ${now}, 1)
       ON CONFLICT (email) DO NOTHING
     `;
   }
+
+  // Ensure admin profile is always named "Admin Account" with no personal data
+  await sql`
+    INSERT INTO profiles (id, user_id, name, created_at, updated_at)
+    SELECT ${nanoid()}, u.id, 'Admin Account', ${new Date().toISOString()}, ${new Date().toISOString()}
+    FROM users u
+    WHERE u.role = 'admin'
+    AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.user_id = u.id)
+  `;
+  await sql`
+    UPDATE profiles SET
+      name = 'Admin Account', major = NULL, grad_year = NULL, hometown = NULL,
+      birthday = NULL, bio = NULL, linkedin = NULL, instagram = NULL,
+      phone = NULL, pledge_class = NULL, photo_url = NULL
+    WHERE user_id IN (SELECT id FROM users WHERE role = 'admin')
+  `;
 }
