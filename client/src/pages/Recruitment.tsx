@@ -246,7 +246,7 @@ export default function Recruitment() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="https://forms.gle/your-application-form"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd6YhZaulhZW0qgcPuXSn56sO1SGk1OFpOeEZQJg5pkNu1WvQ/viewform?usp=dialog"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
@@ -371,7 +371,7 @@ export default function Recruitment() {
             Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
           </p>
           <a
-            href="https://forms.gle/your-application-form"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSd6YhZaulhZW0qgcPuXSn56sO1SGk1OFpOeEZQJg5pkNu1WvQ/viewform?usp=dialog"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"

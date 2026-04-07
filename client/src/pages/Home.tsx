@@ -582,7 +582,7 @@ export default function Home() {
               letterSpacing: "0.05em",
             }}
           >
-            WINTER 2026 APPLICATION
+            SPRING 2026 APPLICATION
           </Link>
         </div>
       </section>
