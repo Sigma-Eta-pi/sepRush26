@@ -1,18 +1,24 @@
 /*
  * UCSB Sigma Eta Pi — Official Brand Design System
  * Design Philosophy: Professional, Elegant, Timeless
- * Primary: Navy Blue #05006C, Secondary: Light Cream #EEEADE
+ * Primary: Navy Blue #1B212C, Secondary: Light Cream #EEEADE
  * Typography: Helvetica Now (display) + Glacial Indifference (secondary) + Tangerine (accent)
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'The Youngest';
+  src: url('./fonts/The Youngest Script-Rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-
-/* Sigma Eta Pi Official Brand Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -55,7 +61,7 @@
 
 :root {
   /* Sigma Eta Pi Official Color Palette */
-  --sep-navy: #05006C;
+  --sep-navy: #1B212C;
   --sep-dark-navy: #0C141A;
   --sep-light: #EEEADE;
   --sep-light-blue: #D0E4EF;
@@ -69,32 +75,32 @@
   --card-foreground: #0C141A;
   --popover: #FFFFFF;
   --popover-foreground: #0C141A;
-  --primary: #05006C;
+  --primary: #1B212C;
   --primary-foreground: #EEEADE;
   --secondary: #D0E4EF;
-  --secondary-foreground: #05006C;
+  --secondary-foreground: #1B212C;
   --muted: #D2D0D1;
   --muted-foreground: #8FA2C2;
-  --accent: #05006C;
+  --accent: #1B212C;
   --accent-foreground: #EEEADE;
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
   --border: #D2D0D1;
   --input: #FFFFFF;
-  --ring: #05006C;
+  --ring: #1B212C;
   --chart-1: #8FA2C2;
   --chart-2: #D0E4EF;
-  --chart-3: #05006C;
+  --chart-3: #1B212C;
   --chart-4: #0C141A;
   --chart-5: #D2D0D1;
   --sidebar: #EEEADE;
   --sidebar-foreground: #0C141A;
-  --sidebar-primary: #05006C;
+  --sidebar-primary: #1B212C;
   --sidebar-primary-foreground: #EEEADE;
-  --sidebar-accent: #05006C;
+  --sidebar-accent: #1B212C;
   --sidebar-accent-foreground: #EEEADE;
   --sidebar-border: #D2D0D1;
-  --sidebar-ring: #05006C;
+  --sidebar-ring: #1B212C;
 }
 
 @layer base {
@@ -151,23 +157,23 @@
 
   /* Sigma Eta Pi Custom Components */
   .sep-btn-primary {
-    @apply px-6 py-3 bg-[#05006C] text-[#EEEADE] font-bold border-2 border-[#05006C] transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#05006C] hover:border-[#05006C];
+    @apply px-6 py-3 bg-[#1B212C] text-[#EEEADE] font-bold border-2 border-[#1B212C] transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#1B212C] hover:border-[#1B212C];
   }
 
   .sep-btn-secondary {
-    @apply px-6 py-3 bg-transparent text-[#05006C] font-bold border-2 border-[#05006C] transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE];
+    @apply px-6 py-3 bg-transparent text-[#1B212C] font-bold border-2 border-[#1B212C] transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE];
   }
 
   .sep-label {
     @apply text-xs font-bold tracking-widest uppercase;
-    color: #05006C;
+    color: #1B212C;
     font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .sep-heading {
     font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 900;
-    color: #05006C;
+    color: #1B212C;
   }
 
   .sep-subheading {
@@ -180,6 +186,6 @@
     font-family: 'Tangerine', cursive;
     font-weight: 700;
     font-size: 2rem;
-    color: #05006C;
+    color: #1B212C;
   }
 }

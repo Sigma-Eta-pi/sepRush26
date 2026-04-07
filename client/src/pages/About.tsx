@@ -6,23 +6,24 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "wouter";
 
-const ABOUT_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-about-bg-Sx7XK3mHc53GjCcs5HyE2K.webp";
-const BROTHERHOOD_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-brotherhood-FBLsWtvH52zdAHRAWhKhwz.webp";
-const INNOVATION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-values-innovation-Y8mrMA9TsjTcWgPnvxRjyd.webp";
+import brotherhoodImg from "@/images/brotherhood.png";
+import innovationImg from "@/images/innovation.png";
+import leadershipImg from "@/images/leadership.JPG";
+
+const ABOUT_BG = leadershipImg;
+const BROTHERHOOD_IMG = brotherhoodImg;
+const INNOVATION_IMG = innovationImg;
 
 const VALUES = [
   {
-    icon: "💡",
     title: "Innovation",
     description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
   },
   {
-    icon: "🤝",
     title: "Brotherhood",
     description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
   },
   {
-    icon: "🚀",
     title: "Leadership",
     description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
   },
@@ -77,13 +78,13 @@ export default function About() {
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  color: "#05006C",
+                  color: "#1B212C",
                 }}
               >
                 Our Story
               </div>
               <h2
-                className="text-[#05006C] mb-6"
+                className="text-[#1B212C] mb-6"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
@@ -108,7 +109,7 @@ export default function About() {
             </div>
             <div className="space-y-6">
               <div
-                className="aspect-video overflow-hidden border-4 border-[#05006C]"
+                className="aspect-video overflow-hidden border-4 border-[#1B212C]"
                 style={{
                   backgroundImage: `url(${BROTHERHOOD_IMG})`,
                   backgroundSize: "cover",
@@ -116,7 +117,7 @@ export default function About() {
                 }}
               />
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#05006C] text-[#EEEADE] border-4 border-[#05006C] p-6">
+                <div className="bg-[#1B212C] text-[#EEEADE] border-4 border-[#1B212C] p-6">
                   <div
                     className="font-bold mb-1"
                     style={{
@@ -130,7 +131,7 @@ export default function About() {
                     Founded at UCLA
                   </div>
                 </div>
-                <div className="bg-[#05006C] text-[#EEEADE] border-4 border-[#05006C] p-6">
+                <div className="bg-[#1B212C] text-[#EEEADE] border-4 border-[#1B212C] p-6">
                   <div
                     className="font-bold mb-1"
                     style={{
@@ -155,7 +156,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div
-              className="aspect-video overflow-hidden border-4 border-[#05006C] order-2 lg:order-1"
+              className="aspect-video overflow-hidden border-4 border-[#1B212C] order-2 lg:order-1"
               style={{
                 backgroundImage: `url(${INNOVATION_IMG})`,
                 backgroundSize: "cover",
@@ -167,13 +168,13 @@ export default function About() {
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  color: "#05006C",
+                  color: "#1B212C",
                 }}
               >
                 National Organization
               </div>
               <h2
-                className="text-[#05006C] mb-6"
+                className="text-[#1B212C] mb-6"
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
@@ -208,13 +209,13 @@ export default function About() {
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: "#05006C",
+                color: "#1B212C",
               }}
             >
               Our Values
             </div>
             <h2
-              className="text-[#05006C]"
+              className="text-[#1B212C]"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
@@ -229,11 +230,10 @@ export default function About() {
             {VALUES.map((value, i) => (
               <div
                 key={i}
-                className="bg-[#EEEADE] border-4 border-[#05006C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
+                className="bg-[#EEEADE] border-4 border-[#1B212C] p-8 hover:bg-[#D0E4EF] transition-all duration-300 group"
               >
-                <div className="text-4xl mb-4">{value.icon}</div>
                 <h3
-                  className="text-[#05006C] mb-3 group-hover:text-[#0C141A] transition-colors"
+                  className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
                     fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
@@ -254,10 +254,10 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#05006C]">
+      <section className="py-20 bg-[#EEEADE] border-t-4 border-[#1B212C]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2
-            className="text-[#05006C] mb-6"
+            className="text-[#1B212C] mb-6"
             style={{
               fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
@@ -268,12 +268,12 @@ export default function About() {
             Ready to Be Part of Something?
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join our founding class and help shape the future of entrepreneurship at UCSB.
+            Join our founder class and help shape the future of entrepreneurship at UCSB.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recruitment"
-              className="px-8 py-4 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
@@ -283,7 +283,7 @@ export default function About() {
             </Link>
             <Link
               href="/meet-us"
-              className="px-8 py-4 border-2 border-[#05006C] text-[#05006C] font-bold rounded-lg transition-all duration-300 hover:bg-[#05006C] hover:text-[#EEEADE] text-sm"
+              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",

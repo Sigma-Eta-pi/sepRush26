@@ -5,6 +5,7 @@
 
 import { Link } from "wouter";
 import { Instagram, Linkedin, Mail, ExternalLink } from "lucide-react";
+import sepLogo from "@/images/sep-logo.png";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -23,7 +24,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 flex-shrink-0">
-                <SepLogoFooter />
+                <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" />
               </div>
               <div>
                 <div
@@ -175,20 +176,3 @@ export default function Footer() {
   );
 }
 
-function SepLogoFooter() {
-  return (
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <g>
-        <path d="M50 8 L85 22 L85 55 Q85 78 50 92 Q15 78 15 55 L15 22 Z" fill="none" stroke="#05006C" strokeWidth="2" />
-        <path d="M50 45 L20 25 L15 35 L35 50 Z" fill="#05006C" opacity="0.95" />
-        <path d="M50 45 L80 25 L85 35 L65 50 Z" fill="#05006C" opacity="0.95" />
-        <ellipse cx="50" cy="58" rx="12" ry="18" fill="#05006C" opacity="0.95" />
-        <circle cx="50" cy="38" r="8" fill="#05006C" />
-        <path d="M50 41 L55 44 L50 46 Z" fill="#EEEADE" />
-        <circle cx="53" cy="37" r="1.5" fill="#EEEADE" />
-        <path d="M44 74 L50 82 L56 74" fill="#05006C" opacity="0.9" />
-        <text x="50" y="68" textAnchor="middle" fill="#EEEADE" fontSize="8" fontFamily="serif" fontWeight="bold" opacity="0.9">ΣΗΠ</text>
-      </g>
-    </svg>
-  );
-}
