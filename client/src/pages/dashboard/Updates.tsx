@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { motion } from 'framer-motion';
-import { Clock, User, Megaphone, Plus, Pencil, Trash2, X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
+import { Clock, User, Megaphone, Plus, Pencil, Trash2, X } from "lucide-react";
 
 interface Update {
   id: string;
@@ -16,7 +16,11 @@ interface Update {
 async function apiFetch(path: string, token: string, options?: RequestInit) {
   const res = await fetch(path, {
     ...options,
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...options?.headers },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...options?.headers,
+    },
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -28,35 +32,37 @@ export default function Updates() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showNew, setShowNew] = useState(false);
-  const [newForm, setNewForm] = useState({ title: '', content: '' });
+  const [newForm, setNewForm] = useState({ title: "", content: "" });
   const [editing, setEditing] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: '', content: '' });
+  const [editForm, setEditForm] = useState({ title: "", content: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  const isExecOrAdmin = user?.role === 'exec' || user?.role === 'admin';
+  const isExecOrAdmin = user?.role === "exec" || user?.role === "admin";
 
   const fetchUpdates = () => {
     if (!token) return;
     setLoading(true);
-    apiFetch('/api/updates', token)
+    apiFetch("/api/updates", token)
       .then(setUpdates)
-      .catch((e) => setError(e.message))
+      .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchUpdates(); }, [token]);
+  useEffect(() => {
+    fetchUpdates();
+  }, [token]);
 
   const handleCreate = async () => {
     if (!token || !newForm.title || !newForm.content) return;
     setSubmitting(true);
     try {
-      const created = await apiFetch('/api/updates', token, {
-        method: 'POST',
+      const created = await apiFetch("/api/updates", token, {
+        method: "POST",
         body: JSON.stringify(newForm),
       });
       setShowNew(false);
-      setNewForm({ title: '', content: '' });
-      setUpdates((prev) => [created, ...prev]);
+      setNewForm({ title: "", content: "" });
+      setUpdates(prev => [created, ...prev]);
     } catch (e: any) {
       alert(e.message);
     } finally {
@@ -69,7 +75,7 @@ export default function Updates() {
     setSubmitting(true);
     try {
       await apiFetch(`/api/updates/${id}`, token, {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(editForm),
       });
       setEditing(null);
@@ -82,10 +88,10 @@ export default function Updates() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!token || !window.confirm('Delete this update?')) return;
+    if (!token || !window.confirm("Delete this update?")) return;
     try {
-      await apiFetch(`/api/updates/${id}`, token, { method: 'DELETE' });
-      setUpdates((prev) => prev.filter((u) => u.id !== id));
+      await apiFetch(`/api/updates/${id}`, token, { method: "DELETE" });
+      setUpdates(prev => prev.filter(u => u.id !== id));
     } catch (e: any) {
       alert(e.message);
     }
@@ -96,7 +102,9 @@ export default function Updates() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Megaphone size={24} className="text-[#05006C]" />
-          <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">UPDATES</h1>
+          <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">
+            UPDATES
+          </h1>
         </div>
         {isExecOrAdmin && (
           <button
@@ -115,19 +123,26 @@ export default function Updates() {
           className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 mb-4"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm tracking-wider">NEW UPDATE</span>
-            <button onClick={() => setShowNew(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#05006C] font-bold text-sm tracking-wider">
+              NEW UPDATE
+            </span>
+            <button
+              onClick={() => setShowNew(false)}
+              className="text-[#05006C]/40 hover:text-[#05006C]"
+            >
+              <X size={18} />
+            </button>
           </div>
           <input
             placeholder="Title"
             value={newForm.title}
-            onChange={(e) => setNewForm((f) => ({ ...f, title: e.target.value }))}
+            onChange={e => setNewForm(f => ({ ...f, title: e.target.value }))}
             className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-3"
           />
           <textarea
             placeholder="Content"
             value={newForm.content}
-            onChange={(e) => setNewForm((f) => ({ ...f, content: e.target.value }))}
+            onChange={e => setNewForm(f => ({ ...f, content: e.target.value }))}
             className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-3"
           />
           <div className="flex gap-2">
@@ -136,7 +151,7 @@ export default function Updates() {
               disabled={submitting}
               className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
             >
-              {submitting ? 'Posting...' : 'POST'}
+              {submitting ? "Posting..." : "POST"}
             </button>
             <button
               onClick={() => setShowNew(false)}
@@ -150,8 +165,11 @@ export default function Updates() {
 
       {loading && (
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 animate-pulse">
+          {[1, 2, 3].map(i => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 animate-pulse"
+            >
               <div className="h-5 bg-[#05006C]/10 rounded w-1/3 mb-3" />
               <div className="h-3 bg-[#05006C]/5 rounded w-1/4 mb-4" />
               <div className="space-y-2">
@@ -192,12 +210,16 @@ export default function Updates() {
                 <div>
                   <input
                     value={editForm.title}
-                    onChange={(e) => setEditForm((f) => ({ ...f, title: e.target.value }))}
+                    onChange={e =>
+                      setEditForm(f => ({ ...f, title: e.target.value }))
+                    }
                     className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-2"
                   />
                   <textarea
                     value={editForm.content}
-                    onChange={(e) => setEditForm((f) => ({ ...f, content: e.target.value }))}
+                    onChange={e =>
+                      setEditForm(f => ({ ...f, content: e.target.value }))
+                    }
                     className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-2"
                   />
                   <div className="flex gap-2">
@@ -221,7 +243,13 @@ export default function Updates() {
                   {isExecOrAdmin && (
                     <div className="absolute top-4 right-4 flex gap-1.5">
                       <button
-                        onClick={() => { setEditing(update.id); setEditForm({ title: update.title, content: update.content }); }}
+                        onClick={() => {
+                          setEditing(update.id);
+                          setEditForm({
+                            title: update.title,
+                            content: update.content,
+                          });
+                        }}
                         className="border border-[#05006C]/20 text-[#05006C]/70 px-2 py-1.5 rounded-lg hover:bg-[#05006C]/5"
                       >
                         <Pencil size={14} />
@@ -234,16 +262,21 @@ export default function Updates() {
                       </button>
                     </div>
                   )}
-                  <h2 className="text-[#05006C] text-xl font-bold pr-20">{update.title}</h2>
+                  <h2 className="text-[#05006C] text-xl font-bold pr-20">
+                    {update.title}
+                  </h2>
                   <div className="flex gap-4 mt-1 text-[#05006C]/50 text-sm">
                     <span className="flex items-center gap-1">
                       <User size={14} /> {update.authorName}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock size={14} /> {new Date(update.createdAt).toLocaleDateString()}
+                      <Clock size={14} />{" "}
+                      {new Date(update.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-[#05006C]/80 mt-4 leading-relaxed whitespace-pre-wrap">{update.content}</p>
+                  <p className="text-[#05006C]/80 mt-4 leading-relaxed whitespace-pre-wrap">
+                    {update.content}
+                  </p>
                 </>
               )}
             </motion.div>

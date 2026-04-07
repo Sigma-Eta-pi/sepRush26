@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useLocation, Link } from 'wouter';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import sepLogo from '@/images/sep-logo.png';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, Link } from "wouter";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import sepLogo from "@/images/sep-logo.png";
 
 interface LoginForm {
   email: string;
@@ -14,16 +14,20 @@ interface LoginForm {
 export default function Login() {
   const auth = useAuth();
   const [, navigate] = useLocation();
-  const [error, setError] = useState('');
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<LoginForm>();
+  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<LoginForm>();
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      setError('');
+      setError("");
       const result = await auth.login(data.email, data.password);
-      navigate(result.needsOnboarding ? '/onboarding' : '/dashboard');
+      navigate(result.needsOnboarding ? "/onboarding" : "/dashboard");
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || "Login failed");
     }
   };
 
@@ -39,22 +43,36 @@ export default function Login() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-md bg-[#05006C]/80 backdrop-blur border border-[#EEEADE]/20 rounded-2xl p-8"
       >
         <div className="flex flex-col items-center mb-8">
           <div className="w-[72px] h-[72px] mb-4">
-            <img src={sepLogo} alt="Sigma Eta Pi" className="w-full h-full object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
+            <img
+              src={sepLogo}
+              alt="Sigma Eta Pi"
+              className="w-full h-full object-contain"
+              style={{
+                filter: "brightness(10) contrast(10)",
+                mixBlendMode: "screen",
+              }}
+            />
           </div>
           <h1
             className="text-[#EEEADE] font-bold text-xl tracking-widest uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+            style={{
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            }}
           >
             ACTIVE LOGIN
           </h1>
           <p
             className="text-[#EEEADE]/50 text-xs tracking-widest mt-1 uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+            style={{
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            }}
           >
             SIGMA ETA PI — EPSILON CHAPTER
           </p>
@@ -67,7 +85,7 @@ export default function Login() {
             </label>
             <input
               type="email"
-              {...register('email', { required: true })}
+              {...register("email", { required: true })}
               className="w-full bg-[#05006C]/60 text-[#EEEADE] border border-[#EEEADE]/30 rounded-lg px-4 py-3 text-sm placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/60 transition-colors"
               placeholder="you@ucsb.edu"
             />
@@ -79,15 +97,13 @@ export default function Login() {
             </label>
             <input
               type="password"
-              {...register('password', { required: true })}
+              {...register("password", { required: true })}
               className="w-full bg-[#05006C]/60 text-[#EEEADE] border border-[#EEEADE]/30 rounded-lg px-4 py-3 text-sm placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/60 transition-colors"
               placeholder="Enter password"
             />
           </div>
 
-          {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
-          )}
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
           <button
             type="submit"
@@ -100,7 +116,7 @@ export default function Login() {
                 Signing in...
               </>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
         </form>

@@ -17,15 +17,18 @@ const INNOVATION_IMG = innovationImg;
 const VALUES = [
   {
     title: "Innovation",
-    description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+    description:
+      "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
   },
   {
     title: "Brotherhood",
-    description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
+    description:
+      "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued and empowered.",
   },
   {
     title: "Leadership",
-    description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+    description:
+      "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
   },
 ];
 
@@ -48,7 +51,8 @@ export default function About() {
           <div
             className="text-xs font-bold tracking-widest uppercase mb-2"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               color: "#D0E4EF",
             }}
           >
@@ -57,7 +61,8 @@ export default function About() {
           <h1
             className="text-white"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
               textTransform: "uppercase",
@@ -77,7 +82,8 @@ export default function About() {
               <div
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   color: "#1B212C",
                 }}
               >
@@ -86,7 +92,8 @@ export default function About() {
               <h2
                 className="text-[#1B212C] mb-6"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
                   fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
                   textTransform: "uppercase",
@@ -95,15 +102,32 @@ export default function About() {
               >
                 Empowering the Next Generation of Entrepreneurs
               </h2>
-              <div className="space-y-5 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <div
+                className="space-y-5 text-[#0C141A]/70 leading-relaxed"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
                 <p>
-                  Sigma Eta Pi at UCSB is a student-led business entrepreneurship co-ed fraternity that empowers members to take initiative, think big, and turn dreams to realities. Bringing together students from a wide range of majors, our UCSB chapter fosters a supportive community where collaboration, mentorship, and professional growth are central.
+                  Sigma Eta Pi at UCSB is a student-led business
+                  entrepreneurship co-ed fraternity that empowers members to
+                  take initiative, think big, and turn dreams to realities.
+                  Bringing together students from a wide range of majors, our
+                  UCSB chapter fosters a supportive community where
+                  collaboration, mentorship, and professional growth are
+                  central.
                 </p>
                 <p>
-                  Founded in 2026, Sigma Eta Pi at UCSB provides opportunities to engage with startup ecosystems, connect with experienced entrepreneurs, and gain hands-on experience in business and innovation.
+                  Founded in 2026, Sigma Eta Pi at UCSB provides opportunities
+                  to engage with startup ecosystems, connect with experienced
+                  entrepreneurs, and gain hands-on experience in business and
+                  innovation.
                 </p>
                 <p>
-                  At UCSB, our events reflect the balance between professionalism and brotherhood. From date parties and retreats to senior send-offs, entrepreneurship panels, and professional workshops, Sigma Eta Pi offers a vibrant and enriching experience for its members, preparing them to succeed academically, professionally, and personally.
+                  At UCSB, our events reflect the balance between
+                  professionalism and brotherhood. From date parties and
+                  retreats to senior send-offs, entrepreneurship panels, and
+                  professional workshops, Sigma Eta Pi offers a vibrant and
+                  enriching experience for its members, preparing them to
+                  succeed academically, professionally, and personally.
                 </p>
               </div>
             </div>
@@ -121,13 +145,20 @@ export default function About() {
                   <div
                     className="font-bold mb-1"
                     style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontSize: "2.5rem",
                     }}
                   >
                     2010
                   </div>
-                  <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+                  <div
+                    className="text-xs tracking-widest uppercase"
+                    style={{
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    }}
+                  >
                     Founded at UCLA
                   </div>
                 </div>
@@ -135,13 +166,20 @@ export default function About() {
                   <div
                     className="font-bold mb-1"
                     style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontSize: "2.5rem",
                     }}
                   >
                     21+
                   </div>
-                  <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+                  <div
+                    className="text-xs tracking-widest uppercase"
+                    style={{
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    }}
+                  >
                     Ventures Launched
                   </div>
                 </div>
@@ -167,7 +205,8 @@ export default function About() {
               <div
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   color: "#1B212C",
                 }}
               >
@@ -176,7 +215,8 @@ export default function About() {
               <h2
                 className="text-[#1B212C] mb-6"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
                   fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
                   textTransform: "uppercase",
@@ -185,15 +225,29 @@ export default function About() {
               >
                 A Legacy of Entrepreneurial Excellence
               </h2>
-              <div className="space-y-4 text-[#0C141A]/70 leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <div
+                className="space-y-4 text-[#0C141A]/70 leading-relaxed"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
                 <p>
-                  Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
+                  Sigma Eta Pi is a co-ed professional business entrepreneurship
+                  fraternity dedicated to cultivating innovative,
+                  action-oriented leaders. Our members, representing a diverse
+                  range of academic disciplines, engage in a community that
+                  emphasizes collaboration, mentorship, and the practical
+                  application of entrepreneurial skills.
                 </p>
                 <p>
-                  Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.
+                  Founded in 2010 at UCLA as the first entrepreneurship
+                  fraternity on the West Coast, Sigma Eta Pi maintains strong
+                  connections to prominent startup ecosystems, including Silicon
+                  Valley and Silicon Beach.
                 </p>
                 <p>
-                  Across its chapters, members have launched over 21 ventures, including projects backed by Y Combinator, ventures acquired for $90 million, and initiatives that hosted the nation's largest hackathon.
+                  Across its chapters, members have launched over 21 ventures,
+                  including projects backed by Y Combinator, ventures acquired
+                  for $90 million, and initiatives that hosted the nation's
+                  largest hackathon.
                 </p>
               </div>
             </div>
@@ -208,7 +262,8 @@ export default function About() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -217,7 +272,8 @@ export default function About() {
             <h2
               className="text-[#1B212C]"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 textTransform: "uppercase",
@@ -235,7 +291,8 @@ export default function About() {
                 <h3
                   className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
                     fontSize: "1.5rem",
                     textTransform: "uppercase",
@@ -244,7 +301,10 @@ export default function About() {
                 >
                   {value.title}
                 </h3>
-                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+                <p
+                  className="text-[#0C141A]/70 text-sm leading-relaxed"
+                  style={{ fontFamily: "'Glacial Indifference', serif" }}
+                >
                   {value.description}
                 </p>
               </div>
@@ -259,7 +319,8 @@ export default function About() {
           <h2
             className="text-[#1B212C] mb-6"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
               textTransform: "uppercase",
@@ -267,15 +328,20 @@ export default function About() {
           >
             Ready to Be Part of Something?
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join our founder class and help shape the future of entrepreneurship at UCSB.
+          <p
+            className="text-[#0C141A]/70 mb-8"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
+            Join our founder class and help shape the future of entrepreneurship
+            at UCSB.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recruitment"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -285,7 +351,8 @@ export default function About() {
               href="/meet-us"
               className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >

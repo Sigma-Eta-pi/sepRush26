@@ -1,7 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { User, MapPin, GraduationCap, Calendar, Linkedin, Instagram, Phone, Camera, Upload, X, Search, ChevronDown, Check } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  User,
+  MapPin,
+  GraduationCap,
+  Calendar,
+  Linkedin,
+  Instagram,
+  Phone,
+  Camera,
+  Upload,
+  X,
+  Search,
+  ChevronDown,
+  Check,
+} from "lucide-react";
 
 interface MemberProfile {
   id: string;
@@ -22,11 +36,16 @@ interface MemberProfile {
 }
 
 function getInitials(name: string) {
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  return name
+    .split(" ")
+    .map(n => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 
 function InitialsAvatar({ name, size = 64 }: { name: string; size?: number }) {
-  const fontSize = size < 80 ? 'text-lg' : 'text-3xl';
+  const fontSize = size < 80 ? "text-lg" : "text-3xl";
   return (
     <div
       className={`rounded-full bg-[#05006C] text-[#EEEADE] flex items-center justify-center font-bold ${fontSize} shrink-0`}
@@ -39,7 +58,13 @@ function InitialsAvatar({ name, size = 64 }: { name: string; size?: number }) {
 
 // ─── Member Card ───────────────────────────────────────────────────────────────
 
-function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () => void }) {
+function MemberCard({
+  profile,
+  onClick,
+}: {
+  profile: MemberProfile;
+  onClick: () => void;
+}) {
   return (
     <motion.div
       layout
@@ -61,12 +86,18 @@ function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () 
           <InitialsAvatar name={profile.name} size={64} />
         )}
         <div className="min-w-0">
-          <div className="font-bold text-[#05006C] truncate">{profile.name}</div>
+          <div className="font-bold text-[#05006C] truncate">
+            {profile.name}
+          </div>
           {(profile.major || profile.gradYear) && (
             <div className="text-sm text-[#05006C]/60 flex items-center gap-1.5 mt-0.5">
               <GraduationCap size={14} className="shrink-0" />
               <span className="truncate">
-                {profile.major}{profile.major && profile.gradYear ? ' · ' : ''}{profile.gradYear ? `'${String(profile.gradYear).slice(-2)}` : ''}
+                {profile.major}
+                {profile.major && profile.gradYear ? " · " : ""}
+                {profile.gradYear
+                  ? `'${String(profile.gradYear).slice(-2)}`
+                  : ""}
               </span>
             </div>
           )}
@@ -91,7 +122,13 @@ function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () 
 
 // ─── Profile Modal ─────────────────────────────────────────────────────────────
 
-function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: () => void }) {
+function ProfileModal({
+  profile,
+  onClose,
+}: {
+  profile: MemberProfile;
+  onClose: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -104,7 +141,7 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ type: 'spring', duration: 0.35 }}
+        transition={{ type: "spring", duration: 0.35 }}
         onClick={e => e.stopPropagation()}
         className="bg-white rounded-2xl p-8 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto relative"
       >
@@ -117,7 +154,11 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
 
         <div className="flex flex-col items-center text-center mb-6">
           {profile.photoUrl ? (
-            <img src={profile.photoUrl} alt={profile.name} className="w-32 h-32 rounded-full object-cover mb-4" />
+            <img
+              src={profile.photoUrl}
+              alt={profile.name}
+              className="w-32 h-32 rounded-full object-cover mb-4"
+            />
           ) : (
             <div className="mb-4">
               <InitialsAvatar name={profile.name} size={128} />
@@ -135,7 +176,10 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
           {profile.major && (
             <div className="flex items-center gap-3 text-[#05006C]/70">
               <GraduationCap size={16} className="text-[#05006C]/40 shrink-0" />
-              <span>{profile.major}{profile.gradYear ? ` · Class of ${profile.gradYear}` : ''}</span>
+              <span>
+                {profile.major}
+                {profile.gradYear ? ` · Class of ${profile.gradYear}` : ""}
+              </span>
             </div>
           )}
           {!profile.major && profile.gradYear && (
@@ -166,7 +210,11 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
             <div className="flex items-center gap-3 text-[#05006C]/70">
               <Linkedin size={16} className="text-[#05006C]/40 shrink-0" />
               <a
-                href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`}
+                href={
+                  profile.linkedin.startsWith("http")
+                    ? profile.linkedin
+                    : `https://${profile.linkedin}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#05006C] underline underline-offset-2"
@@ -180,13 +228,13 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
             <div className="flex items-center gap-3 text-[#05006C]/70">
               <Instagram size={16} className="text-[#05006C]/40 shrink-0" />
               <a
-                href={`https://instagram.com/${profile.instagram.replace('@', '')}`}
+                href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#05006C] underline underline-offset-2"
                 onClick={e => e.stopPropagation()}
               >
-                @{profile.instagram.replace('@', '')}
+                @{profile.instagram.replace("@", "")}
               </a>
             </div>
           )}
@@ -194,7 +242,9 @@ function ProfileModal({ profile, onClose }: { profile: MemberProfile; onClose: (
 
         {profile.bio && (
           <div className="mt-5 pt-5 border-t border-[#05006C]/10">
-            <p className="text-[#05006C]/70 text-sm leading-relaxed whitespace-pre-wrap">{profile.bio}</p>
+            <p className="text-[#05006C]/70 text-sm leading-relaxed whitespace-pre-wrap">
+              {profile.bio}
+            </p>
           </div>
         )}
       </motion.div>
@@ -221,16 +271,25 @@ function SkeletonCard() {
 
 // ─── Class Dropdown ────────────────────────────────────────────────────────────
 
-function ClassDropdown({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) {
+function ClassDropdown({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   return (
@@ -240,8 +299,13 @@ function ClassDropdown({ value, onChange, options }: { value: string; onChange: 
         onClick={() => setOpen(o => !o)}
         className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition flex items-center justify-between cursor-pointer"
       >
-        <span className={value ? '' : 'text-[#05006C]/40'}>{value || 'Select class...'}</span>
-        <ChevronDown size={16} className={`text-[#05006C]/40 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className={value ? "" : "text-[#05006C]/40"}>
+          {value || "Select class..."}
+        </span>
+        <ChevronDown
+          size={16}
+          className={`text-[#05006C]/40 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
       {open && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#05006C]/15 rounded-lg shadow-lg z-20 overflow-hidden">
@@ -249,7 +313,10 @@ function ClassDropdown({ value, onChange, options }: { value: string; onChange: 
             <button
               key={opt}
               type="button"
-              onClick={() => { onChange(opt); setOpen(false); }}
+              onClick={() => {
+                onChange(opt);
+                setOpen(false);
+              }}
               className="w-full px-4 py-2.5 text-left text-sm text-[#05006C] hover:bg-[#05006C]/5 transition-colors flex items-center justify-between cursor-pointer"
             >
               {opt}
@@ -264,33 +331,34 @@ function ClassDropdown({ value, onChange, options }: { value: string; onChange: 
 
 // ─── Profile Editor ────────────────────────────────────────────────────────────
 
-
 function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [classOptions, setClassOptions] = useState<string[]>([]);
-  const [name, setName] = useState('');
-  const [photoUrl, setPhotoUrl] = useState('');
-  const [major, setMajor] = useState('');
-  const [gradYear, setGradYear] = useState('');
-  const [hometown, setHometown] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [bio, setBio] = useState('');
-  const [pledgeClass, setPledgeClass] = useState('');
-  const [linkedin, setLinkedin] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [phone, setPhone] = useState('');
-  const [linkedinPhoto, setLinkedinPhoto] = useState('');
+  const [name, setName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [major, setMajor] = useState("");
+  const [gradYear, setGradYear] = useState("");
+  const [hometown, setHometown] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [bio, setBio] = useState("");
+  const [pledgeClass, setPledgeClass] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [phone, setPhone] = useState("");
+  const [linkedinPhoto, setLinkedinPhoto] = useState("");
 
   useEffect(() => {
-    fetch('/api/classes')
+    fetch("/api/classes")
       .then(r => r.json())
-      .then((data: { id: string; name: string }[]) => setClassOptions(data.map(d => d.name)))
+      .then((data: { id: string; name: string }[]) =>
+        setClassOptions(data.map(d => d.name))
+      )
       .catch(() => {});
   }, []);
 
@@ -302,24 +370,26 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
         });
         if (res.ok) {
           const p: MemberProfile = await res.json();
-          setName(p.name || '');
-          setPhotoUrl(p.photoUrl || '');
-          setMajor(p.major || '');
-          setGradYear(p.gradYear ? String(p.gradYear) : '');
-          setHometown(p.hometown || '');
-          setBirthday(p.birthday || '');
-          setBio(p.bio || '');
-          setPledgeClass(p.pledgeClass || '');
-          setLinkedin(p.linkedin || '');
-          setInstagram(p.instagram || '');
-          setPhone(p.phone || '');
+          setName(p.name || "");
+          setPhotoUrl(p.photoUrl || "");
+          setMajor(p.major || "");
+          setGradYear(p.gradYear ? String(p.gradYear) : "");
+          setHometown(p.hometown || "");
+          setBirthday(p.birthday || "");
+          setBio(p.bio || "");
+          setPledgeClass(p.pledgeClass || "");
+          setLinkedin(p.linkedin || "");
+          setInstagram(p.instagram || "");
+          setPhone(p.phone || "");
           if (p.linkedin && !p.photoUrl) {
             const match = p.linkedin.match(/linkedin\.com\/in\/([^\/\?#]+)/i);
             if (match) {
-              const slug = match[1].replace(/\/$/, '');
+              const slug = match[1].replace(/\/$/, "");
               fetch(`/api/proxy/linkedin-photo/${slug}`)
                 .then(r => r.json())
-                .then(d => { if (d.url) setLinkedinPhoto(d.url); })
+                .then(d => {
+                  if (d.url) setLinkedinPhoto(d.url);
+                })
                 .catch(() => {});
             }
           }
@@ -332,22 +402,21 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
     })();
   }, [userId, token]);
 
-
   async function handlePhotoUpload(file: File) {
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append('photo', file);
-      const res = await fetch('/api/upload/photo', {
-        method: 'POST',
+      formData.append("photo", file);
+      const res = await fetch("/api/upload/photo", {
+        method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      if (!res.ok) throw new Error('Upload failed');
+      if (!res.ok) throw new Error("Upload failed");
       const data = await res.json();
       setPhotoUrl(data.url);
     } catch {
-      setError('Photo upload failed');
+      setError("Photo upload failed");
     } finally {
       setUploading(false);
     }
@@ -355,17 +424,26 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) { setError('Name is required'); return; }
-    if (!linkedin.trim()) { setError('LinkedIn URL is required'); return; }
+    if (!name.trim()) {
+      setError("Name is required");
+      return;
+    }
+    if (!linkedin.trim()) {
+      setError("LinkedIn URL is required");
+      return;
+    }
     setSaving(true);
-    setError('');
+    setError("");
     setSuccess(false);
     try {
       // If no manually uploaded photo, use LinkedIn photo
       const finalPhotoUrl = photoUrl || linkedinPhoto || undefined;
-      const res = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      const res = await fetch("/api/profiles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           name: name.trim(),
           photoUrl: finalPhotoUrl,
@@ -380,11 +458,11 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           phone: phone.trim() || undefined,
         }),
       });
-      if (!res.ok) throw new Error('Save failed');
+      if (!res.ok) throw new Error("Save failed");
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch {
-      setError('Failed to save profile');
+      setError("Failed to save profile");
     } finally {
       setSaving(false);
     }
@@ -393,7 +471,9 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
   if (loading) {
     return (
       <div className="bg-white rounded-xl p-6 animate-pulse space-y-4">
-        <div className="flex justify-center"><div className="w-24 h-24 rounded-full bg-[#05006C]/10" /></div>
+        <div className="flex justify-center">
+          <div className="w-24 h-24 rounded-full bg-[#05006C]/10" />
+        </div>
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="space-y-1">
             <div className="h-3 bg-[#05006C]/8 rounded w-20" />
@@ -404,8 +484,10 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
     );
   }
 
-  const inputClass = 'w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition';
-  const labelClass = 'block text-[#05006C]/70 text-xs tracking-wider uppercase font-medium mb-1';
+  const inputClass =
+    "w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-[#05006C] focus:outline-none focus:border-[#05006C]/40 focus:bg-white transition";
+  const labelClass =
+    "block text-[#05006C]/70 text-xs tracking-wider uppercase font-medium mb-1";
   const displayPhoto = photoUrl || linkedinPhoto;
 
   return (
@@ -418,11 +500,17 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           className="relative group cursor-pointer"
         >
           {displayPhoto ? (
-            <img src={displayPhoto} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
+            <img
+              src={displayPhoto}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover"
+            />
           ) : (
             <div className="w-24 h-24 rounded-full bg-[#05006C]/10 flex items-center justify-center">
               {name ? (
-                <span className="text-[#05006C] font-bold text-2xl">{getInitials(name)}</span>
+                <span className="text-[#05006C] font-bold text-2xl">
+                  {getInitials(name)}
+                </span>
               ) : (
                 <Camera size={28} className="text-[#05006C]/30" />
               )}
@@ -448,21 +536,32 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           }}
         />
         <span className="text-xs text-[#05006C]/40">
-          {linkedinPhoto && !photoUrl ? 'Using LinkedIn photo · Click to upload a different one' : 'Click to upload photo'}
+          {linkedinPhoto && !photoUrl
+            ? "Using LinkedIn photo · Click to upload a different one"
+            : "Click to upload photo"}
         </span>
       </div>
 
       {/* Name */}
       <div>
         <label className={labelClass}>Name *</label>
-        <input className={inputClass} value={name} onChange={e => setName(e.target.value)} placeholder="Full name" required />
+        <input
+          className={inputClass}
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Full name"
+          required
+        />
       </div>
 
       {/* LinkedIn — mandatory, top position */}
       <div>
         <label className={labelClass}>LinkedIn URL *</label>
         <div className="relative">
-          <Linkedin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
+          <Linkedin
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40"
+          />
           <input
             className={`${inputClass} pl-10`}
             value={linkedin}
@@ -476,18 +575,33 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
       {/* Class */}
       <div>
         <label className={labelClass}>Class *</label>
-        <ClassDropdown value={pledgeClass} onChange={setPledgeClass} options={classOptions} />
+        <ClassDropdown
+          value={pledgeClass}
+          onChange={setPledgeClass}
+          options={classOptions}
+        />
       </div>
 
       {/* Major + Grad Year row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelClass}>Major</label>
-          <input className={inputClass} value={major} onChange={e => setMajor(e.target.value)} placeholder="e.g. Computer Science" />
+          <input
+            className={inputClass}
+            value={major}
+            onChange={e => setMajor(e.target.value)}
+            placeholder="e.g. Computer Science"
+          />
         </div>
         <div>
           <label className={labelClass}>Grad Year</label>
-          <input className={inputClass} type="number" value={gradYear} onChange={e => setGradYear(e.target.value)} placeholder="e.g. 2026" />
+          <input
+            className={inputClass}
+            type="number"
+            value={gradYear}
+            onChange={e => setGradYear(e.target.value)}
+            placeholder="e.g. 2026"
+          />
         </div>
       </div>
 
@@ -495,18 +609,33 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelClass}>Hometown</label>
-          <input className={inputClass} value={hometown} onChange={e => setHometown(e.target.value)} placeholder="e.g. Los Angeles, CA" />
+          <input
+            className={inputClass}
+            value={hometown}
+            onChange={e => setHometown(e.target.value)}
+            placeholder="e.g. Los Angeles, CA"
+          />
         </div>
         <div>
           <label className={labelClass}>Birthday</label>
-          <input className={inputClass} value={birthday} onChange={e => setBirthday(e.target.value)} placeholder="e.g. March 15" />
+          <input
+            className={inputClass}
+            value={birthday}
+            onChange={e => setBirthday(e.target.value)}
+            placeholder="e.g. March 15"
+          />
         </div>
       </div>
 
       {/* Bio */}
       <div>
         <label className={labelClass}>Bio</label>
-        <textarea className={`${inputClass} min-h-[100px] resize-y`} value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell everyone about yourself..." />
+        <textarea
+          className={`${inputClass} min-h-[100px] resize-y`}
+          value={bio}
+          onChange={e => setBio(e.target.value)}
+          placeholder="Tell everyone about yourself..."
+        />
       </div>
 
       {/* Instagram + Phone row */}
@@ -514,15 +643,31 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
         <div>
           <label className={labelClass}>Instagram</label>
           <div className="relative">
-            <Instagram size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
-            <input className={`${inputClass} pl-10`} value={instagram} onChange={e => setInstagram(e.target.value)} placeholder="@handle" />
+            <Instagram
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40"
+            />
+            <input
+              className={`${inputClass} pl-10`}
+              value={instagram}
+              onChange={e => setInstagram(e.target.value)}
+              placeholder="@handle"
+            />
           </div>
         </div>
         <div>
           <label className={labelClass}>Phone</label>
           <div className="relative">
-            <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40" />
-            <input className={`${inputClass} pl-10`} value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 123-4567" />
+            <Phone
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/40"
+            />
+            <input
+              className={`${inputClass} pl-10`}
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="(555) 123-4567"
+            />
           </div>
         </div>
       </div>
@@ -546,7 +691,7 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
           disabled={saving}
           className="bg-[#05006C] text-[#EEEADE] px-6 py-2.5 rounded-full font-bold tracking-wider text-sm hover:bg-[#0A0080] transition-colors disabled:opacity-50 cursor-pointer"
         >
-          {saving ? 'Saving...' : 'Save Profile'}
+          {saving ? "Saving..." : "Save Profile"}
         </button>
       </div>
     </form>
@@ -557,18 +702,20 @@ function ProfileEditor({ token, userId }: { token: string; userId: string }) {
 
 export default function MemberProfiles() {
   const { user, token } = useAuth();
-  const [tab, setTab] = useState<'members' | 'profile'>('members');
+  const [tab, setTab] = useState<"members" | "profile">("members");
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [classFilter, setClassFilter] = useState('All');
+  const [search, setSearch] = useState("");
+  const [classFilter, setClassFilter] = useState("All");
   const [classes, setClasses] = useState<string[]>([]);
   const [selected, setSelected] = useState<MemberProfile | null>(null);
 
   useEffect(() => {
-    fetch('/api/classes')
+    fetch("/api/classes")
       .then(r => r.json())
-      .then((data: { id: string; name: string }[]) => setClasses(data.map(d => d.name)))
+      .then((data: { id: string; name: string }[]) =>
+        setClasses(data.map(d => d.name))
+      )
       .catch(() => {});
   }, []);
 
@@ -576,7 +723,7 @@ export default function MemberProfiles() {
     if (!token) return;
     (async () => {
       try {
-        const res = await fetch('/api/profiles', {
+        const res = await fetch("/api/profiles", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) setProfiles(await res.json());
@@ -589,20 +736,30 @@ export default function MemberProfiles() {
   }, [token]);
 
   // Deduplicate — prefer profiles with more data, then dedup by userId then by name
-  const score = (p: MemberProfile) => (p.photoUrl ? 2 : 0) + (p.linkedin ? 1 : 0);
-  const sorted = profiles.slice().sort((a, b) => score(b) - score(a) || b.updatedAt.localeCompare(a.updatedAt));
+  const score = (p: MemberProfile) =>
+    (p.photoUrl ? 2 : 0) + (p.linkedin ? 1 : 0);
+  const sorted = profiles
+    .slice()
+    .sort(
+      (a, b) => score(b) - score(a) || b.updatedAt.localeCompare(a.updatedAt)
+    );
   const byUserId = new Map<string, MemberProfile>();
-  for (const p of sorted) if (!byUserId.has(p.userId)) byUserId.set(p.userId, p);
+  for (const p of sorted)
+    if (!byUserId.has(p.userId)) byUserId.set(p.userId, p);
   const byName = new Map<string, MemberProfile>();
   for (const p of byUserId.values()) {
-    const key = p.name.toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    const key = p.name
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "");
     if (!byName.has(key)) byName.set(key, p);
   }
   const uniqueProfiles = Array.from(byName.values());
 
   const filtered = uniqueProfiles.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchClass = classFilter === 'All' || p.pledgeClass === classFilter;
+    const matchClass = classFilter === "All" || p.pledgeClass === classFilter;
     return matchSearch && matchClass;
   });
 
@@ -611,21 +768,21 @@ export default function MemberProfiles() {
       {/* Tabs */}
       <div className="flex gap-6 border-b border-[#05006C]/10 mb-6">
         <button
-          onClick={() => setTab('members')}
+          onClick={() => setTab("members")}
           className={`pb-3 text-sm tracking-wider font-medium transition-colors cursor-pointer ${
-            tab === 'members'
-              ? 'border-b-2 border-[#05006C] text-[#05006C] font-bold'
-              : 'text-[#05006C]/50 hover:text-[#05006C]/80'
+            tab === "members"
+              ? "border-b-2 border-[#05006C] text-[#05006C] font-bold"
+              : "text-[#05006C]/50 hover:text-[#05006C]/80"
           }`}
         >
           ALL MEMBERS
         </button>
         <button
-          onClick={() => setTab('profile')}
+          onClick={() => setTab("profile")}
           className={`pb-3 text-sm tracking-wider font-medium transition-colors cursor-pointer ${
-            tab === 'profile'
-              ? 'border-b-2 border-[#05006C] text-[#05006C] font-bold'
-              : 'text-[#05006C]/50 hover:text-[#05006C]/80'
+            tab === "profile"
+              ? "border-b-2 border-[#05006C] text-[#05006C] font-bold"
+              : "text-[#05006C]/50 hover:text-[#05006C]/80"
           }`}
         >
           MY PROFILE
@@ -633,12 +790,15 @@ export default function MemberProfiles() {
       </div>
 
       {/* ALL MEMBERS */}
-      {tab === 'members' && (
+      {tab === "members" && (
         <div>
           {/* Search + Class Filter */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
             <div className="relative">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30" />
+              <Search
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30"
+              />
               <input
                 type="text"
                 placeholder="Search members..."
@@ -648,14 +808,14 @@ export default function MemberProfiles() {
               />
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {['All', ...classes].map(cls => (
+              {["All", ...classes].map(cls => (
                 <button
                   key={cls}
                   onClick={() => setClassFilter(cls)}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors cursor-pointer ${
                     classFilter === cls
-                      ? 'bg-[#05006C] text-[#EEEADE]'
-                      : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+                      ? "bg-[#05006C] text-[#EEEADE]"
+                      : "bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15"
                   }`}
                 >
                   {cls}
@@ -674,14 +834,20 @@ export default function MemberProfiles() {
             <div className="text-center py-16">
               <User size={48} className="mx-auto text-[#05006C]/15 mb-3" />
               <p className="text-[#05006C]/40 text-sm">
-                {search ? 'No members match your search' : 'No member profiles yet'}
+                {search
+                  ? "No members match your search"
+                  : "No member profiles yet"}
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <AnimatePresence mode="popLayout">
                 {filtered.map(p => (
-                  <MemberCard key={p.id} profile={p} onClick={() => setSelected(p)} />
+                  <MemberCard
+                    key={p.id}
+                    profile={p}
+                    onClick={() => setSelected(p)}
+                  />
                 ))}
               </AnimatePresence>
             </div>
@@ -690,7 +856,7 @@ export default function MemberProfiles() {
       )}
 
       {/* MY PROFILE */}
-      {tab === 'profile' && user && token && (
+      {tab === "profile" && user && token && (
         <div className="max-w-2xl mx-auto">
           <ProfileEditor token={token} userId={user.id} />
         </div>

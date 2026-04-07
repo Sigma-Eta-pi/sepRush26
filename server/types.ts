@@ -1,4 +1,4 @@
-export type UserRole = 'active' | 'exec' | 'admin';
+export type UserRole = "active" | "exec" | "admin";
 
 export interface User {
   id: string;
@@ -43,7 +43,7 @@ export interface CalendarEvent {
   date: string;
   time?: string;
   location?: string;
-  type: 'general' | 'social' | 'professional' | 'exec' | 'mandatory';
+  type: "general" | "social" | "professional" | "exec" | "mandatory";
   createdBy: string;
   createdAt: string;
 }
@@ -57,7 +57,7 @@ export interface Task {
   assignedBy: string;
   assignedByName: string;
   dueDate?: string;
-  status: 'pending' | 'in_progress' | 'done';
+  status: "pending" | "in_progress" | "done";
   createdAt: string;
 }
 

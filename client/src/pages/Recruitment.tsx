@@ -16,21 +16,24 @@ const RECRUITMENT_EVENTS = [
     title: "Brotherhood Night",
     time: "",
     location: "",
-    description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting.",
+    description:
+      "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting.",
   },
   {
     date: "April 7, 2026",
     title: "Info Night",
     time: "",
     location: "",
-    description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like.",
+    description:
+      "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like.",
   },
   {
     date: "April 8, 2026",
     title: "Alumni Panel + Application Workshop",
     time: "",
     location: "",
-    description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application.",
+    description:
+      "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application.",
   },
   {
     date: "April 9, 2026",
@@ -44,7 +47,8 @@ const RECRUITMENT_EVENTS = [
     title: "Applications Due",
     time: "",
     location: "",
-    description: "Submit your application by end of day. Info on @ucsbsep on Instagram.",
+    description:
+      "Submit your application by end of day. Info on @ucsbsep on Instagram.",
   },
 ];
 
@@ -83,8 +87,14 @@ const FAQ = [
   },
 ];
 
-function TimelineItem({ event, index, isLast }: {
-  event: typeof RECRUITMENT_EVENTS[number]; index: number; isLast: boolean;
+function TimelineItem({
+  event,
+  index,
+  isLast,
+}: {
+  event: (typeof RECRUITMENT_EVENTS)[number];
+  index: number;
+  isLast: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -93,7 +103,9 @@ function TimelineItem({ event, index, isLast }: {
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.2 }
     );
     observer.observe(el);
@@ -130,7 +142,8 @@ function TimelineItem({ event, index, isLast }: {
           <div
             className="text-xs font-bold tracking-widest uppercase mb-2"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               color: "#05006C",
             }}
           >
@@ -139,7 +152,8 @@ function TimelineItem({ event, index, isLast }: {
           <h3
             className="text-[#05006C] mb-2"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "1.2rem",
               textTransform: "uppercase",
@@ -147,10 +161,16 @@ function TimelineItem({ event, index, isLast }: {
           >
             {event.title}
           </h3>
-          <p className="text-[#0C141A]/70 text-sm mb-3" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p
+            className="text-[#0C141A]/70 text-sm mb-3"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
             {event.description}
           </p>
-          <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <div
+            className="flex flex-col gap-1 text-xs text-[#0C141A]/60"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
             <span>{event.time}</span>
             <span>{event.location}</span>
           </div>
@@ -160,7 +180,17 @@ function TimelineItem({ event, index, isLast }: {
   );
 }
 
-function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
+function FAQItem({
+  q,
+  a,
+  isOpen,
+  onToggle,
+}: {
+  q: string;
+  a: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
   return (
     <div className="border-2 border-[#1B212C]">
       <button
@@ -170,7 +200,8 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
         <span
           className="text-left text-[#1B212C] font-bold group-hover:text-[#0C141A] transition-colors"
           style={{
-            fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            fontFamily:
+              "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             fontSize: "0.95rem",
           }}
         >
@@ -183,7 +214,10 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
       </button>
       {isOpen && (
         <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#1B212C]">
-          <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+          <p
+            className="text-[#0C141A]/70 text-sm leading-relaxed"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
             {a}
           </p>
         </div>
@@ -214,7 +248,10 @@ export default function Recruitment() {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
             className="inline-block mb-6 px-4 py-1.5 border-2 border-white text-white text-xs tracking-widest uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+            style={{
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            }}
           >
             Spring 2026 Recruitment
           </div>
@@ -222,7 +259,8 @@ export default function Recruitment() {
           <h1
             className="text-white leading-none mb-4"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(3rem, 10vw, 7rem)",
               letterSpacing: "-0.02em",
@@ -241,7 +279,8 @@ export default function Recruitment() {
               letterSpacing: "0.05em",
             }}
           >
-            Be part of something from the very beginning. Help us build Sigma Eta Pi's legacy at UCSB.
+            Be part of something from the very beginning. Help us build Sigma
+            Eta Pi's legacy at UCSB.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -251,7 +290,8 @@ export default function Recruitment() {
               rel="noopener noreferrer"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -261,7 +301,8 @@ export default function Recruitment() {
               href="#events"
               className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -283,7 +324,8 @@ export default function Recruitment() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -292,7 +334,8 @@ export default function Recruitment() {
             <h2
               className="text-[#1B212C]"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 textTransform: "uppercase",
@@ -307,7 +350,12 @@ export default function Recruitment() {
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#05006C]/20 -translate-x-1/2" />
 
             {RECRUITMENT_EVENTS.map((event, i) => (
-              <TimelineItem key={i} event={event} index={i} isLast={i === RECRUITMENT_EVENTS.length - 1} />
+              <TimelineItem
+                key={i}
+                event={event}
+                index={i}
+                isLast={i === RECRUITMENT_EVENTS.length - 1}
+              />
             ))}
           </div>
         </div>
@@ -320,7 +368,8 @@ export default function Recruitment() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -329,7 +378,8 @@ export default function Recruitment() {
             <h2
               className="text-[#1B212C]"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 textTransform: "uppercase",
@@ -359,7 +409,8 @@ export default function Recruitment() {
           <h2
             className="text-[#1B212C] mb-6"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
               textTransform: "uppercase",
@@ -367,8 +418,12 @@ export default function Recruitment() {
           >
             Ready to Join?
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
+          <p
+            className="text-[#0C141A]/70 mb-8"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
+            Applications for Spring 2026 are now open. Submit your application
+            and attend our recruitment events to learn more about Sigma Eta Pi.
           </p>
           <a
             href="https://forms.gle/your-application-form"
@@ -376,7 +431,8 @@ export default function Recruitment() {
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
             }}
           >

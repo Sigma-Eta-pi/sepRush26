@@ -24,13 +24,18 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 flex-shrink-0">
-                <img src={sepLogo} alt="SEP" className="w-full h-full object-contain" />
+                <img
+                  src={sepLogo}
+                  alt="SEP"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <div
                   className="text-[#05006C] font-bold leading-none"
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "1rem",
                     letterSpacing: "0.08em",
                   }}
@@ -50,8 +55,12 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-            <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              UCSB's premier co-ed entrepreneurship fraternity. Cultivating innovative, action-oriented leaders.
+            <p
+              className="text-[#0C141A]/70 text-sm leading-relaxed"
+              style={{ fontFamily: "'Glacial Indifference', serif" }}
+            >
+              UCSB's premier co-ed entrepreneurship fraternity. Cultivating
+              innovative, action-oriented leaders.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <a
@@ -89,13 +98,14 @@ export default function Footer() {
             <h3
               className="text-[#05006C] font-bold mb-6 text-xs tracking-widest uppercase"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               }}
             >
               Navigation
             </h3>
             <ul className="space-y-3">
-              {navLinks.map((link) => (
+              {navLinks.map(link => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -114,7 +124,8 @@ export default function Footer() {
             <h3
               className="text-[#05006C] font-bold mb-6 text-xs tracking-widest uppercase"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               }}
             >
               Contact
@@ -128,10 +139,16 @@ export default function Footer() {
                 <Mail size={16} className="flex-shrink-0" />
                 exec@ucsbsep.org
               </a>
-              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <p
+                className="text-[#0C141A]/50 text-sm"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
                 University of California, Santa Barbara
               </p>
-              <p className="text-[#0C141A]/50 text-sm" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+              <p
+                className="text-[#0C141A]/50 text-sm"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
                 Santa Barbara, CA 93106
               </p>
             </div>
@@ -141,7 +158,8 @@ export default function Footer() {
                 href="/recruitment"
                 className="inline-block px-6 py-3 bg-[#05006C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-xs"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   letterSpacing: "0.05em",
                 }}
               >
@@ -159,7 +177,8 @@ export default function Footer() {
               letterSpacing: "0.05em",
             }}
           >
-            © {new Date().getFullYear()} Sigma Eta Pi — Epsilon Chapter at UCSB. All rights reserved.
+            © {new Date().getFullYear()} Sigma Eta Pi — Epsilon Chapter at
+            UCSB. All rights reserved.
           </p>
           <p
             className="text-[#0C141A]/50 text-xs"
@@ -175,4 +194,3 @@ export default function Footer() {
     </footer>
   );
 }
-

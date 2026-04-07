@@ -53,7 +53,8 @@ export default function Navbar() {
                   className="leading-none mt-0.5"
                   style={{
                     color: "#D0E4EF",
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     letterSpacing: "0.1em",
                     fontSize: "0.6rem",
                   }}
@@ -65,15 +66,18 @@ export default function Navbar() {
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
+              {navLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={`font-bold tracking-widest uppercase transition-colors duration-200 ${
-                    location === link.href ? "text-[#D0E4EF]" : "text-[#EEEADE]/80 hover:text-[#EEEADE]"
+                    location === link.href
+                      ? "text-[#D0E4EF]"
+                      : "text-[#EEEADE]/80 hover:text-[#EEEADE]"
                   }`}
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "0.7rem",
                   }}
                 >
@@ -89,7 +93,8 @@ export default function Navbar() {
                 className="px-6 py-2 bg-[#EEEADE] font-bold rounded-full transition-all duration-300 hover:bg-white text-sm"
                 style={{
                   color: NAV_BG,
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontSize: "0.75rem",
                   letterSpacing: "0.05em",
                 }}
@@ -127,9 +132,12 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden mx-4 sm:mx-6 mt-2 rounded-2xl shadow-lg" style={{ background: NAV_BG }}>
+        <div
+          className="lg:hidden mx-4 sm:mx-6 mt-2 rounded-2xl shadow-lg"
+          style={{ background: NAV_BG }}
+        >
           <div className="px-6 py-4 space-y-1">
-            {navLinks.map((link) => (
+            {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -139,7 +147,8 @@ export default function Navbar() {
                     : "text-[#EEEADE]/80 hover:text-[#EEEADE] hover:bg-[#EEEADE]/10"
                 }`}
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontSize: "0.7rem",
                 }}
                 onClick={() => setMobileOpen(false)}
@@ -151,17 +160,31 @@ export default function Navbar() {
               <Link
                 href="/recruitment"
                 className="block text-center py-3 px-4 bg-[#EEEADE] font-bold rounded-lg text-sm"
-                style={{ color: NAV_BG, fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: "0.75rem", letterSpacing: "0.05em" }}
+                style={{
+                  color: NAV_BG,
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.05em",
+                }}
                 onClick={() => setMobileOpen(false)}
               >
                 APPLY NOW
               </Link>
               {isAuthenticated ? (
-                <Link href="/dashboard" className="block text-center py-3 px-4 bg-[#EEEADE]/10 text-[#EEEADE] font-bold rounded-lg text-xs tracking-widest border border-[#EEEADE]/30" onClick={() => setMobileOpen(false)}>
+                <Link
+                  href="/dashboard"
+                  className="block text-center py-3 px-4 bg-[#EEEADE]/10 text-[#EEEADE] font-bold rounded-lg text-xs tracking-widest border border-[#EEEADE]/30"
+                  onClick={() => setMobileOpen(false)}
+                >
                   DASHBOARD
                 </Link>
               ) : (
-                <Link href="/active-login" className="block text-center py-3 px-4 border border-[#EEEADE]/40 text-[#EEEADE]/80 font-bold rounded-lg text-xs tracking-widest" onClick={() => setMobileOpen(false)}>
+                <Link
+                  href="/active-login"
+                  className="block text-center py-3 px-4 border border-[#EEEADE]/40 text-[#EEEADE]/80 font-bold rounded-lg text-xs tracking-widest"
+                  onClick={() => setMobileOpen(false)}
+                >
                   ACTIVE LOGIN
                 </Link>
               )}

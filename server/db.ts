@@ -1,6 +1,6 @@
-import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
-import { nanoid } from 'nanoid';
+import { neon } from "@neondatabase/serverless";
+import bcrypt from "bcryptjs";
+import { nanoid } from "nanoid";
 
 export const sql = neon(process.env.DATABASE_URL!);
 
@@ -96,7 +96,9 @@ export async function initDb() {
       WHERE pledge_class = 'Founder'
       AND user_id IN (SELECT id FROM users WHERE role NOT IN ('exec', 'admin'))
     `;
-  } catch (e) { console.error('pledge_class migration failed:', e); }
+  } catch (e) {
+    console.error("pledge_class migration failed:", e);
+  }
 
   // Clear auto-generated linkedin + photos for active members pending onboarding
   try {
@@ -104,7 +106,9 @@ export async function initDb() {
       UPDATE profiles SET linkedin = NULL, photo_url = NULL
       WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role NOT IN ('exec', 'admin'))
     `;
-  } catch (e) { console.error('linkedin/photo cleanup migration failed:', e); }
+  } catch (e) {
+    console.error("linkedin/photo cleanup migration failed:", e);
+  }
 
   // Dedup: remove duplicate profile rows, keeping the most recently updated per user
   try {
@@ -115,9 +119,11 @@ export async function initDb() {
       )
       DELETE FROM profiles WHERE id IN (SELECT id FROM ranked WHERE rn > 1)
     `;
-  } catch (e) { console.error('profile dedup migration failed:', e); }
+  } catch (e) {
+    console.error("profile dedup migration failed:", e);
+  }
 
-  const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
+  const defaultClasses = ["Founder", "Founding Class", "Alpha Class"];
   for (const name of defaultClasses) {
     const cid = nanoid();
     const now = new Date().toISOString();
@@ -132,7 +138,7 @@ export async function initDb() {
 
   const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
   if (admins.length === 0) {
-    const hash = await bcrypt.hash('12345!', 10);
+    const hash = await bcrypt.hash("12345!", 10);
     const adminId = nanoid();
     const now = new Date().toISOString();
     await sql`
@@ -145,47 +151,47 @@ export async function initDb() {
   // Migrate @ucsbsep.org accounts → correct @ucsb.edu emails (hardcoded from seed data)
   try {
     const NAME_TO_EMAIL: Record<string, string> = {
-      'piam parekh':               'jparekh@ucsb.edu',
-      'shiv dutta':                'shiv749@ucsb.edu',
-      'kate heidenga':             'kheidenga@ucsb.edu',
-      'huy nguyen':                'huy_nguyen@ucsb.edu',
-      'sally hu':                  'shu971@ucsb.edu',
-      'julia jimenea':             'juliajimenea@ucsb.edu',
-      'saloni singhal':            'salonisinghal@ucsb.edu',
-      'christina sfatcu':          'sfatcu@ucsb.edu',
-      'vaibhava sri rajesh khanna':'vaibhavasri@ucsb.edu',
-      'matthew vasquez':     'mrvasquez@ucsb.edu',
-      'aaron ramirez':             'aaronramirez@ucsb.edu',
-      'amaya bratcher':            'amayabratcher@ucsb.edu',
-      'ariana tran':               'arianatran@ucsb.edu',
-      'brooke namie bradley':      'bnbradley@ucsb.edu',
-      'clay griffin':              'claygriffin@ucsb.edu',
-      'daysi recinos':             'drecinos@ucsb.edu',
-      'deepthy mukkara':           'deepthymukkara@ucsb.edu',
-      'henry snow':                'hhs@ucsb.edu',
-      'jack larson':               'jacklarson@umail.ucsb.edu',
-      'jean kalaw':                'kalaw@ucsb.edu',
-      'julio bermudez':            'juliobermudez@ucsb.edu',
-      'kai abutin':                'kaiabutin@ucsb.edu',
-      'katelyn nguyen':            'katelyntnguyen@ucsb.edu',
-      'kyra chagarlamudi':         'kcamudi@ucsb.edu',
-      'luke patterson':            'lukepatterson@ucsb.edu',
-      'madigan escobar':           'madigan@ucsb.edu',
-      'mariana franca pires':      'marianafrancapires@ucsb.edu',
-      'mariana frança pires':      'marianafrancapires@ucsb.edu',
-      'matthew chang':             'matthew_chang@ucsb.edu',
-      'nina rossi':                'ninarossi@ucsb.edu',
-      'nirvaan patel':             'nirvaan_patel@ucsb.edu',
-      'noah de la rionda':         'noahdelarionda@ucsb.edu',
-      'om kulkarni':               'om77@ucsb.edu',
-      'preston chung':             'preston_chung@ucsb.edu',
-      'raiyan khan':               'raiyan@ucsb.edu',
-      'rohan kamdar':              'rohankamdar@ucsb.edu',
-      'ryan nguyen':               'r_nguyen@ucsb.edu',
-      'samrita sivakumar':         'smrita@ucsb.edu',
-      'savannah rivera':           'savannah_rivera@ucsb.edu',
-      'sudiksha kaushik':          'skaushik@ucsb.edu',
-      'tyler pintor':              'tpintor@ucsb.edu',
+      "piam parekh": "jparekh@ucsb.edu",
+      "shiv dutta": "shiv749@ucsb.edu",
+      "kate heidenga": "kheidenga@ucsb.edu",
+      "huy nguyen": "huy_nguyen@ucsb.edu",
+      "sally hu": "shu971@ucsb.edu",
+      "julia jimenea": "juliajimenea@ucsb.edu",
+      "saloni singhal": "salonisinghal@ucsb.edu",
+      "christina sfatcu": "sfatcu@ucsb.edu",
+      "vaibhava sri rajesh khanna": "vaibhavasri@ucsb.edu",
+      "matthew vasquez": "mrvasquez@ucsb.edu",
+      "aaron ramirez": "aaronramirez@ucsb.edu",
+      "amaya bratcher": "amayabratcher@ucsb.edu",
+      "ariana tran": "arianatran@ucsb.edu",
+      "brooke namie bradley": "bnbradley@ucsb.edu",
+      "clay griffin": "claygriffin@ucsb.edu",
+      "daysi recinos": "drecinos@ucsb.edu",
+      "deepthy mukkara": "deepthymukkara@ucsb.edu",
+      "henry snow": "hhs@ucsb.edu",
+      "jack larson": "jacklarson@umail.ucsb.edu",
+      "jean kalaw": "kalaw@ucsb.edu",
+      "julio bermudez": "juliobermudez@ucsb.edu",
+      "kai abutin": "kaiabutin@ucsb.edu",
+      "katelyn nguyen": "katelyntnguyen@ucsb.edu",
+      "kyra chagarlamudi": "kcamudi@ucsb.edu",
+      "luke patterson": "lukepatterson@ucsb.edu",
+      "madigan escobar": "madigan@ucsb.edu",
+      "mariana franca pires": "marianafrancapires@ucsb.edu",
+      "mariana frança pires": "marianafrancapires@ucsb.edu",
+      "matthew chang": "matthew_chang@ucsb.edu",
+      "nina rossi": "ninarossi@ucsb.edu",
+      "nirvaan patel": "nirvaan_patel@ucsb.edu",
+      "noah de la rionda": "noahdelarionda@ucsb.edu",
+      "om kulkarni": "om77@ucsb.edu",
+      "preston chung": "preston_chung@ucsb.edu",
+      "raiyan khan": "raiyan@ucsb.edu",
+      "rohan kamdar": "rohankamdar@ucsb.edu",
+      "ryan nguyen": "r_nguyen@ucsb.edu",
+      "samrita sivakumar": "smrita@ucsb.edu",
+      "savannah rivera": "savannah_rivera@ucsb.edu",
+      "sudiksha kaushik": "skaushik@ucsb.edu",
+      "tyler pintor": "tpintor@ucsb.edu",
     };
 
     const sepUsers = await sql`
@@ -196,12 +202,13 @@ export async function initDb() {
     `;
 
     for (const sep of sepUsers) {
-      const nameKey = (sep.name ?? '').toLowerCase().trim();
+      const nameKey = (sep.name ?? "").toLowerCase().trim();
       const targetEmail = NAME_TO_EMAIL[nameKey];
 
       if (!targetEmail) {
         // No mapping found — delete orphan
-        if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
+        if (sep.profile_id)
+          await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
         await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
         await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
         continue;
@@ -219,12 +226,13 @@ export async function initDb() {
         if (existing[0].profile_id) {
           await sql`
             UPDATE profiles SET
-              photo_url   = COALESCE(photo_url,  ${sep.photo_url  ?? null}),
-              linkedin    = COALESCE(linkedin,   ${sep.linkedin   ?? null})
+              photo_url   = COALESCE(photo_url,  ${sep.photo_url ?? null}),
+              linkedin    = COALESCE(linkedin,   ${sep.linkedin ?? null})
             WHERE id = ${existing[0].profile_id}
           `;
         }
-        if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
+        if (sep.profile_id)
+          await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
         await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
         await sql`DELETE FROM tasks WHERE assigned_to = ${sep.user_id}`;
         await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
@@ -233,7 +241,9 @@ export async function initDb() {
         await sql`UPDATE users SET email = ${targetEmail} WHERE id = ${sep.user_id}`;
       }
     }
-  } catch (e) { console.error('ucsbsep.org email migration failed:', e); }
+  } catch (e) {
+    console.error("ucsbsep.org email migration failed:", e);
+  }
 
   // Ensure admin profile is always named "Admin Account" with no personal data
   await sql`

@@ -5,13 +5,13 @@
  * Typography: Helvetica Now (display) + Glacial Indifference (secondary) + Tangerine (accent)
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Glacial+Indifference:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'The Youngest';
-  src: url('./fonts/The Youngest Script-Rg.ttf') format('truetype');
+  font-family: "The Youngest";
+  src: url("./fonts/The Youngest Script-Rg.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -61,46 +61,46 @@
 
 :root {
   /* Sigma Eta Pi Official Color Palette */
-  --sep-navy: #1B212C;
-  --sep-dark-navy: #0C141A;
-  --sep-light: #EEEADE;
-  --sep-light-blue: #D0E4EF;
-  --sep-blue-gray: #8FA2C2;
-  --sep-gray: #D2D0D1;
-  
+  --sep-navy: #1b212c;
+  --sep-dark-navy: #0c141a;
+  --sep-light: #eeeade;
+  --sep-light-blue: #d0e4ef;
+  --sep-blue-gray: #8fa2c2;
+  --sep-gray: #d2d0d1;
+
   --radius: 1rem;
-  --background: #EEEADE;
-  --foreground: #0C141A;
-  --card: #FFFFFF;
-  --card-foreground: #0C141A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0C141A;
-  --primary: #1B212C;
-  --primary-foreground: #EEEADE;
-  --secondary: #D0E4EF;
-  --secondary-foreground: #1B212C;
-  --muted: #D2D0D1;
-  --muted-foreground: #8FA2C2;
-  --accent: #1B212C;
-  --accent-foreground: #EEEADE;
-  --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
-  --border: #D2D0D1;
-  --input: #FFFFFF;
-  --ring: #1B212C;
-  --chart-1: #8FA2C2;
-  --chart-2: #D0E4EF;
-  --chart-3: #1B212C;
-  --chart-4: #0C141A;
-  --chart-5: #D2D0D1;
-  --sidebar: #EEEADE;
-  --sidebar-foreground: #0C141A;
-  --sidebar-primary: #1B212C;
-  --sidebar-primary-foreground: #EEEADE;
-  --sidebar-accent: #1B212C;
-  --sidebar-accent-foreground: #EEEADE;
-  --sidebar-border: #D2D0D1;
-  --sidebar-ring: #1B212C;
+  --background: #eeeade;
+  --foreground: #0c141a;
+  --card: #ffffff;
+  --card-foreground: #0c141a;
+  --popover: #ffffff;
+  --popover-foreground: #0c141a;
+  --primary: #1b212c;
+  --primary-foreground: #eeeade;
+  --secondary: #d0e4ef;
+  --secondary-foreground: #1b212c;
+  --muted: #d2d0d1;
+  --muted-foreground: #8fa2c2;
+  --accent: #1b212c;
+  --accent-foreground: #eeeade;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #d2d0d1;
+  --input: #ffffff;
+  --ring: #1b212c;
+  --chart-1: #8fa2c2;
+  --chart-2: #d0e4ef;
+  --chart-3: #1b212c;
+  --chart-4: #0c141a;
+  --chart-5: #d2d0d1;
+  --sidebar: #eeeade;
+  --sidebar-foreground: #0c141a;
+  --sidebar-primary: #1b212c;
+  --sidebar-primary-foreground: #eeeade;
+  --sidebar-accent: #1b212c;
+  --sidebar-accent-foreground: #eeeade;
+  --sidebar-border: #d2d0d1;
+  --sidebar-ring: #1b212c;
 }
 
 @layer base {
@@ -166,26 +166,36 @@
 
   .sep-label {
     @apply text-xs font-bold tracking-widest uppercase;
-    color: #1B212C;
-    font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1b212c;
+    font-family:
+      "Helvetica Now",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
   }
 
   .sep-heading {
-    font-family: 'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family:
+      "Helvetica Now",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
     font-weight: 900;
-    color: #1B212C;
+    color: #1b212c;
   }
 
   .sep-subheading {
-    font-family: 'Glacial Indifference', serif;
+    font-family: "Glacial Indifference", serif;
     font-weight: 400;
-    color: #0C141A;
+    color: #0c141a;
   }
 
   .sep-accent {
-    font-family: 'Tangerine', cursive;
+    font-family: "Tangerine", cursive;
     font-weight: 700;
     font-size: 2rem;
-    color: #1B212C;
+    color: #1b212c;
   }
 }

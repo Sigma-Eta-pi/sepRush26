@@ -7,7 +7,8 @@ import Footer from "@/components/Footer";
 import { Link } from "wouter";
 import { useState } from "react";
 
-const CAREERS_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
+const CAREERS_BG =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663496422464/dGt4dCdYBbjRUK2GvANG9U/sep-careers-bg-5nPxJu5fYFb4Bo8BcBe3he.webp";
 
 const COMPANIES = [
   { name: "Google", category: "Tech", domain: "google.com" },
@@ -52,33 +53,47 @@ const COMPANIES = [
   { name: "Snap", category: "Tech", domain: "snap.com" },
 ];
 
-const CATEGORIES = ["All", "Tech", "Finance", "Consulting", "Venture", "Fintech", "AI", "Aerospace"];
+const CATEGORIES = [
+  "All",
+  "Tech",
+  "Finance",
+  "Consulting",
+  "Venture",
+  "Fintech",
+  "AI",
+  "Aerospace",
+];
 
 const CAREER_RESOURCES = [
   {
     title: "Alumni Network",
-    description: "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond.",
+    description:
+      "Connect with SEP alumni at top companies across Silicon Valley, Silicon Beach, and beyond.",
   },
   {
     title: "Professional Workshops",
-    description: "Regular workshops on resume building, interview prep, case studies, and startup pitching.",
+    description:
+      "Regular workshops on resume building, interview prep, case studies, and startup pitching.",
   },
   {
     title: "Industry Panels",
-    description: "Hear directly from founders, VCs, and executives about their career journeys and insights.",
+    description:
+      "Hear directly from founders, VCs, and executives about their career journeys and insights.",
   },
   {
     title: "Recruiting Support",
-    description: "Access to exclusive job postings, referrals, and recruiting prep from members at top firms.",
+    description:
+      "Access to exclusive job postings, referrals, and recruiting prep from members at top firms.",
   },
 ];
 
 export default function Careers() {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const filteredCompanies = activeCategory === "All"
-    ? COMPANIES
-    : COMPANIES.filter(c => c.category === activeCategory);
+  const filteredCompanies =
+    activeCategory === "All"
+      ? COMPANIES
+      : COMPANIES.filter(c => c.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
@@ -98,7 +113,8 @@ export default function Careers() {
           <div
             className="text-xs font-bold tracking-widest uppercase mb-2"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               color: "#D0E4EF",
             }}
           >
@@ -107,7 +123,8 @@ export default function Careers() {
           <h1
             className="text-white"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
               textTransform: "uppercase",
@@ -126,7 +143,8 @@ export default function Careers() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-4"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -135,7 +153,8 @@ export default function Careers() {
             <h2
               className="text-[#1B212C] mb-6"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
                 textTransform: "uppercase",
@@ -144,8 +163,15 @@ export default function Careers() {
             >
               Sigma Eta Pi Alumni Are Everywhere
             </h2>
-            <p className="text-[#0C141A]/70 text-base leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support in different industries. Our members go on to work at the world's most innovative companies, launch their own startups, and make meaningful impact across every sector.
+            <p
+              className="text-[#0C141A]/70 text-base leading-relaxed"
+              style={{ fontFamily: "'Glacial Indifference', serif" }}
+            >
+              Sigma Eta Pi stays actively connected with its alumni, creating
+              lasting professional support in different industries. Our members
+              go on to work at the world's most innovative companies, launch
+              their own startups, and make meaningful impact across every
+              sector.
             </p>
           </div>
         </div>
@@ -158,7 +184,8 @@ export default function Careers() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -167,7 +194,8 @@ export default function Careers() {
             <h2
               className="text-[#1B212C]"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
                 textTransform: "uppercase",
@@ -185,7 +213,8 @@ export default function Careers() {
                 <h3
                   className="text-[#1B212C] mb-3 group-hover:text-[#0C141A] transition-colors"
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontWeight: 900,
                     fontSize: "1.2rem",
                     textTransform: "uppercase",
@@ -194,7 +223,10 @@ export default function Careers() {
                 >
                   {resource.title}
                 </h3>
-                <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+                <p
+                  className="text-[#0C141A]/70 text-sm leading-relaxed"
+                  style={{ fontFamily: "'Glacial Indifference', serif" }}
+                >
                   {resource.description}
                 </p>
               </div>
@@ -210,7 +242,8 @@ export default function Careers() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -219,7 +252,8 @@ export default function Careers() {
             <h2
               className="text-[#1B212C] mb-6"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
                 textTransform: "uppercase",
@@ -228,7 +262,7 @@ export default function Careers() {
               Companies Our Members Work At
             </h2>
             <div className="flex flex-wrap justify-center gap-2 mt-6">
-              {CATEGORIES.map((cat) => (
+              {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
@@ -238,7 +272,8 @@ export default function Careers() {
                       : "border-[#1B212C] text-[#1B212C] hover:bg-[#1B212C]/10"
                   }`}
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   }}
                 >
                   {cat}
@@ -280,7 +315,8 @@ export default function Careers() {
           <h2
             className="text-[#1B212C] mb-6"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
               textTransform: "uppercase",
@@ -288,14 +324,19 @@ export default function Careers() {
           >
             Launch Your Career with SEP
           </h2>
-          <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Join a network of entrepreneurs and professionals who support each other throughout their careers.
+          <p
+            className="text-[#0C141A]/70 mb-8"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
+            Join a network of entrepreneurs and professionals who support each
+            other throughout their careers.
           </p>
           <Link
             href="/recruitment"
             className="inline-block px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
             }}
           >

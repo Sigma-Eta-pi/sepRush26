@@ -25,21 +25,24 @@ const VALUES = [
     id: 0,
     label: "Innovation",
     title: "Innovation",
-    description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+    description:
+      "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
     image: INNOVATION_IMG,
   },
   {
     id: 1,
     label: "Brotherhood",
     title: "Brotherhood",
-    description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
+    description:
+      "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
     image: BROTHERHOOD_IMG,
   },
   {
     id: 2,
     label: "Leadership",
     title: "Leadership",
-    description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+    description:
+      "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
     image: ABOUT_BG,
   },
 ];
@@ -87,7 +90,11 @@ const COMPANIES = [
   { name: "Zoom", domain: "zoom.us" },
 ];
 
-function useCountUp(target: number, duration: number = 2000, start: boolean = false) {
+function useCountUp(
+  target: number,
+  duration: number = 2000,
+  start: boolean = false
+) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!start) return;
@@ -103,8 +110,18 @@ function useCountUp(target: number, duration: number = 2000, start: boolean = fa
   return count;
 }
 
-function StatCard({ value, suffix, label, description, startCount }: {
-  value: number; suffix: string; label: string; description: string; startCount: boolean;
+function StatCard({
+  value,
+  suffix,
+  label,
+  description,
+  startCount,
+}: {
+  value: number;
+  suffix: string;
+  label: string;
+  description: string;
+  startCount: boolean;
 }) {
   const count = useCountUp(value, 1800, startCount);
   return (
@@ -112,23 +129,29 @@ function StatCard({ value, suffix, label, description, startCount }: {
       <div
         className="text-[#1B212C] font-bold mb-2"
         style={{
-          fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontFamily:
+            "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           fontSize: "3rem",
           letterSpacing: "-0.02em",
         }}
       >
-        {count}{suffix}
+        {count}
+        {suffix}
       </div>
       <div
         className="text-[#1B212C] font-bold mt-2 mb-3 text-lg"
         style={{
-          fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontFamily:
+            "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           letterSpacing: "0.05em",
         }}
       >
         {label}
       </div>
-      <p className="text-[#0C141A]/60 text-sm leading-relaxed max-w-xs mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
+      <p
+        className="text-[#0C141A]/60 text-sm leading-relaxed max-w-xs mx-auto"
+        style={{ fontFamily: "'Glacial Indifference', serif" }}
+      >
         {description}
       </p>
     </div>
@@ -142,7 +165,9 @@ export default function Home() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setStatsVisible(true);
+      },
       { threshold: 0.3 }
     );
     if (statsRef.current) observer.observe(statsRef.current);
@@ -151,7 +176,7 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveValue((prev) => (prev + 1) % VALUES.length);
+      setActiveValue(prev => (prev + 1) % VALUES.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -175,7 +200,10 @@ export default function Home() {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div
             className="inline-block mb-6 px-4 py-1.5 border-2 border-[#EEEADE] text-[#EEEADE] text-xs tracking-widest uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+            style={{
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            }}
           >
             Epsilon Chapter · UCSB
           </div>
@@ -195,7 +223,8 @@ export default function Home() {
           <p
             className="text-white mb-10 max-w-2xl mx-auto mt-4"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
               fontWeight: 400,
               letterSpacing: "0.05em",
@@ -210,7 +239,8 @@ export default function Home() {
               className="px-8 py-4 font-bold rounded-lg transition-all duration-300 hover:opacity-90 text-sm text-[#EEEADE]"
               style={{
                 background: "#203354",
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -220,7 +250,8 @@ export default function Home() {
               href="/about"
               className="px-8 py-4 border-2 border-[#EEEADE] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#203354] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -236,7 +267,10 @@ export default function Home() {
       </section>
 
       {/* ─── STATS SECTION ─── */}
-      <section ref={statsRef} className="bg-[#FFFFFF] border-y-4 border-[#1B212C]">
+      <section
+        ref={statsRef}
+        className="bg-[#FFFFFF] border-y-4 border-[#1B212C]"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#1B212C]/20">
             <StatCard
@@ -271,7 +305,8 @@ export default function Home() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#1B212C",
               }}
             >
@@ -280,7 +315,8 @@ export default function Home() {
             <h2
               className="text-[#1B212C]"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 textTransform: "uppercase",
@@ -310,7 +346,8 @@ export default function Home() {
                   <div
                     className="text-xs font-bold tracking-widest uppercase mb-3"
                     style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       color: "#D0E4EF",
                     }}
                   >
@@ -319,7 +356,8 @@ export default function Home() {
                   <h3
                     className="text-white mb-4"
                     style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       fontWeight: 900,
                       fontSize: "clamp(2rem, 5vw, 3.5rem)",
                       textTransform: "uppercase",
@@ -337,7 +375,8 @@ export default function Home() {
                     href="/about"
                     className="inline-block px-6 py-3 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#1B212C] text-sm"
                     style={{
-                      fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      fontFamily:
+                        "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                       letterSpacing: "0.05em",
                     }}
                   >
@@ -353,20 +392,28 @@ export default function Home() {
                   key={i}
                   onClick={() => setActiveValue(i)}
                   className={`w-2 h-2 transition-all duration-300 ${
-                    i === activeValue ? "bg-[#1B212C] w-6" : "bg-white/40 hover:bg-white/70"
+                    i === activeValue
+                      ? "bg-[#1B212C] w-6"
+                      : "bg-white/40 hover:bg-white/70"
                   }`}
                   aria-label={`Go to value ${i + 1}`}
                 />
               ))}
               <button
-                onClick={() => setActiveValue((prev) => (prev - 1 + VALUES.length) % VALUES.length)}
+                onClick={() =>
+                  setActiveValue(
+                    prev => (prev - 1 + VALUES.length) % VALUES.length
+                  )
+                }
                 className="ml-2 w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Previous"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
-                onClick={() => setActiveValue((prev) => (prev + 1) % VALUES.length)}
+                onClick={() =>
+                  setActiveValue(prev => (prev + 1) % VALUES.length)
+                }
                 className="w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Next"
               >
@@ -386,7 +433,8 @@ export default function Home() {
                     : "text-[#1B212C] hover:bg-[#1B212C]/10"
                 }`}
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontSize: "0.7rem",
                 }}
               >
@@ -413,7 +461,8 @@ export default function Home() {
             <div
               className="text-xs font-bold tracking-widest uppercase mb-3"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#D0E4EF",
               }}
             >
@@ -422,7 +471,8 @@ export default function Home() {
             <h2
               className="text-white mb-4"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 textTransform: "uppercase",
@@ -431,8 +481,13 @@ export default function Home() {
               Anywhere you want to go,
               <br /> we're probably there!
             </h2>
-            <p className="text-white/70 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-              Sigma Eta Pi stays actively connected with its alumni, creating lasting professional support across different industries and companies.
+            <p
+              className="text-white/70 max-w-2xl mx-auto"
+              style={{ fontFamily: "'Glacial Indifference', serif" }}
+            >
+              Sigma Eta Pi stays actively connected with its alumni, creating
+              lasting professional support across different industries and
+              companies.
             </p>
           </div>
 
@@ -446,14 +501,19 @@ export default function Home() {
                   src={`https://www.google.com/s2/favicons?domain=${company.domain}&sz=64`}
                   alt={company.name}
                   className="w-8 h-8 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                  onError={(e) => {
+                  onError={e => {
                     (e.target as HTMLImageElement).style.display = "none";
-                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
+                    (
+                      e.target as HTMLImageElement
+                    ).nextElementSibling?.classList.remove("hidden");
                   }}
                 />
                 <span
                   className="hidden text-white/70 text-xs font-medium text-center leading-tight"
-                  style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}
+                  style={{
+                    fontFamily: "'Glacial Indifference', serif",
+                    fontSize: "0.6rem",
+                  }}
                 >
                   {company.name}
                 </span>
@@ -466,7 +526,8 @@ export default function Home() {
               href="/careers"
               className="inline-block px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#1B212C] text-sm"
               style={{
-                fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily:
+                  "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
@@ -484,7 +545,8 @@ export default function Home() {
               <div
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   color: "#1B212C",
                 }}
               >
@@ -493,7 +555,8 @@ export default function Home() {
               <h2
                 className="text-[#1B212C] mb-6"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   fontWeight: 900,
                   fontSize: "clamp(2rem, 4vw, 3rem)",
                   textTransform: "uppercase",
@@ -502,17 +565,32 @@ export default function Home() {
               >
                 UCSB's Premier Co-Ed Entrepreneurship Fraternity
               </h2>
-              <p className="text-[#0C141A]/70 text-base leading-relaxed mb-6" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
+              <p
+                className="text-[#0C141A]/70 text-base leading-relaxed mb-6"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
+                Sigma Eta Pi is a co-ed professional business entrepreneurship
+                fraternity dedicated to cultivating innovative, action-oriented
+                leaders. Our members, representing a diverse range of academic
+                disciplines, engage in a community that emphasizes
+                collaboration, mentorship, and the practical application of
+                entrepreneurial skills.
               </p>
-              <p className="text-[#0C141A]/70 text-base leading-relaxed mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.
+              <p
+                className="text-[#0C141A]/70 text-base leading-relaxed mb-8"
+                style={{ fontFamily: "'Glacial Indifference', serif" }}
+              >
+                Founded in 2010 at UCLA as the first entrepreneurship fraternity
+                on the West Coast, Sigma Eta Pi maintains strong connections to
+                prominent startup ecosystems, including Silicon Valley and
+                Silicon Beach.
               </p>
               <Link
                 href="/about"
                 className="inline-block px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
                 style={{
-                  fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily:
+                    "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   letterSpacing: "0.05em",
                 }}
               >
@@ -532,13 +610,20 @@ export default function Home() {
                 <div
                   className="font-bold"
                   style={{
-                    fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: "2rem",
                   }}
                 >
                   2026
                 </div>
-                <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+                <div
+                  className="text-xs tracking-widest uppercase"
+                  style={{
+                    fontFamily:
+                      "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  }}
+                >
                   Founded at UCSB
                 </div>
               </div>
@@ -553,7 +638,8 @@ export default function Home() {
           <div
             className="text-xs font-bold tracking-widest uppercase mb-4"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               color: "#1B212C",
             }}
           >
@@ -562,7 +648,8 @@ export default function Home() {
           <h2
             className="text-[#1B212C] mb-6"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               fontWeight: 900,
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
               textTransform: "uppercase",
@@ -571,14 +658,21 @@ export default function Home() {
           >
             Join Our Founder Class
           </h2>
-          <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            As we relaunch at UCSB, we can't wait to meet our founder class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.
+          <p
+            className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
+            As we relaunch at UCSB, we can't wait to meet our founder class —
+            the leaders, builders, and innovators who will define SEP's future
+            on campus. Step forward, write your next chapter, and be part of
+            something from the very beginning.
           </p>
           <Link
             href="/recruitment"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
-              fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              fontFamily:
+                "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
               letterSpacing: "0.05em",
             }}
           >
