@@ -11,42 +11,104 @@ import execHeroBg from "@/images/exec.png";
 const HERO_BG = execHeroBg;
 
 const EXEC_BOARD = [
-  { name: "Piam Parekh",               role: "Co-President",          initials: "PP", slug: "piamparekh" },
-  { name: "Shiv Dutta",                role: "Co-President",          initials: "SD", slug: "shiv-dutta" },
-  { name: "Kate Heidenga",             role: "VP of Recruitment",     initials: "KH", slug: "kateheidenga" },
-  { name: "Huy Nguyen",                role: "VP of Finance",         initials: "HN", slug: "huynguyen06" },
-  { name: "Sally Hu",                  role: "VP of Operations",      initials: "SH", slug: "sally-huu" },
-  { name: "Julia Jimenea",             role: "VP of Public Relations",initials: "JJ", slug: "juliajimenea" },
-  { name: "Saloni Singhal",            role: "VP of Programming",     initials: "SS", slug: "ssaloni-singhal" },
-  { name: "Christina Sfatcu",          role: "VP of Brotherhood",     initials: "CS", slug: "christina-sfatcu" },
-  { name: "Vaibhava",                  role: "VP of Internal Affairs",initials: "V",  slug: "vaibhava-rajesh-0674a5210" },
-  { name: "Matthew Vasquez",           role: "VP of External Affairs",initials: "MV", slug: "matthewrvasquez" },
+  {
+    name: "Piam Parekh",
+    role: "Co-President",
+    initials: "PP",
+    slug: "piamparekh",
+  },
+  {
+    name: "Shiv Dutta",
+    role: "Co-President",
+    initials: "SD",
+    slug: "shiv-dutta",
+  },
+  {
+    name: "Kate Heidenga",
+    role: "VP of Recruitment",
+    initials: "KH",
+    slug: "kateheidenga",
+  },
+  {
+    name: "Huy Nguyen",
+    role: "VP of Finance",
+    initials: "HN",
+    slug: "huynguyen06",
+  },
+  {
+    name: "Sally Hu",
+    role: "VP of Operations",
+    initials: "SH",
+    slug: "sally-huu",
+  },
+  {
+    name: "Julia Jimenea",
+    role: "VP of Public Relations",
+    initials: "JJ",
+    slug: "juliajimenea",
+  },
+  {
+    name: "Saloni Singhal",
+    role: "VP of Programming",
+    initials: "SS",
+    slug: "ssaloni-singhal",
+  },
+  {
+    name: "Christina Sfatcu",
+    role: "VP of Brotherhood",
+    initials: "CS",
+    slug: "christina-sfatcu",
+  },
+  {
+    name: "Vaibhava",
+    role: "VP of Internal Affairs",
+    initials: "V",
+    slug: "vaibhava-rajesh-0674a5210",
+  },
+  {
+    name: "Matthew Vasquez",
+    role: "VP of External Affairs",
+    initials: "MV",
+    slug: "matthewrvasquez",
+  },
 ];
 
 // Original 8 founding exec — shown at the bottom with their roles
 const FOUNDERS = [
-  { name: "Piam Parekh",    role: "Co-President",          initials: "PP" },
-  { name: "Shiv Dutta",     role: "Co-President",          initials: "SD" },
-  { name: "Sally Hu",       role: "VP of Operations",      initials: "SH" },
-  { name: "Saloni Singhal", role: "VP of Programming",     initials: "SS" },
-  { name: "Christina Sfatcu",role: "VP of Brotherhood",    initials: "CS" },
-  { name: "Kate Heidenga",  role: "VP of Recruitment",     initials: "KH" },
-  { name: "Huy Nguyen",     role: "VP of Finance",         initials: "HN" },
-  { name: "Julia Jimenea",  role: "VP of Public Relations",initials: "JJ" },
+  { name: "Piam Parekh", role: "Co-President", initials: "PP" },
+  { name: "Shiv Dutta", role: "Co-President", initials: "SD" },
+  { name: "Sally Hu", role: "VP of Operations", initials: "SH" },
+  { name: "Saloni Singhal", role: "VP of Programming", initials: "SS" },
+  { name: "Christina Sfatcu", role: "VP of Brotherhood", initials: "CS" },
+  { name: "Kate Heidenga", role: "VP of Recruitment", initials: "KH" },
+  { name: "Huy Nguyen", role: "VP of Finance", initials: "HN" },
+  { name: "Julia Jimenea", role: "VP of Public Relations", initials: "JJ" },
 ];
 
 const EXEC_NAMES = new Set(EXEC_BOARD.map(m => m.name));
 const FOUNDER_NAMES = new Set(FOUNDERS.map(f => f.name));
 
 // Founding pledge class values (DB may have either spelling)
-const FOUNDING_CLASS_VALUES = new Set(['Founder', 'Founding Class', 'founding class', 'founder']);
+const FOUNDING_CLASS_VALUES = new Set([
+  "Founder",
+  "Founding Class",
+  "founding class",
+  "founder",
+]);
 
 // Match exec member to profile — handles partial name mismatches
-function matchExecProfile(memberName: string, profiles: MemberProfile[]): MemberProfile | undefined {
+function matchExecProfile(
+  memberName: string,
+  profiles: MemberProfile[]
+): MemberProfile | undefined {
   const lower = memberName.toLowerCase();
   return profiles.find(p => {
     const pLower = p.name.toLowerCase();
-    return pLower === lower || pLower.startsWith(lower) || lower.startsWith(pLower.split(' ')[0]);
+    return (
+      pLower === lower ||
+      pLower.startsWith(lower) ||
+      lower.startsWith(pLower.split(" ")[0])
+    );
   });
 }
 
@@ -75,31 +137,61 @@ function LinkedInIcon() {
 }
 
 // Small exec chip — compact row card
-function ExecChip({ member, profile }: { member: typeof EXEC_BOARD[0]; profile?: MemberProfile }) {
+function ExecChip({
+  member,
+  profile,
+}: {
+  member: (typeof EXEC_BOARD)[0];
+  profile?: MemberProfile;
+}) {
   const [imgErr, setImgErr] = useState(false);
   const photo = profile?.photoUrl;
   const hasPhoto = photo && !imgErr;
   // Use profile LinkedIn first, fall back to hardcoded slug
   const linkedinUrl = profile?.linkedin
-    ? (profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`)
-    : member.slug ? `https://www.linkedin.com/in/${member.slug}` : null;
+    ? profile.linkedin.startsWith("http")
+      ? profile.linkedin
+      : `https://${profile.linkedin}`
+    : member.slug
+      ? `https://www.linkedin.com/in/${member.slug}`
+      : null;
 
   const inner = (
     <div className="flex items-center gap-2 px-3 py-2 border border-[#1B212C]/20 bg-[#FFFFFF] hover:bg-[#EEEADE] hover:border-[#05006C] transition-all duration-200 group">
       <div className="w-10 h-10 rounded-full bg-[#05006C] flex-shrink-0 flex items-center justify-center overflow-hidden">
         {hasPhoto ? (
-          <img src={photo} alt={member.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
+          <img
+            src={photo}
+            alt={member.name}
+            className="w-full h-full object-cover"
+            onError={() => setImgErr(true)}
+          />
         ) : (
-          <span className="text-[#EEEADE] text-xs font-black" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif" }}>
+          <span
+            className="text-[#EEEADE] text-xs font-black"
+            style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif" }}
+          >
             {member.initials}
           </span>
         )}
       </div>
       <div className="min-w-0">
-        <div className="text-[#1B212C] font-bold truncate" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.7rem" }}>
+        <div
+          className="text-[#1B212C] font-bold truncate"
+          style={{
+            fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+            fontSize: "0.7rem",
+          }}
+        >
           {member.name}
         </div>
-        <div className="text-[#1B212C]/50 truncate" style={{ fontFamily: "'Glacial Indifference', serif", fontSize: "0.6rem" }}>
+        <div
+          className="text-[#1B212C]/50 truncate"
+          style={{
+            fontFamily: "'Glacial Indifference', serif",
+            fontSize: "0.6rem",
+          }}
+        >
           {member.role}
         </div>
       </div>
@@ -119,28 +211,54 @@ function ExecChip({ member, profile }: { member: typeof EXEC_BOARD[0]; profile?:
 // Small member card — founding class + founders grid
 function MemberCard({ profile }: { profile: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
-  const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
-  const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+  const linkedinSlug = profile.linkedin
+    ? extractLinkedinSlug(profile.linkedin)
+    : null;
+  const initials = profile.name
+    .split(" ")
+    .map(n => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
   const hasPhoto = profile.photoUrl && !imgErr;
 
   const inner = (
     <>
       <div className="aspect-square bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative overflow-hidden">
         {hasPhoto ? (
-          <img src={profile.photoUrl} alt={profile.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
+          <img
+            src={profile.photoUrl}
+            alt={profile.name}
+            className="w-full h-full object-cover"
+            onError={() => setImgErr(true)}
+          />
         ) : (
-          <span className="text-[#1B212C] font-bold" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "1.2rem" }}>
+          <span
+            className="text-[#1B212C] font-bold"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+              fontSize: "1.2rem",
+            }}
+          >
             {initials}
           </span>
         )}
         {linkedinSlug && (
           <div className="absolute inset-0 bg-[#05006C]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div className="w-5 h-5 text-white"><LinkedInIcon /></div>
+            <div className="w-5 h-5 text-white">
+              <LinkedInIcon />
+            </div>
           </div>
         )}
       </div>
       <div className="p-1.5 bg-[#EEEADE]">
-        <div className="text-[#1B212C] font-bold text-center leading-tight" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "0.6rem" }}>
+        <div
+          className="text-[#1B212C] font-bold text-center leading-tight"
+          style={{
+            fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+            fontSize: "0.6rem",
+          }}
+        >
           {profile.name}
         </div>
       </div>
@@ -149,12 +267,25 @@ function MemberCard({ profile }: { profile: MemberProfile }) {
 
   if (profile.linkedin) {
     return (
-      <a href={profile.linkedin.startsWith("http") ? profile.linkedin : `https://${profile.linkedin}`} target="_blank" rel="noopener noreferrer" className="group border border-[#1B212C]/30 hover:border-[#05006C] transition-all duration-200 overflow-hidden block">
+      <a
+        href={
+          profile.linkedin.startsWith("http")
+            ? profile.linkedin
+            : `https://${profile.linkedin}`
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group border border-[#1B212C]/30 hover:border-[#05006C] transition-all duration-200 overflow-hidden block"
+      >
         {inner}
       </a>
     );
   }
-  return <div className="group border border-[#1B212C]/30 overflow-hidden">{inner}</div>;
+  return (
+    <div className="group border border-[#1B212C]/30 overflow-hidden">
+      {inner}
+    </div>
+  );
 }
 
 export default function MeetUs() {
@@ -162,7 +293,7 @@ export default function MeetUs() {
 
   useEffect(() => {
     fetch("/api/profiles")
-      .then(r => r.ok ? r.json() : [])
+      .then(r => (r.ok ? r.json() : []))
       .then(setProfiles)
       .catch(() => {});
   }, []);
@@ -171,18 +302,35 @@ export default function MeetUs() {
   const profileByName = new Map<string, MemberProfile>();
   for (const p of profiles) {
     const existing = profileByName.get(p.name);
-    if (!existing || (!existing.photoUrl && !existing.linkedin && (p.photoUrl || p.linkedin))) {
+    if (
+      !existing ||
+      (!existing.photoUrl && !existing.linkedin && (p.photoUrl || p.linkedin))
+    ) {
       profileByName.set(p.name, p);
     }
   }
 
-  const normalize = (s: string) => s.toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+  const normalize = (s: string) =>
+    s
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "");
 
   // Founding class = any founding pledge class value, not an original founder exec — deduplicated
   const foundingClassMembers = Array.from(
     profiles
-      .filter(p => FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? '') && !FOUNDER_NAMES.has(p.name))
-      .sort((a, b) => ((b.photoUrl ? 2 : 0) + (b.linkedin ? 1 : 0)) - ((a.photoUrl ? 2 : 0) + (a.linkedin ? 1 : 0)))
+      .filter(
+        p =>
+          FOUNDING_CLASS_VALUES.has(p.pledgeClass ?? "") &&
+          !FOUNDER_NAMES.has(p.name)
+      )
+      .sort(
+        (a, b) =>
+          (b.photoUrl ? 2 : 0) +
+          (b.linkedin ? 1 : 0) -
+          ((a.photoUrl ? 2 : 0) + (a.linkedin ? 1 : 0))
+      )
       .reduce((map, p) => {
         const key = normalize(p.name);
         if (!map.has(key)) map.set(key, p);
@@ -192,16 +340,24 @@ export default function MeetUs() {
   );
 
   // Future pledge classes = non-founding pledge classes, grouped and deduplicated by normalized name
-  const futureClasses = profiles.reduce((acc, p) => {
-    if (!p.pledgeClass || FOUNDING_CLASS_VALUES.has(p.pledgeClass)) return acc;
-    if (!acc[p.pledgeClass]) acc[p.pledgeClass] = new Map<string, MemberProfile>();
-    const key = normalize(p.name);
-    const ex = acc[p.pledgeClass].get(key);
-    if (!ex || (p.photoUrl && !ex.photoUrl)) acc[p.pledgeClass].set(key, p);
-    return acc;
-  }, {} as Record<string, Map<string, MemberProfile>>);
+  const futureClasses = profiles.reduce(
+    (acc, p) => {
+      if (!p.pledgeClass || FOUNDING_CLASS_VALUES.has(p.pledgeClass))
+        return acc;
+      if (!acc[p.pledgeClass])
+        acc[p.pledgeClass] = new Map<string, MemberProfile>();
+      const key = normalize(p.name);
+      const ex = acc[p.pledgeClass].get(key);
+      if (!ex || (p.photoUrl && !ex.photoUrl)) acc[p.pledgeClass].set(key, p);
+      return acc;
+    },
+    {} as Record<string, Map<string, MemberProfile>>
+  );
   const futureClassesArr = Object.fromEntries(
-    Object.entries(futureClasses).map(([cls, map]) => [cls, Array.from(map.values())])
+    Object.entries(futureClasses).map(([cls, map]) => [
+      cls,
+      Array.from(map.values()),
+    ])
   ) as Record<string, MemberProfile[]>;
 
   return (
@@ -211,14 +367,33 @@ export default function MeetUs() {
       {/* Hero */}
       <section
         className="relative h-72 md:h-96 flex items-end overflow-hidden pt-24"
-        style={{ backgroundImage: `url(${HERO_BG})`, backgroundSize: "cover", backgroundPosition: "center top" }}
+        style={{
+          backgroundImage: `url(${HERO_BG})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+        }}
       >
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
-          <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#D0E4EF" }}>
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-2"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+              color: "#D0E4EF",
+            }}
+          >
             Our Team
           </div>
-          <h1 className="text-white" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(2.5rem, 6vw, 5rem)", textTransform: "uppercase", lineHeight: 1 }}>
+          <h1
+            className="text-white"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
             Meet the Team
           </h1>
         </div>
@@ -228,16 +403,34 @@ export default function MeetUs() {
       <section className="py-10 bg-[#FFFFFF] border-b border-[#1B212C]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <div className="text-xs font-bold tracking-widest uppercase mb-1" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
+            <div
+              className="text-xs font-bold tracking-widest uppercase mb-1"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                color: "#1B212C",
+              }}
+            >
               Executive Board
             </div>
-            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+            <h2
+              className="text-[#1B212C]"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                fontWeight: 900,
+                fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)",
+                textTransform: "uppercase",
+              }}
+            >
               Current Leadership
             </h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {EXEC_BOARD.map((member, i) => (
-              <ExecChip key={i} member={member} profile={matchExecProfile(member.name, profiles)} />
+              <ExecChip
+                key={i}
+                member={member}
+                profile={matchExecProfile(member.name, profiles)}
+              />
             ))}
           </div>
         </div>
@@ -245,15 +438,28 @@ export default function MeetUs() {
 
       {/* Future pledge classes — one section per class, newest first */}
       {Object.entries(futureClassesArr).map(([className, members]) => (
-        <section key={className} className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
+        <section
+          key={className}
+          className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10"
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
-              <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+              <h2
+                className="text-[#1B212C]"
+                style={{
+                  fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)",
+                  textTransform: "uppercase",
+                }}
+              >
                 {className}
               </h2>
             </div>
             <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
-              {members.map(p => <MemberCard key={p.id} profile={p} />)}
+              {members.map(p => (
+                <MemberCard key={p.id} profile={p} />
+              ))}
             </div>
           </div>
         </section>
@@ -263,12 +469,22 @@ export default function MeetUs() {
       <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+            <h2
+              className="text-[#1B212C]"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                fontWeight: 900,
+                fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)",
+                textTransform: "uppercase",
+              }}
+            >
               Founding Class
             </h2>
           </div>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
-            {foundingClassMembers.map(p => <MemberCard key={p.id} profile={p} />)}
+            {foundingClassMembers.map(p => (
+              <MemberCard key={p.id} profile={p} />
+            ))}
           </div>
         </div>
       </section>
@@ -277,7 +493,15 @@ export default function MeetUs() {
       <section className="py-12 bg-[#EEEADE] border-b border-[#1B212C]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-[#1B212C]" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)", textTransform: "uppercase" }}>
+            <h2
+              className="text-[#1B212C]"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                fontWeight: 900,
+                fontSize: "clamp(1.2rem, 2.5vw, 1.75rem)",
+                textTransform: "uppercase",
+              }}
+            >
               Founders
             </h2>
           </div>
@@ -285,10 +509,10 @@ export default function MeetUs() {
             {FOUNDERS.map((founder, i) => {
               const profile = profileByName.get(founder.name) ?? {
                 id: founder.name,
-                userId: '',
+                userId: "",
                 name: founder.name,
-                createdAt: '',
-                updatedAt: '',
+                createdAt: "",
+                updatedAt: "",
               };
               return <MemberCard key={i} profile={profile} />;
             })}
@@ -299,20 +523,54 @@ export default function MeetUs() {
       {/* Join CTA */}
       <section className="py-20 bg-[#EEEADE]">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="text-xs font-bold tracking-widest uppercase mb-4" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", color: "#1B212C" }}>
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-4"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+              color: "#1B212C",
+            }}
+          >
             Join Us
           </div>
-          <h2 className="text-[#1B212C] mb-6" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontWeight: 900, fontSize: "clamp(2rem, 5vw, 4rem)", textTransform: "uppercase", lineHeight: 1 }}>
+          <h2
+            className="text-[#1B212C] mb-6"
+            style={{
+              fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2rem, 5vw, 4rem)",
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
             Be Part of Our Story
           </h2>
-          <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Sigma Eta Pi is UCSB's premier entrepreneurship fraternity — a community of builders, founders, and leaders shaping the future of business and technology.
+          <p
+            className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto"
+            style={{ fontFamily: "'Glacial Indifference', serif" }}
+          >
+            Sigma Eta Pi is UCSB's premier entrepreneurship fraternity — a
+            community of builders, founders, and leaders shaping the future of
+            business and technology.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/recruitment" className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", letterSpacing: "0.05em" }}>
+            <Link
+              href="/recruitment"
+              className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                letterSpacing: "0.05em",
+              }}
+            >
               APPLY NOW
             </Link>
-            <Link href="/about" className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", letterSpacing: "0.05em" }}>
+            <Link
+              href="/about"
+              className="px-8 py-4 border-2 border-[#1B212C] text-[#1B212C] font-bold rounded-lg transition-all duration-300 hover:bg-[#1B212C] hover:text-[#EEEADE] text-sm"
+              style={{
+                fontFamily: "'Helvetica Now', -apple-system, sans-serif",
+                letterSpacing: "0.05em",
+              }}
+            >
               LEARN MORE
             </Link>
           </div>

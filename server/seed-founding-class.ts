@@ -4,46 +4,46 @@
  * Safe to re-run — skips existing emails.
  */
 
-import 'dotenv/config';
-import bcrypt from 'bcryptjs';
-import { nanoid } from 'nanoid';
-import { sql } from './db.js';
+import "dotenv/config";
+import bcrypt from "bcryptjs";
+import { nanoid } from "nanoid";
+import { sql } from "./db.js";
 
-const DEFAULT_PASSWORD = 'UCsep2025!';
+const DEFAULT_PASSWORD = "UCsep2025!";
 
 const MEMBERS = [
-  { name: 'Aaron Ramirez',              email: 'aaronramirez@ucsb.edu' },
-  { name: 'Amaya Bratcher',             email: 'amayabratcher@ucsb.edu' },
-  { name: 'Ariana Tran',                email: 'arianatran@ucsb.edu' },
-  { name: 'Brooke Namie Bradley',       email: 'bnbradley@ucsb.edu' },
-  { name: 'Clay Griffin',               email: 'claygriffin@ucsb.edu' },
-  { name: 'Daysi Recinos',              email: 'drecinos@ucsb.edu' },
-  { name: 'Deepthy Mukkara',            email: 'deepthymukkara@ucsb.edu' },
-  { name: 'Henry Snow',                 email: 'hhs@ucsb.edu' },
-  { name: 'Jack Larson',                email: 'jacklarson@umail.ucsb.edu' },
-  { name: 'Jean Kalaw',                 email: 'kalaw@ucsb.edu' },
-  { name: 'Julio Bermudez',             email: 'juliobermudez@ucsb.edu' },
-  { name: 'Kai Abutin',                 email: 'kaiabutin@ucsb.edu' },
-  { name: 'Katelyn Nguyen',             email: 'katelyntnguyen@ucsb.edu' },
-  { name: 'Kyra Chagarlamudi',          email: 'kcamudi@ucsb.edu' },
-  { name: 'Luke Patterson',             email: 'lukepatterson@ucsb.edu' },
-  { name: 'Madigan Escobar',            email: 'madigan@ucsb.edu' },
-  { name: 'Mariana França Pires',       email: 'marianafrancapires@ucsb.edu' },
-  { name: 'Matthew Chang',              email: 'matthew_chang@ucsb.edu' },
-  { name: 'Matthew Vasquez',      email: 'mrvasquez@ucsb.edu' },
-  { name: 'Nina Rossi',                 email: 'ninarossi@ucsb.edu' },
-  { name: 'Nirvaan Patel',              email: 'nirvaan_patel@ucsb.edu' },
-  { name: 'Noah de la Rionda',          email: 'noahdelarionda@ucsb.edu' },
-  { name: 'Om Kulkarni',                email: 'om77@ucsb.edu' },
-  { name: 'Preston Chung',              email: 'preston_chung@ucsb.edu' },
-  { name: 'Raiyan Khan',                email: 'raiyan@ucsb.edu' },
-  { name: 'Rohan Kamdar',               email: 'rohankamdar@ucsb.edu' },
-  { name: 'Ryan Nguyen',                email: 'r_nguyen@ucsb.edu' },
-  { name: 'Samrita Sivakumar',          email: 'smrita@ucsb.edu' },
-  { name: 'Savannah Rivera',            email: 'savannah_rivera@ucsb.edu' },
-  { name: 'Sudiksha Kaushik',           email: 'skaushik@ucsb.edu' },
-  { name: 'Tyler Pintor',               email: 'tpintor@ucsb.edu' },
-  { name: 'Vaibhava Sri Rajesh Khanna', email: 'vaibhavasri@ucsb.edu' },
+  { name: "Aaron Ramirez", email: "aaronramirez@ucsb.edu" },
+  { name: "Amaya Bratcher", email: "amayabratcher@ucsb.edu" },
+  { name: "Ariana Tran", email: "arianatran@ucsb.edu" },
+  { name: "Brooke Namie Bradley", email: "bnbradley@ucsb.edu" },
+  { name: "Clay Griffin", email: "claygriffin@ucsb.edu" },
+  { name: "Daysi Recinos", email: "drecinos@ucsb.edu" },
+  { name: "Deepthy Mukkara", email: "deepthymukkara@ucsb.edu" },
+  { name: "Henry Snow", email: "hhs@ucsb.edu" },
+  { name: "Jack Larson", email: "jacklarson@umail.ucsb.edu" },
+  { name: "Jean Kalaw", email: "kalaw@ucsb.edu" },
+  { name: "Julio Bermudez", email: "juliobermudez@ucsb.edu" },
+  { name: "Kai Abutin", email: "kaiabutin@ucsb.edu" },
+  { name: "Katelyn Nguyen", email: "katelyntnguyen@ucsb.edu" },
+  { name: "Kyra Chagarlamudi", email: "kcamudi@ucsb.edu" },
+  { name: "Luke Patterson", email: "lukepatterson@ucsb.edu" },
+  { name: "Madigan Escobar", email: "madigan@ucsb.edu" },
+  { name: "Mariana França Pires", email: "marianafrancapires@ucsb.edu" },
+  { name: "Matthew Chang", email: "matthew_chang@ucsb.edu" },
+  { name: "Matthew Vasquez", email: "mrvasquez@ucsb.edu" },
+  { name: "Nina Rossi", email: "ninarossi@ucsb.edu" },
+  { name: "Nirvaan Patel", email: "nirvaan_patel@ucsb.edu" },
+  { name: "Noah de la Rionda", email: "noahdelarionda@ucsb.edu" },
+  { name: "Om Kulkarni", email: "om77@ucsb.edu" },
+  { name: "Preston Chung", email: "preston_chung@ucsb.edu" },
+  { name: "Raiyan Khan", email: "raiyan@ucsb.edu" },
+  { name: "Rohan Kamdar", email: "rohankamdar@ucsb.edu" },
+  { name: "Ryan Nguyen", email: "r_nguyen@ucsb.edu" },
+  { name: "Samrita Sivakumar", email: "smrita@ucsb.edu" },
+  { name: "Savannah Rivera", email: "savannah_rivera@ucsb.edu" },
+  { name: "Sudiksha Kaushik", email: "skaushik@ucsb.edu" },
+  { name: "Tyler Pintor", email: "tpintor@ucsb.edu" },
+  { name: "Vaibhava Sri Rajesh Khanna", email: "vaibhavasri@ucsb.edu" },
 ];
 
 async function seed() {
@@ -83,4 +83,7 @@ async function seed() {
   process.exit(0);
 }
 
-seed().catch(err => { console.error(err); process.exit(1); });
+seed().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

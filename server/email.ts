@@ -1,18 +1,23 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
-const configured = !!(process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS);
+const configured = !!(
+  process.env.EMAIL_HOST &&
+  process.env.EMAIL_USER &&
+  process.env.EMAIL_PASS
+);
 
 const transporter = configured
   ? nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: process.env.EMAIL_PORT === '465',
+      port: parseInt(process.env.EMAIL_PORT || "587"),
+      secure: process.env.EMAIL_PORT === "465",
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     })
   : null;
 
-const FROM = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@ucsbsep.org';
-const APP_URL = process.env.APP_URL || 'http://localhost:3000';
+const FROM =
+  process.env.EMAIL_FROM || process.env.EMAIL_USER || "noreply@ucsbsep.org";
+const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
 function baseTemplate(body: string) {
   return `
@@ -37,8 +42,16 @@ export async function sendPasswordResetEmail(to: string, token: string) {
     <a href="${link}" style="display:inline-block;background:#05006C;color:#EEEADE;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">Reset Password</a>
     <p style="color:#9ca3af;font-size:12px;margin-top:24px;">If you didn't request this, ignore this email.<br/><a href="${link}" style="color:#9ca3af;">${link}</a></p>
   `);
-  if (!transporter) { console.log(`[EMAIL] Password reset for ${to}: ${link}`); return; }
-  await transporter.sendMail({ from: FROM, to, subject: 'Reset your SEP password', html });
+  if (!transporter) {
+    console.log(`[EMAIL] Password reset for ${to}: ${link}`);
+    return;
+  }
+  await transporter.sendMail({
+    from: FROM,
+    to,
+    subject: "Reset your SEP password",
+    html,
+  });
 }
 
 export async function sendWelcomeEmail(to: string, token: string) {
@@ -50,18 +63,33 @@ export async function sendWelcomeEmail(to: string, token: string) {
     <a href="${link}" style="display:inline-block;background:#05006C;color:#EEEADE;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">Set My Password</a>
     <p style="color:#9ca3af;font-size:12px;margin-top:24px;">Link expires in 24 hours.<br/><a href="${link}" style="color:#9ca3af;">${link}</a></p>
   `);
-  if (!transporter) { console.log(`[EMAIL] Welcome email for ${to}: ${link}`); return; }
-  await transporter.sendMail({ from: FROM, to, subject: 'Welcome to SEP Epsilon — Set your password', html });
+  if (!transporter) {
+    console.log(`[EMAIL] Welcome email for ${to}: ${link}`);
+    return;
+  }
+  await transporter.sendMail({
+    from: FROM,
+    to,
+    subject: "Welcome to SEP Epsilon — Set your password",
+    html,
+  });
 }
 
-export async function sendBlastEmail(recipients: string[], subject: string, content: string, senderName: string) {
+export async function sendBlastEmail(
+  recipients: string[],
+  subject: string,
+  content: string,
+  senderName: string
+) {
   const html = baseTemplate(`
-    <p style="color:#374151;white-space:pre-wrap;line-height:1.7;margin:0 0 32px;">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+    <p style="color:#374151;white-space:pre-wrap;line-height:1.7;margin:0 0 32px;">${content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
     <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 0 16px;"/>
     <p style="color:#9ca3af;font-size:12px;margin:0;">— ${senderName}, SEP Epsilon Executive Board</p>
   `);
   if (!transporter) {
-    console.log(`[EMAIL] Blast "${subject}" to ${recipients.length} recipients (not configured)`);
+    console.log(
+      `[EMAIL] Blast "${subject}" to ${recipients.length} recipients (not configured)`
+    );
     return;
   }
   for (const to of recipients) {

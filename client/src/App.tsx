@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import { motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -30,50 +31,50 @@ function Router() {
   const [location] = useLocation();
   return (
     <motion.div
-        key={location}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-      >
-        <Switch>
-          <Route path={"/"} component={Home} />
-          <Route path={"/about"} component={About} />
-          <Route path={"/meet-us"} component={MeetUs} />
-          <Route path={"/careers"} component={Careers} />
-          <Route path={"/recruitment"} component={Recruitment} />
-          <Route path="/active-login" component={Login} />
-          <Route path="/reset-password" component={ResetPassword} />
-          <Route path="/onboarding">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Onboarding />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path="/dashboard">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Dashboard />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path="/dashboard/:rest*">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Dashboard />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path={"/404"} component={NotFound} />
-          <Route component={NotFound} />
-        </Switch>
-      </motion.div>
+      key={location}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/about"} component={About} />
+        <Route path={"/meet-us"} component={MeetUs} />
+        <Route path={"/careers"} component={Careers} />
+        <Route path={"/recruitment"} component={Recruitment} />
+        <Route path="/active-login" component={Login} />
+        <Route path="/reset-password" component={ResetPassword} />
+        <Route path="/onboarding">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={suspenseFallback}>
+                <Onboarding />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path="/dashboard">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={suspenseFallback}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path="/dashboard/:rest*">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={suspenseFallback}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </motion.div>
   );
 }
 
@@ -86,6 +87,7 @@ function App() {
             <Toaster />
             <ScrollToTop />
             <Router />
+            <Analytics />
           </TooltipProvider>
         </ThemeProvider>
       </AuthProvider>
