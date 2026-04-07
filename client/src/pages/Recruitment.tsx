@@ -67,7 +67,7 @@ const FAQ = [
   },
   {
     q: "When is the application deadline?",
-    a: "Applications for Spring 2026 recruitment close on February 28, 2026. We'll notify applicants of interview dates shortly after.",
+    a: "Applications for Spring 2026 recruitment close on April 9, 2026 at 11:59. We'll notify applicants of interview dates shortly after.",
   },
   {
     q: "What happens after I apply?",
