@@ -1,11 +1,17 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
-export type UserRole = 'active' | 'exec' | 'admin' | 'editor';
+export type UserRole = 'active' | 'exec' | 'admin';
 
 export interface AuthUser {
   id: string;
   email: string;
   role: UserRole;
+  is_editor: boolean;
+}
+
+export function canEditSite(user: AuthUser | null): boolean {
+  if (!user) return false;
+  return user.role === 'admin' || user.role === 'exec' || user.is_editor === true;
 }
 
 interface AuthContextType {

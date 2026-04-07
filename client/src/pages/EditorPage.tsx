@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'wouter';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, canEditSite } from '@/contexts/AuthContext';
 import {
   Save,
   ExternalLink,
@@ -562,15 +562,15 @@ function ChatBubble({
 // ─── Main EditorPage ──────────────────────────────────────────────────────────
 
 export default function EditorPage() {
-  const { user, token } = useAuth();
+  const { user, token, isLoading: authLoading } = useAuth();
   const [, navigate] = useLocation();
 
   // Auth guard
   useEffect(() => {
-    if (user && user.role !== 'editor' && user.role !== 'admin') {
+    if (!authLoading && user && !canEditSite(user)) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const [activePage, setActivePage] = useState<PageKey>('home');
   const [content, setContent] = useState<Record<string, unknown>>({});

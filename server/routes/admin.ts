@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/users', requireAdmin, async (_req, res) => {
   const rows = await sql`
-    SELECT u.id, u.email, u.role, u.created_at, p.name AS profile_name, p.pledge_class
+    SELECT u.id, u.email, u.role, u.is_editor, u.created_at, p.name AS profile_name, p.pledge_class
     FROM users u
     LEFT JOIN profiles p ON p.user_id = u.id
     ORDER BY u.created_at ASC
@@ -17,6 +17,7 @@ router.get('/users', requireAdmin, async (_req, res) => {
     id: u.id,
     email: u.email,
     role: u.role,
+    is_editor: u.is_editor === 1,
     createdAt: u.created_at,
     name: u.profile_name || null,
     pledgeClass: u.pledge_class || null,
@@ -25,16 +26,16 @@ router.get('/users', requireAdmin, async (_req, res) => {
 
 // Update role/email/pledgeClass — no password field exposed to admin
 router.put('/users/:id', requireAdmin, async (req, res) => {
-  const rows = await sql`SELECT id, email, role FROM users WHERE id = ${req.params.id} LIMIT 1`;
+  const rows = await sql`SELECT id, email, role, is_editor FROM users WHERE id = ${req.params.id} LIMIT 1`;
   if (rows.length === 0) { res.status(404).json({ error: 'User not found' }); return; }
 
-  const { role, email, pledgeClass } = req.body;
+  const { role, email, is_editor, pledgeClass } = req.body;
   const u = rows[0];
 
   if (req.user!.id === req.params.id && role && role !== u.role) {
     res.status(403).json({ error: 'Cannot change your own role' }); return;
   }
-  if (role && !['active', 'exec', 'admin', 'editor'].includes(role)) {
+  if (role && !['active', 'exec', 'admin'].includes(role)) {
     res.status(400).json({ error: 'Invalid role' }); return;
   }
   if (email && email !== u.email) {
@@ -44,14 +45,14 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
 
   const newRole = role ?? u.role;
   const newEmail = email?.trim() || u.email;
-  await sql`UPDATE users SET role = ${newRole}, email = ${newEmail} WHERE id = ${req.params.id}`;
+  const newIsEditor = typeof is_editor === 'boolean' ? (is_editor ? 1 : 0) : (u.is_editor ?? 0);
+  await sql`UPDATE users SET role = ${newRole}, email = ${newEmail}, is_editor = ${newIsEditor} WHERE id = ${req.params.id}`;
 
   if (pledgeClass !== undefined) {
     const val = pledgeClass?.trim() || null;
     await sql`UPDATE profiles SET pledge_class = ${val} WHERE user_id = ${req.params.id}`;
   }
-
-  res.json({ id: u.id, email: newEmail, role: newRole, pledgeClass: pledgeClass ?? null });
+  res.json({ id: u.id, email: newEmail, role: newRole, is_editor: newIsEditor === 1 });
 });
 
 // Send password reset email

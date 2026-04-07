@@ -18,7 +18,8 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 interface MemberUser {
   id: string;
   email: string;
-  role: 'active' | 'exec' | 'admin' | 'editor';
+  role: 'active' | 'exec' | 'admin';
+  is_editor: boolean;
   createdAt: string;
   name?: string | null;
   pledgeClass?: string | null;
@@ -334,7 +335,6 @@ function MembersTab({ token }: { token: string }) {
               <option value="active">Active</option>
               <option value="exec">Exec</option>
               <option value="admin">Admin</option>
-              <option value="editor">Editor</option>
             </select>
           </div>
           <button onClick={handleAdd} disabled={submitting}
@@ -358,9 +358,11 @@ function MembersTab({ token }: { token: string }) {
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                   m.role === 'admin' ? 'bg-red-100 text-red-700' :
                   m.role === 'exec' ? 'bg-yellow-100 text-yellow-700' :
-                  m.role === 'editor' ? 'bg-purple-100 text-purple-700' :
                   'bg-[#05006C]/8 text-[#05006C]/60'
                 }`}>{m.role}</span>
+                {m.is_editor && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 uppercase tracking-wider">editor</span>
+                )}
 
                 {resetStatus[m.id] ? (
                   <span className={`text-xs px-2 py-1 rounded-lg ${
@@ -420,8 +422,25 @@ function MembersTab({ token }: { token: string }) {
                           <option value="active">active</option>
                           <option value="exec">exec</option>
                           <option value="admin">admin</option>
-                          <option value="editor">editor</option>
                         </select>
+                        <div className="flex items-center gap-2 mt-2">
+                          <input
+                            type="checkbox"
+                            id={`editor-${m.id}`}
+                            checked={!!m.is_editor}
+                            onChange={async (e) => {
+                              await apiFetch(`/api/admin/users/${m.id}`, token, {
+                                method: 'PUT',
+                                body: JSON.stringify({ is_editor: e.target.checked }),
+                              });
+                              fetchMembers();
+                            }}
+                            className="w-4 h-4 accent-purple-600"
+                          />
+                          <label htmlFor={`editor-${m.id}`} className="text-xs text-slate-600 font-medium">
+                            Website Editor Access
+                          </label>
+                        </div>
                       </div>
                       <div>
                         <label className="block text-[#05006C]/50 text-xs mb-1">Class</label>
