@@ -19,7 +19,7 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 interface MemberUser {
   id: string;
   email: string;
-  role: 'active' | 'exec' | 'admin';
+  role: 'active' | 'exec' | 'admin' | 'pnm';
   is_editor: boolean;
   createdAt: string;
   name?: string | null;
@@ -445,6 +445,7 @@ function MembersTab({ token }: { token: string }) {
               className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
             <select value={addForm.role} onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
               className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]">
+              <option value="pnm">PNM</option>
               <option value="active">Active</option>
               <option value="exec">Exec</option>
               <option value="admin">Admin</option>
@@ -471,6 +472,7 @@ function MembersTab({ token }: { token: string }) {
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                   m.role === 'admin' ? 'bg-red-100 text-red-700' :
                   m.role === 'exec' ? 'bg-yellow-100 text-yellow-700' :
+                  m.role === 'pnm' ? 'bg-orange-100 text-orange-700' :
                   'bg-[#05006C]/8 text-[#05006C]/60'
                 }`}>{m.role}</span>
                 {m.is_editor && (
@@ -532,6 +534,7 @@ function MembersTab({ token }: { token: string }) {
                         <select value={editForm.role}
                           onChange={(e) => setEditForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
                           className={inputCls}>
+                          <option value="pnm">pnm</option>
                           <option value="active">active</option>
                           <option value="exec">exec</option>
                           <option value="admin">admin</option>

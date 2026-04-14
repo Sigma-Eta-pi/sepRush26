@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import { sql } from '../db.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, optionalAuth } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -30,12 +30,12 @@ function rowToProfile(r: any) {
   };
 }
 
-router.get('/', async (_req, res) => {
-  const rows = await sql`
-    SELECT p.* FROM profiles p
-    JOIN users u ON u.id = p.user_id
-    WHERE u.role != 'admin'
-  `;
+router.get('/', optionalAuth, async (req, res) => {
+  // Authenticated members (logged in) can see PNM profiles in the dashboard.
+  // Unauthenticated public requests (MeetUs page) exclude PNMs.
+  const rows = req.user
+    ? await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role != 'admin'`
+    : await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm')`;
   res.json(rows.map(rowToProfile));
 });
 

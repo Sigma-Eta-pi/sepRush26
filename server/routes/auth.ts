@@ -8,7 +8,7 @@ import type { UserRole } from '../types.js';
 
 const router = Router();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const VALID_ROLES: UserRole[] = ['active', 'exec', 'admin'];
+const VALID_ROLES: UserRole[] = ['active', 'exec', 'admin', 'pnm'];
 
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
 function checkRateLimit(ip: string) {

@@ -51,6 +51,15 @@ export function requireEditor(req: Request, res: Response, next: NextFunction): 
   });
 }
 
+// Sets req.user if a valid token is present, but does not reject unauthenticated requests
+export function optionalAuth(req: Request, _res: Response, next: NextFunction): void {
+  const token = req.headers.authorization?.slice(7);
+  if (token) {
+    try { req.user = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: UserRole; is_editor: boolean }; } catch { /* ignore */ }
+  }
+  next();
+}
+
 export function signToken(payload: { id: string; email: string; role: UserRole; is_editor: boolean }): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
 }
