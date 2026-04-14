@@ -38,10 +38,10 @@ router.post('/login', async (req, res) => {
   const hasProfile = profileRows.length > 0 && !!profileRows[0].name;
   const firstLogin = user.first_login === 1;
 
-  const token = signToken({ id: user.id, email: user.email, role: user.role });
+  const token = signToken({ id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 });
   res.json({
     token,
-    user: { id: user.id, email: user.email, role: user.role },
+    user: { id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 },
     needsOnboarding: firstLogin || !hasProfile,
     firstLogin,
   });
@@ -101,10 +101,10 @@ router.post('/reset-password', async (req, res) => {
   await sql`UPDATE users SET password_hash = ${hash}, first_login = 0 WHERE id = ${rows[0].user_id}`;
   await sql`UPDATE password_reset_tokens SET used = 1 WHERE id = ${rows[0].id}`;
 
-  const userRows = await sql`SELECT id, email, role FROM users WHERE id = ${rows[0].user_id} LIMIT 1`;
+  const userRows = await sql`SELECT id, email, role, is_editor FROM users WHERE id = ${rows[0].user_id} LIMIT 1`;
   const user = userRows[0];
-  const authToken = signToken({ id: user.id, email: user.email, role: user.role });
-  res.json({ success: true, token: authToken, user: { id: user.id, email: user.email, role: user.role } });
+  const authToken = signToken({ id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 });
+  res.json({ success: true, token: authToken, user: { id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 } });
 });
 
 // Change password while logged in (first-login flow) — clears first_login flag

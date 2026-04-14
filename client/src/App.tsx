@@ -16,6 +16,7 @@ import Recruitment from "./pages/Recruitment";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditorPage from "./pages/EditorPage";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Onboarding = lazy(() => import("./pages/Onboarding"));
@@ -42,6 +43,13 @@ function Router() {
           <Route path={"/careers"} component={Careers} />
           <Route path={"/recruitment"} component={Recruitment} />
           <Route path="/active-login" component={Login} />
+          <Route path="/editor">
+            {() => (
+              <ProtectedRoute>
+                <EditorPage />
+              </ProtectedRoute>
+            )}
+          </Route>
           <Route path="/reset-password" component={ResetPassword} />
           <Route path="/onboarding">
             {() => (

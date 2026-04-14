@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, canEditSite } from '@/contexts/AuthContext';
 import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe, ListTodo } from 'lucide-react';
 import Updates from './dashboard/Updates';
 import CalendarView from './dashboard/CalendarView';
@@ -25,6 +25,7 @@ const navItems = [
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [location, navigate] = useLocation();
+  const isEditor = canEditSite(user);
 
   const path = location.replace(/^\/dashboard\/?/, '') || 'updates';
 
@@ -116,6 +117,19 @@ export default function Dashboard() {
               {user?.role === 'admin' ? 'Admin Panel' : 'Exec Panel'}
             </Link>
           )}
+          {isEditor && (
+            <Link
+              href="/editor"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all ${
+                isActive('/editor')
+                  ? 'text-[#EEEADE] bg-white/15'
+                  : 'text-[#EEEADE]/70 hover:text-[#EEEADE] hover:bg-white/10'
+              }`}
+            >
+              <Globe size={18} />
+              Website Editor
+            </Link>
+          )}
         </nav>
 
         {/* User info + logout */}
@@ -126,6 +140,11 @@ export default function Dashboard() {
               <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${roleBadgeColor}`}>
                 {user?.role}
               </span>
+              {user && canEditSite(user) && user.role === 'active' && (
+                <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500 text-white">
+                  editor
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-1 ml-2">
               <Link

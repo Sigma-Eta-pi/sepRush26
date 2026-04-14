@@ -6,12 +6,18 @@ export interface AuthUser {
   id: string;
   email: string;
   role: UserRole;
+  is_editor: boolean;
+}
+
+export function canEditSite(user: AuthUser | null): boolean {
+  if (!user) return false;
+  return user.role === 'admin' || user.role === 'exec' || user.is_editor === true;
 }
 
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<{ needsOnboarding: boolean }>;
+  login: (email: string, password: string) => Promise<{ needsOnboarding: boolean; role: UserRole }>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -76,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user);
     setNeedsOnboarding(!!data.needsOnboarding);
     setFirstLogin(!!data.firstLogin);
-    return { needsOnboarding: !!data.needsOnboarding };
+    return { needsOnboarding: !!data.needsOnboarding, role: data.user.role as UserRole };
   };
 
   const logout = () => {

@@ -10,9 +10,10 @@ import uploadRouter from '../server/routes/upload.js';
 import taskRouter from '../server/routes/tasks.js';
 import classesRouter from '../server/routes/classes.js';
 import proxyRouter from '../server/routes/proxy.js';
+import contentRouter from '../server/routes/content.js';
 
 const app = express();
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '20mb' }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
@@ -24,6 +25,7 @@ app.use('/api/upload', uploadRouter);
 app.use('/api/tasks', taskRouter);
 app.use('/api/classes', classesRouter);
 app.use('/api/proxy', proxyRouter);
+app.use('/api/content', contentRouter);
 
 app.all('/api/*', (_req, res) => res.status(404).json({ error: 'Not found' }));
 

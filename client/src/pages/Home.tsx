@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import heroBg from "@/images/hero.JPG";
 import careersBg from "@/images/exec.png";
 import brotherhoodImg from "@/images/brotherhood.png";
@@ -20,29 +21,8 @@ const BROTHERHOOD_IMG = brotherhoodImg;
 const INNOVATION_IMG = innovationImg;
 const ABOUT_BG = leadershipImg;
 
-const VALUES = [
-  {
-    id: 0,
-    label: "Innovation",
-    title: "Innovation",
-    description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
-    image: INNOVATION_IMG,
-  },
-  {
-    id: 1,
-    label: "Brotherhood",
-    title: "Brotherhood",
-    description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
-    image: BROTHERHOOD_IMG,
-  },
-  {
-    id: 2,
-    label: "Leadership",
-    title: "Leadership",
-    description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
-    image: ABOUT_BG,
-  },
-];
+// Images are hardcoded — not editable via CMS
+const VALUE_IMAGES = [INNOVATION_IMG, BROTHERHOOD_IMG, ABOUT_BG];
 
 const COMPANIES = [
   { name: "Google", domain: "google.com" },
@@ -86,6 +66,74 @@ const COMPANIES = [
   { name: "Notion", domain: "notion.so" },
   { name: "Zoom", domain: "zoom.us" },
 ];
+
+const defaultHomeContent = {
+  hero: {
+    title: "Sigma Eta Pi",
+    subtitle: "The Premier Entrepreneurship Fraternity at UCSB",
+    badge: "Epsilon Chapter · UCSB",
+    cta_primary: "JOIN OUR ALPHA CLASS",
+    cta_primary_href: "/recruitment",
+    cta_secondary: "LEARN MORE",
+    cta_secondary_href: "/about",
+    bg_image: "",
+  },
+  stats: [
+    {
+      value: 21,
+      suffix: "+",
+      label: "Ventures Launched",
+      description: "Across all chapters, members have launched over 21 ventures, including Y Combinator-backed projects and initiatives acquired for $90 million.",
+    },
+    {
+      value: 90,
+      suffix: "M+",
+      label: "Acquisition Value",
+      description: "Member-founded ventures have been acquired for over $90 million, demonstrating the real-world impact of our entrepreneurship community.",
+    },
+    {
+      value: 350,
+      suffix: "+",
+      label: "Chapters Nationwide",
+      description: "Sigma Eta Pi spans hundreds of chapters across the country, offering a powerful network of entrepreneurs, founders, and innovators.",
+    },
+  ],
+  values: [
+    {
+      label: "Innovation",
+      title: "Innovation",
+      description: "Believe that embracing innovation is key to shaping the future and driving meaningful change. We challenge the status quo and build what doesn't yet exist.",
+      bg_image: "",
+    },
+    {
+      label: "Brotherhood",
+      title: "Brotherhood",
+      description: "Support one another through challenges and triumphs, creating a welcoming and inclusive environment where everyone feels valued. Our bond extends beyond campus.",
+      bg_image: "",
+    },
+    {
+      label: "Leadership",
+      title: "Leadership",
+      description: "Fosters personal growth while equipping members to make meaningful impact. We develop the next generation of entrepreneurs, founders, and industry leaders.",
+      bg_image: "",
+    },
+  ],
+  about_teaser: {
+    label: "About Sigma Eta Pi",
+    title: "UCSB's Premier Co-Ed Entrepreneurship Fraternity",
+    p1: "Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.",
+    p2: "Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.",
+    founded_year: "2026",
+    bg_image: "",
+  },
+  recruitment_cta: {
+    label: "Recruitment",
+    title: "Join Our Founder Class",
+    description: "As we relaunch at UCSB, we can't wait to meet our founder class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.",
+    cta: "WINTER 2026 APPLICATION",
+    bg_image: "",
+  },
+};
 
 function useCountUp(target: number, duration: number = 2000, start: boolean = false) {
   const [count, setCount] = useState(0);
@@ -136,6 +184,7 @@ function StatCard({ value, suffix, label, description, startCount }: {
 }
 
 export default function Home() {
+  const { content } = useSiteContent("home", defaultHomeContent);
   const [activeValue, setActiveValue] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -151,10 +200,10 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveValue((prev) => (prev + 1) % VALUES.length);
+      setActiveValue((prev) => (prev + 1) % content.values.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [content.values.length]);
 
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
@@ -164,7 +213,7 @@ export default function Home() {
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24"
         style={{
-          backgroundImage: `url(${HERO_BG})`,
+          backgroundImage: `url(${content.hero.bg_image || HERO_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}
@@ -177,7 +226,7 @@ export default function Home() {
             className="inline-block mb-6 px-4 py-1.5 border-2 border-[#EEEADE] text-[#EEEADE] text-xs tracking-widest uppercase"
             style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
-            Epsilon Chapter · UCSB
+            {content.hero.badge}
           </div>
 
           <h1
@@ -189,7 +238,7 @@ export default function Home() {
               letterSpacing: "0.02em",
             }}
           >
-            Sigma Eta Pi
+            {content.hero.title}
           </h1>
 
           <p
@@ -201,12 +250,12 @@ export default function Home() {
               letterSpacing: "0.05em",
             }}
           >
-            The Premier Entrepreneurship Fraternity at UCSB
+            {content.hero.subtitle}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/recruitment"
+              href={content.hero.cta_primary_href}
               className="px-8 py-4 font-bold rounded-lg transition-all duration-300 hover:opacity-90 text-sm text-[#EEEADE]"
               style={{
                 background: "#203354",
@@ -214,17 +263,17 @@ export default function Home() {
                 letterSpacing: "0.05em",
               }}
             >
-              JOIN OUR ALPHA CLASS
+              {content.hero.cta_primary}
             </Link>
             <Link
-              href="/about"
+              href={content.hero.cta_secondary_href}
               className="px-8 py-4 border-2 border-[#EEEADE] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#EEEADE] hover:text-[#203354] text-sm"
               style={{
                 fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 letterSpacing: "0.05em",
               }}
             >
-              LEARN MORE
+              {content.hero.cta_secondary}
             </Link>
           </div>
         </div>
@@ -239,27 +288,16 @@ export default function Home() {
       <section ref={statsRef} className="bg-[#FFFFFF] border-y-4 border-[#1B212C]">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#1B212C]/20">
-            <StatCard
-              value={21}
-              suffix="+"
-              label="Ventures Launched"
-              description="Across all chapters, members have launched over 21 ventures, including Y Combinator-backed projects and initiatives acquired for $90 million."
-              startCount={statsVisible}
-            />
-            <StatCard
-              value={90}
-              suffix="M+"
-              label="Acquisition Value"
-              description="Member-founded ventures have been acquired for over $90 million, demonstrating the real-world impact of our entrepreneurship community."
-              startCount={statsVisible}
-            />
-            <StatCard
-              value={15}
-              suffix="+"
-              label="Chapters Nationwide"
-              description="Sigma Eta Pi spans chapters across the country, offering a powerful network of entrepreneurs, founders, and innovators."
-              startCount={statsVisible}
-            />
+            {content.stats.map((stat, i) => (
+              <StatCard
+                key={i}
+                value={stat.value}
+                suffix={stat.suffix}
+                label={stat.label}
+                description={stat.description}
+                startCount={statsVisible}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -296,7 +334,7 @@ export default function Home() {
             <div
               className="relative h-[500px] md:h-[600px] overflow-hidden"
               style={{
-                backgroundImage: `url(${VALUES[activeValue].image})`,
+                backgroundImage: `url(${(content.values[activeValue % content.values.length] as any)?.bg_image || VALUE_IMAGES[activeValue % VALUE_IMAGES.length]})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 transition: "background-image 0.5s ease",
@@ -314,7 +352,7 @@ export default function Home() {
                       color: "#D0E4EF",
                     }}
                   >
-                    {VALUES[activeValue].label}
+                    {content.values[activeValue]?.label}
                   </div>
                   <h3
                     className="text-white mb-4"
@@ -325,13 +363,13 @@ export default function Home() {
                       textTransform: "uppercase",
                     }}
                   >
-                    {VALUES[activeValue].title}
+                    {content.values[activeValue]?.title}
                   </h3>
                   <p
                     className="text-white/90 text-base leading-relaxed mb-8"
                     style={{ fontFamily: "'Glacial Indifference', serif" }}
                   >
-                    {VALUES[activeValue].description}
+                    {content.values[activeValue]?.description}
                   </p>
                   <Link
                     href="/about"
@@ -348,7 +386,7 @@ export default function Home() {
             </div>
 
             <div className="absolute bottom-8 right-8 z-20 flex items-center gap-3">
-              {VALUES.map((_, i) => (
+              {content.values.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveValue(i)}
@@ -359,14 +397,14 @@ export default function Home() {
                 />
               ))}
               <button
-                onClick={() => setActiveValue((prev) => (prev - 1 + VALUES.length) % VALUES.length)}
+                onClick={() => setActiveValue((prev) => (prev - 1 + content.values.length) % content.values.length)}
                 className="ml-2 w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Previous"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
-                onClick={() => setActiveValue((prev) => (prev + 1) % VALUES.length)}
+                onClick={() => setActiveValue((prev) => (prev + 1) % content.values.length)}
                 className="w-10 h-10 border-2 border-white/30 flex items-center justify-center text-white hover:border-[#D0E4EF] hover:text-[#D0E4EF] transition-colors"
                 aria-label="Next"
               >
@@ -376,7 +414,7 @@ export default function Home() {
           </div>
 
           <div className="flex border-t-4 border-[#1B212C] mt-0">
-            {VALUES.map((value, i) => (
+            {content.values.map((value, i) => (
               <button
                 key={i}
                 onClick={() => setActiveValue(i)}
@@ -401,7 +439,7 @@ export default function Home() {
       <section
         className="relative py-24 overflow-hidden"
         style={{
-          backgroundImage: `url(${CAREERS_BG})`,
+          backgroundImage: `url(${content.recruitment_cta.bg_image || CAREERS_BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
@@ -488,7 +526,7 @@ export default function Home() {
                   color: "#1B212C",
                 }}
               >
-                About Sigma Eta Pi
+                {content.about_teaser.label}
               </div>
               <h2
                 className="text-[#1B212C] mb-6"
@@ -500,13 +538,13 @@ export default function Home() {
                   lineHeight: 1.1,
                 }}
               >
-                UCSB's Premier Co-Ed Entrepreneurship Fraternity
+                {content.about_teaser.title}
               </h2>
               <p className="text-[#0C141A]/70 text-base leading-relaxed mb-6" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. Our members, representing a diverse range of academic disciplines, engage in a community that emphasizes collaboration, mentorship, and the practical application of entrepreneurial skills.
+                {content.about_teaser.p1}
               </p>
               <p className="text-[#0C141A]/70 text-base leading-relaxed mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-                Founded in 2010 at UCLA as the first entrepreneurship fraternity on the West Coast, Sigma Eta Pi maintains strong connections to prominent startup ecosystems, including Silicon Valley and Silicon Beach.
+                {content.about_teaser.p2}
               </p>
               <Link
                 href="/about"
@@ -523,7 +561,7 @@ export default function Home() {
               <div
                 className="aspect-[4/3] overflow-hidden border-4 border-[#1B212C]"
                 style={{
-                  backgroundImage: `url(${ABOUT_BG})`,
+                  backgroundImage: `url(${content.about_teaser.bg_image || ABOUT_BG})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -536,7 +574,7 @@ export default function Home() {
                     fontSize: "2rem",
                   }}
                 >
-                  2026
+                  {content.about_teaser.founded_year}
                 </div>
                 <div className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
                   Founded at UCSB
@@ -557,7 +595,7 @@ export default function Home() {
               color: "#1B212C",
             }}
           >
-            Recruitment
+            {content.recruitment_cta.label}
           </div>
           <h2
             className="text-[#1B212C] mb-6"
@@ -569,10 +607,10 @@ export default function Home() {
               lineHeight: 1,
             }}
           >
-            Join Our Founder Class
+            {content.recruitment_cta.title}
           </h2>
           <p className="text-[#0C141A]/70 text-lg mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            As we relaunch at UCSB, we can't wait to meet our founder class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.
+            {content.recruitment_cta.description}
           </p>
           <Link
             href="/recruitment"
@@ -582,7 +620,7 @@ export default function Home() {
               letterSpacing: "0.05em",
             }}
           >
-            SPRING 2026 APPLICATION
+            {content.recruitment_cta.cta}
           </Link>
         </div>
       </section>

@@ -86,8 +86,21 @@ export async function initDb() {
       used INTEGER NOT NULL DEFAULT 0
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS site_content (
+      id TEXT PRIMARY KEY,
+      page TEXT UNIQUE NOT NULL,
+      content_json TEXT NOT NULL,
+      updated_by TEXT,
+      updated_at TEXT NOT NULL
+    )
+  `;
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_editor INTEGER NOT NULL DEFAULT 0`;
+  // Migrate any existing role='editor' users: give them is_editor=1 and set base role to 'active'
+  await sql`UPDATE users SET is_editor = 1 WHERE role = 'editor'`;
+  await sql`UPDATE users SET role = 'active' WHERE role = 'editor'`;
 
   // Fix pledge_class: founding class members (non-exec) were seeded as 'Founder', correct to 'Founding Class'
   try {
@@ -124,7 +137,7 @@ export async function initDb() {
     await sql`INSERT INTO classes (id, name, created_at) VALUES (${cid}, ${name}, ${now}) ON CONFLICT (name) DO NOTHING`;
   }
 
-  // Ensure exec@ucsbsep.org always has role='admin' (may have been seeded as 'editor')
+  // Restore exec account to admin if accidentally changed
   await sql`UPDATE users SET role = 'admin' WHERE email = 'exec@ucsbsep.org' AND role != 'admin'`;
 
   // Fix any lowercase 'founder' pledge_class entries

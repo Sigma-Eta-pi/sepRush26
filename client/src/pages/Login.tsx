@@ -21,7 +21,8 @@ export default function Login() {
     try {
       setError('');
       const result = await auth.login(data.email, data.password);
-      navigate(result.needsOnboarding ? '/onboarding' : '/dashboard');
+      if (result.needsOnboarding) navigate('/onboarding');
+      else navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed');
     }
