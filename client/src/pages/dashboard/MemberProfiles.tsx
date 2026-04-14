@@ -40,6 +40,7 @@ function InitialsAvatar({ name, size = 64 }: { name: string; size?: number }) {
 // ─── Member Card ───────────────────────────────────────────────────────────────
 
 function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () => void }) {
+  const [imgErr, setImgErr] = useState(false);
   return (
     <motion.div
       layout
@@ -51,11 +52,12 @@ function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () 
       className="bg-white rounded-xl shadow-sm border border-[#05006C]/10 p-5 cursor-pointer transition-shadow hover:shadow-md"
     >
       <div className="flex items-center gap-4">
-        {profile.photoUrl ? (
+        {profile.photoUrl && !imgErr ? (
           <img
             src={profile.photoUrl}
             alt={profile.name}
             className="w-16 h-16 rounded-full object-cover shrink-0"
+            onError={() => setImgErr(true)}
           />
         ) : (
           <InitialsAvatar name={profile.name} size={64} />

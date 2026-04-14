@@ -78,6 +78,18 @@ export async function initDb() {
     )
   `;
   await sql`
+    CREATE TABLE IF NOT EXISTS documents (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT,
+      category TEXT NOT NULL DEFAULT 'general',
+      url TEXT NOT NULL,
+      doc_type TEXT DEFAULT 'link',
+      uploaded_by TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    )
+  `;
+  await sql`
     CREATE TABLE IF NOT EXISTS password_reset_tokens (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -95,6 +107,19 @@ export async function initDb() {
       updated_at TEXT NOT NULL
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_by TEXT,
+      updated_at TEXT
+    )
+  `;
+
+  // Add source + gcal_uid columns to events table
+  await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'manual'`;
+  await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS gcal_uid TEXT`;
+
   // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_editor INTEGER NOT NULL DEFAULT 0`;
@@ -142,6 +167,9 @@ export async function initDb() {
 
   // Fix any lowercase 'founder' pledge_class entries
   await sql`UPDATE profiles SET pledge_class = 'Founder' WHERE pledge_class = 'founder'`;
+
+  // Clear broken LinkedIn CDN photo URLs — these expire and get hotlink-blocked by LinkedIn
+  await sql`UPDATE profiles SET photo_url = NULL WHERE photo_url LIKE 'https://media.licdn.com%'`;
 
   const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
   if (admins.length === 0) {

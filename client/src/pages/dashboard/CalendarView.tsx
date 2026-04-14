@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Plus, Pencil, Trash2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, MapPin, Clock, Plus, Pencil, Trash2, X, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 
 interface CalendarEvent {
   id: string;
@@ -13,6 +13,7 @@ interface CalendarEvent {
   type: 'general' | 'social' | 'professional' | 'exec' | 'mandatory';
   createdBy: string;
   createdAt: string;
+  source?: string;
 }
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
@@ -146,6 +147,8 @@ export default function CalendarView() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState('');
 
   const today = new Date();
   const [view, setView] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
@@ -186,6 +189,23 @@ export default function CalendarView() {
     catch (e: any) { alert(e.message); }
   };
 
+  const syncGcal = async () => {
+    if (!token) return;
+    setSyncing(true);
+    setSyncMsg('');
+    try {
+      const res = await apiFetch('/api/gcal/sync', token, { method: 'POST' });
+      setSyncMsg(`Synced ${res.total} events`);
+      load();
+      setTimeout(() => setSyncMsg(''), 4000);
+    } catch (e: any) {
+      setSyncMsg(`Error: ${e.message}`);
+      setTimeout(() => setSyncMsg(''), 4000);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   // ── grid ──────────────────────────────────────────────────────────────────
   const yr = view.getFullYear();
   const mo = view.getMonth();
@@ -201,8 +221,23 @@ export default function CalendarView() {
   }
 
   const todayStr = toDateStr(today);
-  const selEvents = byDate[selected] || [];
   const monthLabel = view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  // Upcoming panel: next 14 days of events grouped by date
+  const upcomingDates: string[] = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    upcomingDates.push(toDateStr(d));
+  }
+  const upcomingGroups = upcomingDates
+    .map(ds => ({ ds, evs: byDate[ds] || [] }))
+    .filter(g => g.evs.length > 0);
+
+  const fmtUpcomingDate = (ds: string) => {
+    const d = new Date(ds + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
+  };
 
   return (
     <div>
@@ -212,19 +247,35 @@ export default function CalendarView() {
           <Calendar size={24} className="text-[#05006C]" />
           <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">CALENDAR</h1>
         </div>
-        {canEdit && (
-          <button onClick={() => { setNewForm({ ...blank }); setShowNew(true); }}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#0A0080] transition-colors">
-            <Plus size={16} /> ADD EVENT
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {canEdit && (
+            <button
+              onClick={syncGcal}
+              disabled={syncing}
+              title="Sync Google Calendar"
+              className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+              <span className="hidden sm:inline">Sync Calendar</span>
+            </button>
+          )}
+          {canEdit && (
+            <button onClick={() => { setNewForm({ ...blank }); setShowNew(true); }}
+              className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#0A0080] transition-colors">
+              <Plus size={16} /> ADD EVENT
+            </button>
+          )}
+        </div>
       </div>
 
+      {syncMsg && (
+        <div className="bg-green-50 text-green-700 rounded-xl px-4 py-2.5 border border-green-200 mb-4 text-sm font-medium">{syncMsg}</div>
+      )}
       {error && <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200 mb-4">{error}</div>}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Month grid */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Month grid — spans 3 cols */}
+        <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden">
           {/* Nav */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[#05006C]/10">
             <button onClick={() => setView(new Date(yr, mo - 1, 1))} className="p-1.5 rounded-lg hover:bg-[#05006C]/5 text-[#05006C]/50 hover:text-[#05006C] transition-colors">
@@ -238,7 +289,7 @@ export default function CalendarView() {
 
           {/* DOW headers */}
           <div className="grid grid-cols-7 border-b border-[#05006C]/10">
-            {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
               <div key={d} className="text-center text-[#05006C]/40 text-xs font-bold tracking-wider py-2.5">{d}</div>
             ))}
           </div>
@@ -246,24 +297,36 @@ export default function CalendarView() {
           {/* Cells */}
           <div className="grid grid-cols-7">
             {cells.map((day, i) => {
-              if (!day) return <div key={i} className="h-16 border-b border-r border-[#05006C]/5 bg-[#F5F3EE]/40" />;
+              if (!day) return <div key={i} className="min-h-[100px] border-b border-r border-[#05006C]/5 bg-[#F5F3EE]/40" />;
               const ds = `${yr}-${String(mo + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
               const evs = byDate[ds] || [];
               const isToday = ds === todayStr;
               const isSel = ds === selected;
               return (
                 <button key={i} onClick={() => setSelected(ds)}
-                  className={`h-16 border-b border-r border-[#05006C]/5 p-1.5 text-left transition-colors ${isSel ? 'bg-[#05006C]/8' : 'hover:bg-[#05006C]/4'}`}>
+                  className={`min-h-[100px] border-b border-r border-[#05006C]/5 p-1.5 text-left align-top transition-colors ${isSel ? 'bg-[#05006C]/8' : 'hover:bg-[#05006C]/4'}`}>
                   <span className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full
                     ${isToday ? 'bg-[#05006C] text-[#EEEADE]' : isSel ? 'text-[#05006C]' : 'text-[#05006C]/60'}`}>
                     {day}
                   </span>
                   {evs.length > 0 && (
-                    <div className="flex flex-wrap gap-0.5 mt-0.5 px-0.5">
-                      {evs.slice(0, 3).map(ev => (
-                        <span key={ev.id} className={`w-1.5 h-1.5 rounded-full ${typeDot[ev.type]}`} />
-                      ))}
-                      {evs.length > 3 && <span className="text-[8px] text-[#05006C]/30 leading-none">+{evs.length - 3}</span>}
+                    <div className="mt-1 space-y-0.5 px-0.5">
+                      {/* Desktop: title pills */}
+                      <div className="hidden sm:block space-y-0.5">
+                        {evs.slice(0, 3).map(ev => (
+                          <span key={ev.id} className={`text-[9px] truncate block px-1 py-0.5 rounded ${typeDot[ev.type]} text-white leading-tight`}>
+                            {ev.title}
+                          </span>
+                        ))}
+                        {evs.length > 3 && <span className="text-[8px] text-[#05006C]/30 leading-none">+{evs.length - 3}</span>}
+                      </div>
+                      {/* Mobile: dots */}
+                      <div className="sm:hidden flex flex-wrap gap-0.5 mt-0.5">
+                        {evs.slice(0, 3).map(ev => (
+                          <span key={ev.id} className={`w-1.5 h-1.5 rounded-full ${typeDot[ev.type]}`} />
+                        ))}
+                        {evs.length > 3 && <span className="text-[8px] text-[#05006C]/30 leading-none">+{evs.length - 3}</span>}
+                      </div>
                     </div>
                   )}
                 </button>
@@ -282,54 +345,66 @@ export default function CalendarView() {
           </div>
         </div>
 
-        {/* Day panel */}
-        <div className="bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden flex flex-col">
-          <div className="px-5 py-4 border-b border-[#05006C]/10">
-            <p className="text-[#05006C] font-bold text-sm tracking-wider">
-              {new Date(selected + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase()}
-            </p>
+        {/* Upcoming panel */}
+        <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden flex flex-col">
+          <div className="px-5 py-4 border-b border-[#05006C]/10 flex items-center gap-2">
+            <Calendar size={15} className="text-[#05006C]/50" />
+            <p className="text-[#05006C] font-bold text-sm tracking-wider">UPCOMING</p>
           </div>
-          <div className="p-4 flex-1 min-h-[200px]">
-            <AnimatePresence mode="wait">
-              {loading ? (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center py-12">
-                  <div className="w-5 h-5 border-2 border-[#05006C]/20 border-t-[#05006C] rounded-full animate-spin" />
-                </motion.div>
-              ) : selEvents.length === 0 ? (
-                <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-10 text-center">
-                  <Calendar size={28} className="text-[#05006C]/15 mb-2" />
-                  <p className="text-[#05006C]/30 text-sm">No events</p>
-                </motion.div>
-              ) : (
-                <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2">
-                  {selEvents.map(ev => (
-                    <div key={ev.id} className="rounded-xl border border-[#05006C]/10 overflow-hidden">
-                      <div className={`h-1 ${typeColors[ev.type]}`} />
-                      <div className="p-3">
-                        <div className="flex items-start gap-2 justify-between">
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-[#05006C] text-sm truncate">{ev.title}</p>
-                            <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${typeBadge[ev.type]}`}>{ev.type}</span>
-                          </div>
-                          {canEdit && (
-                            <div className="flex gap-1 shrink-0">
-                              <button onClick={() => { setEditingId(ev.id); setEditForm({ title: ev.title, description: ev.description || '', date: ev.date?.split('T')[0] || '', time: ev.time || '', location: ev.location || '', type: ev.type }); }}
-                                className="text-[#05006C]/40 hover:text-[#05006C] p-1 transition-colors"><Pencil size={13} /></button>
-                              <button onClick={() => remove(ev.id)} className="text-red-400 hover:text-red-600 p-1 transition-colors"><Trash2 size={13} /></button>
+          <div className="p-3 flex-1 overflow-y-auto max-h-[600px]">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-5 h-5 border-2 border-[#05006C]/20 border-t-[#05006C] rounded-full animate-spin" />
+              </div>
+            ) : upcomingGroups.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <Calendar size={28} className="text-[#05006C]/15 mb-2" />
+                <p className="text-[#05006C]/30 text-sm">No upcoming events</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {upcomingGroups.map(({ ds, evs }) => (
+                  <div key={ds}>
+                    <p className="text-[8px] font-bold tracking-widest text-[#05006C]/40 mb-1.5 px-1">{fmtUpcomingDate(ds)}</p>
+                    <div className="space-y-1.5">
+                      {evs.map(ev => (
+                        <div key={ev.id} className="rounded-xl border border-[#05006C]/10 overflow-hidden">
+                          <div className={`h-0.5 ${typeColors[ev.type]}`} />
+                          <div className="p-2.5">
+                            <div className="flex items-start gap-1.5 justify-between">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  <p className="font-bold text-[#05006C] text-xs truncate">{ev.title}</p>
+                                  {ev.source === 'gcal' && (
+                                    <span title="From Google Calendar">
+                                      <Calendar size={10} className="text-[#05006C]/30 shrink-0" />
+                                    </span>
+                                  )}
+                                </div>
+                                <span className={`inline-block mt-0.5 px-1 py-0 rounded text-[9px] font-bold uppercase tracking-wider ${typeBadge[ev.type]}`}>{ev.type}</span>
+                              </div>
+                              {canEdit && (
+                                <div className="flex gap-0.5 shrink-0">
+                                  {ev.source !== 'gcal' && (
+                                    <button onClick={() => { setEditingId(ev.id); setEditForm({ title: ev.title, description: ev.description || '', date: ev.date?.split('T')[0] || '', time: ev.time || '', location: ev.location || '', type: ev.type }); }}
+                                      className="text-[#05006C]/40 hover:text-[#05006C] p-1 transition-colors"><Pencil size={11} /></button>
+                                  )}
+                                  <button onClick={() => remove(ev.id)} className="text-red-400 hover:text-red-600 p-1 transition-colors"><Trash2 size={11} /></button>
+                                </div>
+                              )}
                             </div>
-                          )}
+                            <div className="mt-1 space-y-0.5">
+                              {ev.time && <div className="flex items-center gap-1 text-[10px] text-[#05006C]/50"><Clock size={9} />{ev.time}</div>}
+                              {ev.location && <div className="flex items-center gap-1 text-[10px] text-[#05006C]/50 truncate"><MapPin size={9} /><span className="truncate">{ev.location}</span></div>}
+                            </div>
+                          </div>
                         </div>
-                        <div className="mt-1.5 space-y-0.5">
-                          {ev.time && <div className="flex items-center gap-1.5 text-xs text-[#05006C]/50"><Clock size={11} />{ev.time}</div>}
-                          {ev.location && <div className="flex items-center gap-1.5 text-xs text-[#05006C]/50"><MapPin size={11} />{ev.location}</div>}
-                        </div>
-                        {ev.description && <p className="text-xs text-[#05006C]/50 mt-1.5 leading-relaxed">{ev.description}</p>}
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

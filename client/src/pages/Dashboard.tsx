@@ -2,13 +2,14 @@ import { lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
 import { useAuth, canEditSite } from '@/contexts/AuthContext';
-import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe, ListTodo } from 'lucide-react';
+import { Megaphone, Calendar, Users, Zap, GraduationCap, Settings, LogOut, Globe, ListTodo, BookOpen } from 'lucide-react';
 import Updates from './dashboard/Updates';
 import CalendarView from './dashboard/CalendarView';
 import MemberProfiles from './dashboard/MemberProfiles';
 import ConnectionsFinder from './dashboard/ConnectionsFinder';
 import AlumniFinder from './dashboard/AlumniFinder';
 import TasksView from './dashboard/TasksView';
+import Documentation from './dashboard/Documentation';
 import sepLogo from '@/images/sep-logo.png';
 
 const AdminPanel = lazy(() => import('./dashboard/AdminPanel'));
@@ -20,6 +21,7 @@ const navItems = [
   { label: 'My Tasks', icon: ListTodo, href: '/dashboard/tasks' },
   { label: 'Connections', icon: Zap, href: '/dashboard/connections' },
   { label: 'Alumni', icon: GraduationCap, href: '/dashboard/alumni' },
+  { label: 'Docs', icon: BookOpen, href: '/dashboard/docs' },
 ];
 
 export default function Dashboard() {
@@ -62,6 +64,8 @@ export default function Dashboard() {
         return <ConnectionsFinder />;
       case 'alumni':
         return <AlumniFinder />;
+      case 'docs':
+        return <Documentation />;
       case 'admin':
         return (
           <Suspense fallback={<div className="text-[#05006C]/50">Loading admin panel...</div>}>

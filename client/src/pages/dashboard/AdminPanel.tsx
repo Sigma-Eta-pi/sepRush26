@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings, Trash2, Pencil, Plus, Users, Megaphone, Calendar,
   X, Check, Mail, RotateCcw, Send, ListTodo, Shield,
+  RefreshCw, ChevronDown, ChevronUp,
 } from 'lucide-react';
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
@@ -100,6 +101,118 @@ export default function AdminPanel() {
         {activeTab === 'announcements' && isExecOrAdmin && token && <AnnouncementsTab token={token} />}
         {activeTab === 'events' && isExecOrAdmin && token && <EventsTab token={token} />}
         {activeTab === 'email' && isExecOrAdmin && token && <EmailBlastTab token={token} />}
+      </div>
+
+      {isExecOrAdmin && token && <GCalSection token={token} />}
+    </div>
+  );
+}
+
+/* ─── GOOGLE CALENDAR SECTION ─── */
+
+function GCalSection({ token }: { token: string }) {
+  const [icalUrl, setIcalUrl] = useState('');
+  const [lastSync, setLastSync] = useState<string | null>(null);
+  const [lastCount, setLastCount] = useState('0');
+  const [syncing, setSyncing] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [statusMsg, setStatusMsg] = useState('');
+
+  useEffect(() => {
+    apiFetch('/api/gcal/status', token)
+      .then((d: any) => { setIcalUrl(d.icalUrl || ''); setLastSync(d.lastSync || null); setLastCount(d.lastCount || '0'); })
+      .catch(() => {});
+  }, [token]);
+
+  const handleSaveAndSync = async () => {
+    if (!icalUrl.trim()) return;
+    setSyncing(true);
+    setStatusMsg('');
+    try {
+      await apiFetch('/api/gcal/settings', token, { method: 'POST', body: JSON.stringify({ icalUrl: icalUrl.trim() }) });
+      const result = await apiFetch('/api/gcal/sync', token, { method: 'POST' });
+      const now = new Date().toISOString();
+      setLastSync(now);
+      setLastCount(String(result.total));
+      setStatusMsg(`Synced ${result.imported} new, ${result.updated} updated`);
+      setTimeout(() => setStatusMsg(''), 5000);
+    } catch (e: any) {
+      setStatusMsg(`Error: ${e.message}`);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const fmtSync = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border border-[#05006C]/10 shadow-sm p-6 mt-6">
+      <div className="flex items-center gap-3 mb-4">
+        <Calendar size={20} className="text-[#05006C]" />
+        <h2 className="text-[#05006C] font-bold tracking-widest text-sm">GOOGLE CALENDAR SYNC</h2>
+      </div>
+
+      <div className="space-y-3">
+        <div>
+          <label className="text-[#05006C]/60 text-xs font-bold block mb-1">iCAL URL</label>
+          <input
+            type="url"
+            value={icalUrl}
+            onChange={e => setIcalUrl(e.target.value)}
+            placeholder="https://calendar.google.com/calendar/ical/..."
+            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40"
+          />
+        </div>
+
+        <button
+          onClick={handleSaveAndSync}
+          disabled={syncing || !icalUrl.trim()}
+          className="flex items-center gap-2 bg-[#05006C] text-[#EEEADE] px-5 py-2.5 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#0A0080] transition-colors"
+        >
+          <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+          {syncing ? 'Syncing…' : 'Save & Sync Now'}
+        </button>
+
+        {statusMsg && (
+          <p className="text-sm text-green-600 font-medium">{statusMsg}</p>
+        )}
+
+        {lastSync && (
+          <p className="text-xs text-[#05006C]/40">
+            Last synced {lastCount} events on {fmtSync(lastSync)}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4 border-t border-[#05006C]/10 pt-4">
+        <button
+          onClick={() => setShowInstructions(s => !s)}
+          className="flex items-center gap-2 text-xs text-[#05006C]/60 hover:text-[#05006C] font-bold tracking-wider transition-colors"
+        >
+          {showInstructions ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          HOW TO GET YOUR iCAL URL
+        </button>
+
+        <AnimatePresence>
+          {showInstructions && (
+            <motion.ol
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-3 space-y-1.5 text-xs text-[#05006C]/60 list-decimal list-inside overflow-hidden"
+            >
+              <li>Open Google Calendar (calendar.google.com)</li>
+              <li>Click the gear icon → Settings</li>
+              <li>Click your calendar name on the left sidebar</li>
+              <li>Scroll to "Integrate calendar"</li>
+              <li>Copy the <strong className="text-[#05006C]/80">"Secret address in iCal format"</strong> (for private calendars) or <strong className="text-[#05006C]/80">"Public address in iCal format"</strong></li>
+              <li>Paste it above and click Save &amp; Sync</li>
+            </motion.ol>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

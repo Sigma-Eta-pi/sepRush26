@@ -14,6 +14,8 @@ import proxyRouter from './routes/proxy.js';
 import classesRouter from './routes/classes.js';
 import tasksRouter from './routes/tasks.js';
 import contentRouter from './routes/content.js';
+import documentsRouter from './routes/documents.js';
+import gcalRouter from './routes/gcal.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -49,6 +51,8 @@ async function start() {
   app.use('/api/classes', classesRouter);
   app.use('/api/tasks', tasksRouter);
   app.use('/api/content', contentRouter);
+  app.use('/api/documents', documentsRouter);
+  app.use('/api/gcal', gcalRouter);
 
   const port = parseInt(process.env.API_PORT || '3456');
   app.listen(port, () => console.log(`SEP API running on http://localhost:${port}`));

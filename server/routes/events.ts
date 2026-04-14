@@ -8,7 +8,7 @@ const VALID_EVENT_TYPES = ['general', 'social', 'professional', 'exec', 'mandato
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 function rowToEvent(r: any) {
-  return { id: r.id, title: r.title, description: r.description, date: r.date, time: r.time, location: r.location, type: r.type, createdBy: r.created_by, createdAt: r.created_at };
+  return { id: r.id, title: r.title, description: r.description, date: r.date, time: r.time, location: r.location, type: r.type, createdBy: r.created_by, createdAt: r.created_at, source: r.source ?? 'manual' };
 }
 
 router.get('/', requireAuth, async (_req, res) => {
