@@ -87,23 +87,37 @@ router.delete('/users/:id', requireAdmin, async (req, res) => {
 });
 
 // Email blast — exec or admin
+// recipient: 'actives' | 'pnms' | 'exec' | 'all' | 'individual'
+// recipientId: userId (only when recipient === 'individual')
 router.post('/email-blast', requireExec, async (req, res) => {
-  const { subject, content } = req.body;
+  const { subject, content, recipient = 'actives', recipientId } = req.body;
   if (!subject?.trim() || !content?.trim()) { res.status(400).json({ error: 'Subject and content required' }); return; }
 
   const user = req.user!;
   const senderRows = await sql`SELECT name FROM profiles WHERE user_id = ${user.id} LIMIT 1`;
   const senderName = senderRows[0]?.name || user.email;
 
-  // Send to all active users
-  const recipients = await sql`SELECT email FROM users WHERE role = 'active'`;
-  const emails = recipients.map(r => r.email as string);
+  let rows: { email: string }[];
+  if (recipient === 'individual') {
+    if (!recipientId) { res.status(400).json({ error: 'recipientId required for individual send' }); return; }
+    rows = await sql`SELECT email FROM users WHERE id = ${recipientId} LIMIT 1`;
+  } else if (recipient === 'pnms') {
+    rows = await sql`SELECT email FROM users WHERE role = 'pnm'`;
+  } else if (recipient === 'exec') {
+    rows = await sql`SELECT email FROM users WHERE role = 'exec'`;
+  } else if (recipient === 'all') {
+    rows = await sql`SELECT email FROM users WHERE role IN ('active', 'pnm', 'exec')`;
+  } else {
+    // default: actives
+    rows = await sql`SELECT email FROM users WHERE role = 'active'`;
+  }
 
-  if (emails.length === 0) { res.json({ success: true, sent: 0, message: 'No active members to email' }); return; }
+  const emails = rows.map(r => r.email as string);
+  if (emails.length === 0) { res.json({ success: true, sent: 0, message: 'No recipients found' }); return; }
 
   try {
     await sendBlastEmail(emails, subject.trim(), content.trim(), senderName);
-    res.json({ success: true, sent: emails.length, message: `Email sent to ${emails.length} active member${emails.length === 1 ? '' : 's'}` });
+    res.json({ success: true, sent: emails.length, message: `Email sent to ${emails.length} recipient${emails.length === 1 ? '' : 's'}` });
   } catch (e: any) {
     console.error('Blast email failed:', e);
     res.status(500).json({ error: 'Failed to send emails' });

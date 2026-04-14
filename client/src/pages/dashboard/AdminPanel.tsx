@@ -759,21 +759,54 @@ function TasksTab({ token }: { token: string }) {
 
 /* ─── EMAIL BLAST TAB ─── */
 
+type RecipientType = 'actives' | 'pnms' | 'exec' | 'all' | 'individual';
+
+const RECIPIENT_OPTIONS: { value: RecipientType; label: string; desc: string }[] = [
+  { value: 'actives',    label: 'All Actives',  desc: 'Members with "active" role' },
+  { value: 'pnms',       label: 'All PNMs',     desc: 'Potential new members' },
+  { value: 'exec',       label: 'All Exec',     desc: 'Exec board only' },
+  { value: 'all',        label: 'Everyone',     desc: 'Actives + PNMs + Exec' },
+  { value: 'individual', label: 'One Person',   desc: 'Pick a specific member' },
+];
+
 function EmailBlastTab({ token }: { token: string }) {
   const [form, setForm] = useState({ subject: '', content: '' });
+  const [recipient, setRecipient] = useState<RecipientType>('actives');
+  const [members, setMembers] = useState<{ id: string; email: string; name?: string | null }[]>([]);
+  const [selectedId, setSelectedId] = useState('');
+  const [memberSearch, setMemberSearch] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
+  // Load member list for individual picker
+  useEffect(() => {
+    if (recipient !== 'individual') return;
+    apiFetch('/api/admin/members', token).then((data: MemberUser[]) => {
+      setMembers(data.map(m => ({ id: m.id, email: m.email, name: m.name })));
+    }).catch(() => {});
+  }, [recipient]);
+
+  const filteredMembers = members.filter(m => {
+    const q = memberSearch.toLowerCase();
+    return !q || m.email.toLowerCase().includes(q) || (m.name || '').toLowerCase().includes(q);
+  });
+
+  const recipientLabel = RECIPIENT_OPTIONS.find(o => o.value === recipient)?.label ?? '';
+
+  const confirmMsg = recipient === 'individual'
+    ? `Send this email to ${members.find(m => m.id === selectedId)?.email ?? 'this person'}?`
+    : `Send this email to ${recipientLabel.toLowerCase()}?`;
+
   const handleSend = async () => {
     if (!form.subject.trim() || !form.content.trim()) return;
-    if (!window.confirm(`Send this email to all active members?`)) return;
+    if (recipient === 'individual' && !selectedId) return;
+    if (!window.confirm(confirmMsg)) return;
     setSubmitting(true);
     setResult(null);
     try {
-      const data = await apiFetch('/api/admin/email-blast', token, {
-        method: 'POST',
-        body: JSON.stringify(form),
-      });
+      const body: Record<string, string> = { ...form, recipient };
+      if (recipient === 'individual') body.recipientId = selectedId;
+      const data = await apiFetch('/api/admin/email-blast', token, { method: 'POST', body: JSON.stringify(body) });
       setResult({ success: true, message: data.message });
       setForm({ subject: '', content: '' });
     } catch (e: any) {
@@ -783,14 +816,68 @@ function EmailBlastTab({ token }: { token: string }) {
     }
   };
 
+  const canSend = form.subject.trim() && form.content.trim() && (recipient !== 'individual' || selectedId);
+
   return (
     <div>
       <div className="mb-6">
-        <h3 className="text-[#05006C] font-bold text-sm tracking-wider mb-1">EMAIL ALL ACTIVES</h3>
-        <p className="text-[#05006C]/50 text-xs">Sends to all members with the "active" role. Exec and admin are not included.</p>
+        <h3 className="text-[#05006C] font-bold text-sm tracking-wider mb-1">EMAIL BLAST</h3>
+        <p className="text-[#05006C]/50 text-xs">Choose who to send to, then write your message.</p>
       </div>
 
       <div className="space-y-4">
+        {/* Recipient selector */}
+        <div>
+          <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SEND TO</label>
+          <div className="flex flex-wrap gap-2">
+            {RECIPIENT_OPTIONS.map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => { setRecipient(opt.value); setSelectedId(''); setMemberSearch(''); }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors ${
+                  recipient === opt.value
+                    ? 'bg-[#05006C] text-[#EEEADE] border-[#05006C]'
+                    : 'bg-white text-[#05006C]/60 border-[#05006C]/20 hover:border-[#05006C]/40 hover:text-[#05006C]'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[#05006C]/40 text-xs mt-1.5">
+            {RECIPIENT_OPTIONS.find(o => o.value === recipient)?.desc}
+          </p>
+        </div>
+
+        {/* Individual member picker */}
+        {recipient === 'individual' && (
+          <div>
+            <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SELECT MEMBER</label>
+            <input
+              placeholder="Search by name or email..."
+              value={memberSearch}
+              onChange={e => setMemberSearch(e.target.value)}
+              className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-xl px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 mb-2"
+            />
+            <div className="max-h-40 overflow-y-auto border border-[#05006C]/10 rounded-xl divide-y divide-[#05006C]/5 bg-white">
+              {filteredMembers.length === 0 ? (
+                <p className="text-[#05006C]/30 text-xs text-center py-4">No members found</p>
+              ) : filteredMembers.map(m => (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedId(m.id)}
+                  className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                    selectedId === m.id ? 'bg-[#05006C]/8 font-bold text-[#05006C]' : 'text-[#05006C]/70 hover:bg-[#05006C]/4'
+                  }`}
+                >
+                  {m.name && <span className="font-medium">{m.name} — </span>}
+                  <span className="text-xs">{m.email}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div>
           <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SUBJECT</label>
           <input
@@ -805,7 +892,7 @@ function EmailBlastTab({ token }: { token: string }) {
           <textarea
             value={form.content}
             onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-            placeholder="Write your message to the chapter..."
+            placeholder="Write your message..."
             rows={8}
             className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-xl px-4 py-3 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 resize-none"
           />
@@ -821,11 +908,11 @@ function EmailBlastTab({ token }: { token: string }) {
 
         <button
           onClick={handleSend}
-          disabled={submitting || !form.subject.trim() || !form.content.trim()}
+          disabled={submitting || !canSend}
           className="bg-[#05006C] text-[#EEEADE] px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 disabled:opacity-50 hover:bg-[#05006C]/90 transition-colors"
         >
           <Send size={16} />
-          {submitting ? 'Sending...' : 'Send to All Actives'}
+          {submitting ? 'Sending...' : `Send to ${recipientLabel}`}
         </button>
       </div>
     </div>
