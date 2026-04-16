@@ -73,11 +73,12 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
   const newIsEditor = typeof is_editor === 'boolean' ? (is_editor ? 1 : 0) : (u.is_editor ?? 0);
   await sql`UPDATE users SET role = ${newRole}, email = ${newEmail}, is_editor = ${newIsEditor} WHERE id = ${req.params.id}`;
 
+  let newPledgeClass: string | null | undefined;
   if (pledgeClass !== undefined) {
-    const val = pledgeClass?.trim() || null;
-    await sql`UPDATE profiles SET pledge_class = ${val} WHERE user_id = ${req.params.id}`;
+    newPledgeClass = pledgeClass?.trim() || null;
+    await sql`UPDATE profiles SET pledge_class = ${newPledgeClass} WHERE user_id = ${req.params.id}`;
   }
-  res.json({ id: u.id, email: newEmail, role: newRole, is_editor: newIsEditor === 1 });
+  res.json({ id: u.id, email: newEmail, role: newRole, is_editor: newIsEditor === 1, pledgeClass: newPledgeClass });
 });
 
 // Send password reset email
@@ -151,9 +152,9 @@ router.post('/email-blast', requireExec, async (req, res) => {
 
 // Active members extracted from Notion CSV export (Status = Active only)
 const NOTION_ACTIVE_MEMBERS = [
-  { name: 'Piam Parekh',          email: 'jparekh@ucsb.edu',           birthday: '',                  pledgeClass: 'Rho',     hometown: 'Bay Area',                    instagram: 'cursorboy',           linkedin: 'https://www.linkedin.com/in/piamparekh',                          major: 'Mathematics',                                          phone: '5105098139' },
+  { name: 'Piam Parekh',          email: 'jparekh@ucsb.edu',           birthday: '',                  pledgeClass: '',        hometown: 'Bay Area',                    instagram: 'cursorboy',           linkedin: 'https://www.linkedin.com/in/piamparekh',                          major: 'Mathematics',                                          phone: '5105098139' },
   { name: 'Sally Hu',             email: 'shu971@ucsb.edu',            birthday: 'October 17, 2007',  pledgeClass: '',        hometown: 'Alhambra',                    instagram: 'sa.llyhu',            linkedin: 'https://www.linkedin.com/in/sally-huu/',                          major: 'Economics',                                            phone: '626-554-9476' },
-  { name: 'Saloni Singhal',       email: 'salonisinghal@ucsb.edu',     birthday: 'October 11, 2005',  pledgeClass: 'Rho',     hometown: 'Cupertino, CA',               instagram: '_saloni_s',           linkedin: 'www.linkedin.com/in/ssaloni-singhal',                             major: 'Accounting, Economics, Statistics and Data Science',   phone: '4088396173' },
+  { name: 'Saloni Singhal',       email: 'salonisinghal@ucsb.edu',     birthday: 'October 11, 2005',  pledgeClass: '',        hometown: 'Cupertino, CA',               instagram: '_saloni_s',           linkedin: 'www.linkedin.com/in/ssaloni-singhal',                             major: 'Accounting, Economics, Statistics and Data Science',   phone: '4088396173' },
   { name: 'Julia Jimenea',        email: 'juliajimenea@ucsb.edu',      birthday: 'July 13, 2006',     pledgeClass: 'Alpha',   hometown: 'Irvine, California',          instagram: 'juliajimenea',        linkedin: 'www.linkedin.com/in/julia-jimenea-b7725a246',                     major: 'Statistics and Data Science',                          phone: '7145992816' },
   { name: 'Stina Sfatcu',         email: 'sfatcu@ucsb.edu',            birthday: '',                  pledgeClass: '',        hometown: 'Orange County',               instagram: '',                    linkedin: 'https://www.linkedin.com/in/christina-sfatcu/',                   major: 'Statistics and Data Science',                          phone: '7142220611' },
   { name: 'Huy Nguyen',           email: 'huy_nguyen@ucsb.edu',        birthday: '',                  pledgeClass: '',        hometown: 'Ho Chi Minh City, VN',        instagram: '',                    linkedin: 'https://www.linkedin.com/in/huynguyen06/',                        major: 'Electrical Engineering',                               phone: '559 905 2116' },
