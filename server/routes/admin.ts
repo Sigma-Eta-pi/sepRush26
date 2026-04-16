@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { sql } from '../db.js';
 import { requireAdmin, requireExec } from '../middleware/auth.js';
 import { sendPasswordResetEmail, sendBlastEmail } from '../email.js';
@@ -151,31 +149,58 @@ router.post('/email-blast', requireExec, async (req, res) => {
   }
 });
 
-// One-time Notion CSV import — matches Active members by email, updates profile fields
+// Active members extracted from Notion CSV export (Status = Active only)
+const NOTION_ACTIVE_MEMBERS = [
+  { name: 'Piam Parekh',          email: 'jparekh@ucsb.edu',           birthday: '',                  pledgeClass: 'Rho',     hometown: 'Bay Area',                    instagram: 'cursorboy',           linkedin: 'https://www.linkedin.com/in/piamparekh',                          major: 'Mathematics',                                          phone: '5105098139' },
+  { name: 'Sally Hu',             email: 'shu971@ucsb.edu',            birthday: 'October 17, 2007',  pledgeClass: '',        hometown: 'Alhambra',                    instagram: 'sa.llyhu',            linkedin: 'https://www.linkedin.com/in/sally-huu/',                          major: 'Economics',                                            phone: '626-554-9476' },
+  { name: 'Saloni Singhal',       email: 'salonisinghal@ucsb.edu',     birthday: 'October 11, 2005',  pledgeClass: 'Rho',     hometown: 'Cupertino, CA',               instagram: '_saloni_s',           linkedin: 'www.linkedin.com/in/ssaloni-singhal',                             major: 'Accounting, Economics, Statistics and Data Science',   phone: '4088396173' },
+  { name: 'Julia Jimenea',        email: 'juliajimenea@ucsb.edu',      birthday: 'July 13, 2006',     pledgeClass: 'Alpha',   hometown: 'Irvine, California',          instagram: 'juliajimenea',        linkedin: 'www.linkedin.com/in/julia-jimenea-b7725a246',                     major: 'Statistics and Data Science',                          phone: '7145992816' },
+  { name: 'Stina Sfatcu',         email: 'sfatcu@ucsb.edu',            birthday: '',                  pledgeClass: '',        hometown: 'Orange County',               instagram: '',                    linkedin: 'https://www.linkedin.com/in/christina-sfatcu/',                   major: 'Statistics and Data Science',                          phone: '7142220611' },
+  { name: 'Huy Nguyen',           email: 'huy_nguyen@ucsb.edu',        birthday: '',                  pledgeClass: '',        hometown: 'Ho Chi Minh City, VN',        instagram: '',                    linkedin: 'https://www.linkedin.com/in/huynguyen06/',                        major: 'Electrical Engineering',                               phone: '559 905 2116' },
+  { name: 'Shiv Dutta',           email: 'shiv749@ucsb.edu',           birthday: 'December 3, 2005',  pledgeClass: '',        hometown: '',                            instagram: '',                    linkedin: 'https://www.linkedin.com/in/shiv-dutta/',                         major: 'Accounting, Economics, Statistics and Data Science',   phone: '(661)755-5155' },
+  { name: 'Kate Heidenga',        email: 'kheidenga@ucsb.edu',         birthday: 'September 17, 2005',pledgeClass: '',        hometown: 'Boulder, CO',                 instagram: 'Kate_heidenga_',      linkedin: '',                                                                major: 'Biopsychology',                                        phone: '720-483-7101' },
+  { name: 'Amaya Bratcher',       email: 'amayaabratcher@gmail.com',   birthday: 'November 8, 2006',  pledgeClass: '',        hometown: 'Hemet, California',           instagram: 'amayabratcher',       linkedin: 'www.linkedin.com/in/aabratcher',                                  major: 'Computer Science',                                     phone: '951-474-7499' },
+  { name: 'Brooke Bradley',       email: 'bnbradley@ucsb.edu',         birthday: 'December 7, 2005',  pledgeClass: '',        hometown: 'Simi Valley',                 instagram: 'brookee.bradleyy',    linkedin: 'www.linkedin.com/in/brooke-bradley-562183395',                    major: 'Biology',                                              phone: '(805)-428-6985' },
+  { name: 'Matthew Chang',        email: 'matthewchang011@gmail.com',  birthday: 'November 22, 2004', pledgeClass: '',        hometown: 'Lake Forest, California',     instagram: '',                    linkedin: 'www.linkedin.com/in/matthewzchang',                               major: 'Economics and Accounting',                             phone: '949-922-0678' },
+  { name: 'Daysi Recinos',        email: 'drecinos@ucsb.edu',          birthday: 'June 24, 2002',     pledgeClass: '',        hometown: 'Paramount, California',       instagram: 'amore.daysi',         linkedin: 'http://linkedin.com/in/recinosd',                                 major: 'Accounting, Economics',                                phone: '5624401297' },
+  { name: 'Ryan Nguyen',          email: 'r_nguyen@ucsb.edu',          birthday: 'November 4, 2005',  pledgeClass: 'Founding',hometown: 'Irvine, CA',                  instagram: 'rryan.nn',            linkedin: 'www.linkedin.com/in/ryannguyen224',                               major: 'Communication, Economics, TMP',                        phone: '949-462-4778' },
+  { name: 'Nina Rossi',           email: 'ninarossi@ucsb.edu',         birthday: 'August 22, 2005',   pledgeClass: '',        hometown: 'Paris, France',               instagram: 'ninaross.i',          linkedin: '',                                                                major: 'Economics and Accounting, Political Science',          phone: '901-949-5176' },
+  { name: 'Noah de la Rionda',    email: 'noahdelarionda@ucsb.edu',    birthday: 'July 17, 2005',     pledgeClass: '',        hometown: 'Thousand Oaks',               instagram: 'noahdelarionda',      linkedin: 'www.linkedin.com/in/noah-de-la-rionda-41a27b303',                 major: 'Economics',                                            phone: '8055010421' },
+  { name: 'Preston Chung',        email: 'preston_chung@ucsb.edu',     birthday: 'October 23, 2005',  pledgeClass: 'Founding',hometown: 'Danville',                    instagram: 'preston_chung_',      linkedin: 'www.linkedin.com/in/prestonchung',                                major: 'Accounting, Economics',                                phone: '628-233-0820' },
+  { name: 'Mariana Franca Pires', email: 'marianafrancapires@ucsb.edu',birthday: 'May 20, 2005',      pledgeClass: '',        hometown: 'Santa Cruz',                  instagram: '',                    linkedin: 'https://www.linkedin.com/in/mariana-franca-pires-33b001280/',     major: 'Communication',                                        phone: '(831) 428-6933' },
+  { name: 'Kai Abutin',           email: 'kaiabutin@ucsb.edu',         birthday: 'July 16, 2007',     pledgeClass: '',        hometown: 'Camarillo, CA',               instagram: 'kaill0uu',            linkedin: 'www.linkedin.com/in/kai-abutin',                                  major: 'Electrical Engineering',                               phone: '8053122307' },
+  { name: 'Om Kulkarni',          email: 'om77@ucsb.edu',              birthday: 'June 7, 2006',      pledgeClass: '',        hometown: 'Santa Clarita, California',   instagram: 'omskulk',             linkedin: 'https://www.linkedin.com/in/om77/',                               major: 'Computer Science',                                     phone: '(661) 229-6644' },
+  { name: 'Vaibhava Rajesh',      email: 'vaibhavaraja@gmail.com',     birthday: '',                  pledgeClass: '',        hometown: '',                            instagram: '',                    linkedin: '',                                                                major: 'Communication',                                        phone: '9165309022' },
+  { name: 'Luke Patterson',       email: 'lukepatterson@ucsb.edu',     birthday: 'November 11, 2006', pledgeClass: '',        hometown: 'Saunderstown, Rhode Island',  instagram: '',                    linkedin: 'https://www.linkedin.com/in/luke-patterson-b836aa373/',           major: 'Chemistry',                                            phone: '4012491105' },
+  { name: 'Julio Bermudez',       email: '',                           birthday: 'November 21, 2004', pledgeClass: '',        hometown: '',                            instagram: '',                    linkedin: '',                                                                major: 'Economics',                                            phone: '8184053463' },
+  { name: 'Rohan Kamdar',         email: 'rohankamdar@ucsb.edu',       birthday: 'March 30, 2005',    pledgeClass: '',        hometown: 'Tustin, CA',                  instagram: 'rohan_kamdar1',       linkedin: '',                                                                major: 'Financial Mathematics and Statistics',                 phone: '714-478-8291' },
+  { name: 'Matthew Vasquez',      email: 'mrvasquez@ucsb.edu',         birthday: 'November 9, 2004',  pledgeClass: '',        hometown: 'Duarte, CA',                  instagram: 'matthewvsqz',         linkedin: 'https://www.linkedin.com/in/matthewrvasquez/',                    major: 'Economics',                                            phone: '6262722897' },
+  { name: 'Kyra Chagarlamudi',    email: 'kchagarlamudi@ucsb.edu',     birthday: 'November 22, 2006', pledgeClass: '',        hometown: 'Dallas, TX',                  instagram: 'k.t.chagarlamudi',    linkedin: 'https://www.linkedin.com/in/kyra-chagarlamudi-54428138a/',        major: 'Economics',                                            phone: '2142180036' },
+  { name: 'Madigan Escobar',      email: 'madigan@ucsb.edu',           birthday: 'July 4, 2007',      pledgeClass: '',        hometown: 'Palm Springs',                instagram: 'madiganesco',         linkedin: 'https://www.linkedin.com/in/madigan-escobar-b6b2b628b',          major: 'Accounting, Economics',                                phone: '7602856420' },
+  { name: 'Nirvaan Patel',        email: 'nirvaan.patel@icloud.com',   birthday: 'September 8, 2006', pledgeClass: '',        hometown: 'Charleston, SC',              instagram: 'npatel_06',           linkedin: 'www.linkedin.com/in/nirvaan-patel',                               major: 'Economics',                                            phone: '8033519064' },
+  { name: 'Jack Larson',          email: 'jacklarson@ucsb.edu',        birthday: 'January 28, 2005',  pledgeClass: '',        hometown: '',                            instagram: 'jjacklarson',         linkedin: 'http://linkedin.com/in/jacklarsonucsb',                           major: 'Economics',                                            phone: '7074838233' },
+  { name: 'Henry Snow',           email: 'hhs@ucsb.edu',               birthday: '',                  pledgeClass: '',        hometown: 'Grand Rapids, Michigan',      instagram: 'henryhsnow',          linkedin: 'https://www.linkedin.com/in/henry-snow-787892381/',               major: 'Economics, TMP',                                       phone: '(616) 251-8383' },
+  { name: 'Tyler Pintor',         email: '',                           birthday: 'August 16, 2007',   pledgeClass: '',        hometown: '',                            instagram: 'tyler.pintor',        linkedin: '',                                                                major: 'Accounting, Economics',                                phone: '925-854-7299' },
+  { name: 'Ariana Tran',          email: 'arianatran@ucsb.edu',        birthday: 'October 1, 2006',   pledgeClass: '',        hometown: 'Fountain Valley, CA',         instagram: 'aaritran',            linkedin: 'https://www.linkedin.com/in/ariana-tran/',                        major: 'Economics and Accounting, TMP',                        phone: '7147974443' },
+  { name: 'Samrita Sivakumar',    email: 'samrita@ucsb.edu',           birthday: 'August 21, 2006',   pledgeClass: '',        hometown: 'Mountain House, CA',          instagram: 'samrita._s',          linkedin: 'www.linkedin.com/in/samrita-sivakumar-40642626a',                 major: 'Economics, Political Science',                         phone: '408-747-9232' },
+  { name: 'Clay Griffin',         email: 'claygriffin@ucsb.edu',       birthday: 'April 18, 2007',    pledgeClass: '',        hometown: 'Menlo Park, CA',              instagram: 'claygriffinn',        linkedin: 'www.linkedin.com/in/clay-griffin-aaa567363',                      major: 'Economics',                                            phone: '6505075545' },
+  { name: 'Raiyan Khan',          email: 'raiyan@ucsb.edu',            birthday: 'February 7, 2006',  pledgeClass: '',        hometown: 'Aliso Viejo',                 instagram: 'rraiyankhann',        linkedin: 'https://www.linkedin.com/in/raiyankhan1/',                        major: 'Statistics and Data Science',                          phone: '9493017798' },
+  { name: 'Aaron Ramirez',        email: 'aaronramirez@ucsb.edu',      birthday: '',                  pledgeClass: '',        hometown: 'Fullerton, CA',               instagram: 'aaron.ram11',         linkedin: 'https://www.linkedin.com/in/aaron-ramirez-2701a9207',             major: 'Accounting, Economics',                                phone: '7142967563' },
+  { name: 'Savannah Rivera',      email: 'savannah_rivera@ucsb.edu',   birthday: 'April 13, 2007',    pledgeClass: '',        hometown: 'Oakdale, CA',                 instagram: 'savannah_rivera413',  linkedin: 'https://www.linkedin.com/in/savannah-rivera-6885bb3a9',          major: 'Communication, Financial Mathematics and Statistics',  phone: '(209)840-1377' },
+  { name: 'Sudiksha Kaushika',    email: 'skaushik@ucsb.edu',          birthday: 'March 1, 2006',     pledgeClass: '',        hometown: 'Seattle, WA',                 instagram: 'sudikaushik',         linkedin: 'www.linkedin.com/in/sudikshakaushik',                             major: 'Accounting, Economics',                                phone: '9362428484' },
+  { name: 'Deepthy Mukkara',      email: 'deepthymukkara@ucsb.edu',    birthday: 'July 10, 2006',     pledgeClass: '',        hometown: 'Mountain House, CA',          instagram: 'deepthymukkara_',     linkedin: 'www.linkedin.com/in/deepthymukkara',                              major: 'Financial Mathematics and Statistics, TMP',            phone: '4088191795' },
+  { name: 'Katelyn Nguyen',       email: 'katelyntnguyen@ucsb.edu',    birthday: 'August 19, 2005',   pledgeClass: '',        hometown: 'Orange County, CA',           instagram: 'nguyenxkatelyn',      linkedin: 'https://www.linkedin.com/in/katelyn-nguyen-0l819/',               major: 'Communication',                                        phone: '7143915669' },
+];
+
+// One-time Notion data import — matches Active members by email (fallback: name), updates profile fields
 router.post('/import-notion', requireAdmin, async (_req, res) => {
   try {
-    const csvPath = join(process.cwd(), 'ExportBlock-a7fa3b93-7c4c-436d-8113-71878a69b865-Part-1', 'Member Profiles a96ad62df7d44a29bd4896e5b679c2c7.csv');
-    const text = readFileSync(csvPath, 'utf-8');
-    const rows = parseCSV(text);
-    if (rows.length < 2) { res.status(400).json({ error: 'CSV empty' }); return; }
-
-    // col indices: 0=Name,2=Birthday,5=Class,10=Email,21=Hometown,22=Instagram,25=LinkedIn,26=Major,29=Phone,33=Status
-    const activeRows = rows.slice(1).filter(r => r[33]?.trim() === 'Active' && r[0]?.trim());
     const results: { name: string; status: string; fields?: string }[] = [];
     const now = new Date().toISOString();
 
-    for (const r of activeRows) {
-      const name = r[0].trim();
-      const email = r[10]?.trim() || '';
-      const birthday = r[2]?.trim() || '';
-      const pledgeClass = r[5]?.trim() || '';
-      const hometown = r[21]?.trim() || '';
-      const instagram = (r[22]?.trim() || '').replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '').replace(/\/$/, '').replace(/^@/, '');
-      const linkedin = r[25]?.trim() || '';
-      const major = r[26]?.trim() || '';
-      const phone = r[29]?.trim() || '';
+    for (const m of NOTION_ACTIVE_MEMBERS) {
+      const { name, email, birthday, pledgeClass, hometown, instagram, linkedin, major, phone } = m;
 
-      // Match user by email, fallback to name
       let profileId: string | null = null;
       if (email) {
         const ur = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${email}) LIMIT 1`;
@@ -185,19 +210,12 @@ router.post('/import-notion', requireAdmin, async (_req, res) => {
         }
       }
       if (!profileId) {
-        const pr = await sql`SELECT id FROM profiles WHERE LOWER(TRIM(name)) = LOWER(${name.toLowerCase()}) LIMIT 1`;
+        const pr = await sql`SELECT id FROM profiles WHERE LOWER(TRIM(name)) = LOWER(${name}) LIMIT 1`;
         if (pr.length > 0) profileId = pr[0].id;
       }
       if (!profileId) { results.push({ name, status: 'not_found' }); continue; }
 
-      const updated: string[] = [];
-      if (phone) updated.push('phone');
-      if (linkedin) updated.push('linkedin');
-      if (instagram) updated.push('instagram');
-      if (hometown) updated.push('hometown');
-      if (major) updated.push('major');
-      if (birthday) updated.push('birthday');
-      if (pledgeClass) updated.push('pledge_class');
+      const updated = [phone && 'phone', linkedin && 'linkedin', instagram && 'instagram', hometown && 'hometown', major && 'major', birthday && 'birthday', pledgeClass && 'pledge_class'].filter(Boolean);
 
       await sql`
         UPDATE profiles SET
@@ -214,7 +232,7 @@ router.post('/import-notion', requireAdmin, async (_req, res) => {
       results.push({ name, status: 'updated', fields: updated.join(', ') || 'none' });
     }
 
-    res.json({ success: true, active: activeRows.length, results });
+    res.json({ success: true, total: NOTION_ACTIVE_MEMBERS.length, results });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
