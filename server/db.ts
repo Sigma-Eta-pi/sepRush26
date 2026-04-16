@@ -118,8 +118,8 @@ export async function initDb() {
 
   // Separate LinkedIn photo column (never overwritten by user uploads)
   await sql`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS linkedin_photo_url TEXT`;
-  // One-time migration: copy existing photo_url → linkedin_photo_url for profiles that have a linkedin URL
-  await sql`UPDATE profiles SET linkedin_photo_url = photo_url WHERE linkedin_photo_url IS NULL AND photo_url IS NOT NULL AND linkedin IS NOT NULL AND linkedin != ''`;
+  // Clear any wrongly-migrated data — linkedin_photo_url is only ever written by the admin bulk fetch
+  await sql`UPDATE profiles SET linkedin_photo_url = NULL WHERE linkedin_photo_url IS NOT NULL`;
 
   // Add source + gcal_uid columns to events table
   await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'manual'`;
