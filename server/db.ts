@@ -276,19 +276,12 @@ export async function initDb() {
     }
   } catch (e) { console.error('ucsbsep.org email migration failed:', e); }
 
-  // Ensure admin profile is always named "Admin Account" with no personal data
+  // Ensure the exec service account profile exists but has no personal data
   await sql`
     INSERT INTO profiles (id, user_id, name, created_at, updated_at)
     SELECT ${nanoid()}, u.id, 'Admin Account', ${new Date().toISOString()}, ${new Date().toISOString()}
     FROM users u
-    WHERE u.role = 'admin'
+    WHERE u.email IN ('exec@ucsbsep.org', 'exec@ucsbsep.com')
     AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.user_id = u.id)
-  `;
-  await sql`
-    UPDATE profiles SET
-      name = 'Admin Account', major = NULL, grad_year = NULL, hometown = NULL,
-      birthday = NULL, bio = NULL, linkedin = NULL, instagram = NULL,
-      phone = NULL, pledge_class = NULL, photo_url = NULL
-    WHERE user_id IN (SELECT id FROM users WHERE role = 'admin')
   `;
 }
