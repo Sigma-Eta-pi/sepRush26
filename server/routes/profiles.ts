@@ -25,6 +25,7 @@ function rowToProfile(r: any) {
     phone: r.phone,
     pledgeClass: r.pledge_class,
     photoUrl: r.photo_url,
+    role: r.role as string | undefined,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
   };
@@ -34,8 +35,8 @@ router.get('/', optionalAuth, async (req, res) => {
   // Authenticated members (logged in) can see PNM profiles in the dashboard.
   // Unauthenticated public requests (MeetUs page) exclude PNMs.
   const rows = req.user
-    ? await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.email != 'exec@ucsbsep.com'`
-    : await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm') AND u.email != 'exec@ucsbsep.com'`;
+    ? await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.email != 'exec@ucsbsep.com'`
+    : await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm') AND u.email != 'exec@ucsbsep.com'`;
   res.json(rows.map(rowToProfile));
 });
 

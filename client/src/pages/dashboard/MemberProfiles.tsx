@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, MapPin, GraduationCap, Calendar, Linkedin, Instagram, Phone, Camera, Upload, X, Search, ChevronDown, Check } from 'lucide-react';
+import { User, MapPin, GraduationCap, Calendar, Linkedin, Instagram, Phone, Camera, Upload, X, Search, ChevronDown, Check, ArrowUpDown } from 'lucide-react';
 
 interface MemberProfile {
   id: string;
@@ -17,6 +17,7 @@ interface MemberProfile {
   instagram?: string;
   phone?: string;
   pledgeClass?: string;
+  role?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -41,6 +42,7 @@ function InitialsAvatar({ name, size = 64 }: { name: string; size?: number }) {
 
 function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () => void }) {
   const [imgErr, setImgErr] = useState(false);
+  const isPnm = profile.role === 'pnm';
   return (
     <motion.div
       layout
@@ -49,19 +51,28 @@ function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () 
       exit={{ opacity: 0, y: -8 }}
       whileHover={{ y: -2 }}
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm border border-[#05006C]/10 p-5 cursor-pointer transition-shadow hover:shadow-md"
+      className={`bg-white rounded-xl shadow-sm p-5 cursor-pointer transition-shadow hover:shadow-md ${
+        isPnm ? 'border-2 border-orange-400' : 'border border-[#05006C]/10'
+      }`}
     >
       <div className="flex items-center gap-4">
-        {profile.photoUrl && !imgErr ? (
-          <img
-            src={profile.photoUrl}
-            alt={profile.name}
-            className="w-16 h-16 rounded-full object-cover shrink-0"
-            onError={() => setImgErr(true)}
-          />
-        ) : (
-          <InitialsAvatar name={profile.name} size={64} />
-        )}
+        <div className="relative shrink-0">
+          {profile.photoUrl && !imgErr ? (
+            <img
+              src={profile.photoUrl}
+              alt={profile.name}
+              className="w-16 h-16 rounded-full object-cover"
+              onError={() => setImgErr(true)}
+            />
+          ) : (
+            <InitialsAvatar name={profile.name} size={64} />
+          )}
+          {isPnm && (
+            <span className="absolute -bottom-1 -right-1 bg-orange-400 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+              PNM
+            </span>
+          )}
+        </div>
         <div className="min-w-0">
           <div className="font-bold text-[#05006C] truncate">{profile.name}</div>
           {(profile.major || profile.gradYear) && (
@@ -564,8 +575,18 @@ export default function MemberProfiles() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [classFilter, setClassFilter] = useState('All');
+  const [roleFilter, setRoleFilter] = useState<'all' | 'members' | 'pnm'>('all');
+  const [sortBy, setSortBy] = useState<'name-asc' | 'name-desc' | 'class' | 'grad-year' | 'recent'>('name-asc');
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
   const [classes, setClasses] = useState<string[]>([]);
   const [selected, setSelected] = useState<MemberProfile | null>(null);
+
+  useEffect(() => {
+    function handle(e: MouseEvent) { if (sortRef.current && !sortRef.current.contains(e.target as Node)) setSortOpen(false); }
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, []);
 
   useEffect(() => {
     fetch('/api/classes')
@@ -592,9 +613,9 @@ export default function MemberProfiles() {
 
   // Deduplicate — prefer profiles with more data, then dedup by userId then by name
   const score = (p: MemberProfile) => (p.photoUrl ? 2 : 0) + (p.linkedin ? 1 : 0);
-  const sorted = profiles.slice().sort((a, b) => score(b) - score(a) || b.updatedAt.localeCompare(a.updatedAt));
+  const deduped = profiles.slice().sort((a, b) => score(b) - score(a) || b.updatedAt.localeCompare(a.updatedAt));
   const byUserId = new Map<string, MemberProfile>();
-  for (const p of sorted) if (!byUserId.has(p.userId)) byUserId.set(p.userId, p);
+  for (const p of deduped) if (!byUserId.has(p.userId)) byUserId.set(p.userId, p);
   const byName = new Map<string, MemberProfile>();
   for (const p of byUserId.values()) {
     const key = p.name.toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '');
@@ -602,10 +623,24 @@ export default function MemberProfiles() {
   }
   const uniqueProfiles = Array.from(byName.values());
 
-  const filtered = uniqueProfiles.filter(p => {
+  const SORT_LABELS: Record<typeof sortBy, string> = {
+    'name-asc': 'Name A–Z', 'name-desc': 'Name Z–A',
+    'class': 'Pledge Class', 'grad-year': 'Grad Year', 'recent': 'Recently Updated',
+  };
+
+  const sorted = uniqueProfiles.slice().sort((a, b) => {
+    if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+    if (sortBy === 'name-desc') return b.name.localeCompare(a.name);
+    if (sortBy === 'class') return (a.pledgeClass ?? '').localeCompare(b.pledgeClass ?? '');
+    if (sortBy === 'grad-year') return (a.gradYear ?? 9999) - (b.gradYear ?? 9999);
+    return b.updatedAt.localeCompare(a.updatedAt);
+  });
+
+  const filtered = sorted.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
     const matchClass = classFilter === 'All' || p.pledgeClass === classFilter;
-    return matchSearch && matchClass;
+    const matchRole = roleFilter === 'all' || (roleFilter === 'pnm' ? p.role === 'pnm' : p.role !== 'pnm');
+    return matchSearch && matchClass && matchRole;
   });
 
   return (
@@ -637,19 +672,66 @@ export default function MemberProfiles() {
       {/* ALL MEMBERS */}
       {tab === 'members' && (
         <div>
-          {/* Search + Class Filter */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
-            <div className="relative">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30" />
-              <input
-                type="text"
-                placeholder="Search members..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="w-full sm:w-64 bg-white border border-[#05006C]/15 rounded-lg pl-10 pr-4 py-2.5 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
-              />
+          {/* Search + Sort + Filters */}
+          <div className="flex flex-col gap-3 mb-5">
+            {/* Row 1: search + sort */}
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1 sm:max-w-72">
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#05006C]/30" />
+                <input
+                  type="text"
+                  placeholder="Search members..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="w-full bg-white border border-[#05006C]/15 rounded-lg pl-10 pr-4 py-2.5 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
+                />
+              </div>
+              {/* Sort dropdown */}
+              <div ref={sortRef} className="relative">
+                <button
+                  onClick={() => setSortOpen(o => !o)}
+                  className="flex items-center gap-2 bg-white border border-[#05006C]/15 rounded-lg px-3.5 py-2.5 text-sm text-[#05006C]/70 hover:border-[#05006C]/30 transition whitespace-nowrap"
+                >
+                  <ArrowUpDown size={14} className="text-[#05006C]/40" />
+                  {SORT_LABELS[sortBy]}
+                  <ChevronDown size={13} className={`text-[#05006C]/40 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {sortOpen && (
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-[#05006C]/10 rounded-xl shadow-lg z-20 overflow-hidden min-w-40">
+                    {(Object.entries(SORT_LABELS) as [typeof sortBy, string][]).map(([key, label]) => (
+                      <button
+                        key={key}
+                        onClick={() => { setSortBy(key); setSortOpen(false); }}
+                        className={`w-full px-4 py-2.5 text-left text-sm flex items-center justify-between transition-colors ${
+                          sortBy === key ? 'bg-[#05006C]/5 text-[#05006C] font-medium' : 'text-[#05006C]/60 hover:bg-[#05006C]/5'
+                        }`}
+                      >
+                        {label}
+                        {sortBy === key && <Check size={13} className="text-[#05006C]" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            {/* Row 2: role filter + class filter */}
+            <div className="flex flex-wrap gap-1.5 items-center">
+              {/* Role pills */}
+              {(['all', 'members', 'pnm'] as const).map(r => (
+                <button
+                  key={r}
+                  onClick={() => setRoleFilter(r)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors cursor-pointer ${
+                    roleFilter === r
+                      ? r === 'pnm' ? 'bg-orange-400 text-white' : 'bg-[#05006C] text-[#EEEADE]'
+                      : r === 'pnm' ? 'bg-orange-100 text-orange-600 hover:bg-orange-200' : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+                  }`}
+                >
+                  {r === 'all' ? 'Everyone' : r === 'members' ? 'Members' : 'PNMs'}
+                </button>
+              ))}
+              <div className="w-px h-4 bg-[#05006C]/15 mx-0.5" />
+              {/* Class pills */}
               {['All', ...classes].map(cls => (
                 <button
                   key={cls}
