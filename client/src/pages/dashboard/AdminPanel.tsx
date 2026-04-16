@@ -237,6 +237,8 @@ function MembersTab({ token }: { token: string }) {
   const [classError, setClassError] = useState('');
   const [resetStatus, setResetStatus] = useState<Record<string, string>>({});
   const [search, setSearch] = useState('');
+  const [importStatus, setImportStatus] = useState('');
+  const [liStatus, setLiStatus] = useState('');
 
   const fetchMembers = () => {
     setLoading(true);
@@ -317,6 +319,26 @@ function MembersTab({ token }: { token: string }) {
     }
   };
 
+  const handleImportNotion = async () => {
+    setImportStatus('Importing...');
+    try {
+      const data = await apiFetch('/api/admin/import-notion', token, { method: 'POST' });
+      setImportStatus(`Done — ${data.updated} updated, ${data.not_found} not found`);
+      fetchMembers();
+    } catch (e: any) { setImportStatus(`Error: ${e.message}`); }
+    setTimeout(() => setImportStatus(''), 6000);
+  };
+
+  const handleFetchLinkedinPhotos = async () => {
+    setLiStatus('Fetching...');
+    try {
+      const data = await apiFetch('/api/admin/fetch-linkedin-photos', token, { method: 'POST' });
+      const fetched = data.results?.filter((r: any) => r.status === 'fetched').length ?? 0;
+      setLiStatus(`Done — ${fetched} / ${data.total} photos fetched`);
+    } catch (e: any) { setLiStatus(`Error: ${e.message}`); }
+    setTimeout(() => setLiStatus(''), 6000);
+  };
+
   const handleAddClass = async () => {
     const name = newClassName.trim();
     if (!name) return;
@@ -353,7 +375,21 @@ function MembersTab({ token }: { token: string }) {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <span className="text-[#05006C]/60 text-sm font-bold">{filteredMembers.length} / {members.length} members</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={handleImportNotion}
+            disabled={!!importStatus}
+            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 disabled:opacity-50"
+          >
+            {importStatus || 'Import Members'}
+          </button>
+          <button
+            onClick={handleFetchLinkedinPhotos}
+            disabled={!!liStatus}
+            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 disabled:opacity-50"
+          >
+            {liStatus || 'Fetch LinkedIn Photos'}
+          </button>
           <button
             onClick={() => { setShowClasses(s => !s); setShowAdd(false); }}
             className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5"
