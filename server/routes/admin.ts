@@ -19,7 +19,7 @@ async function fetchLinkedinPhoto(linkedinUrl: string): Promise<string | null> {
     const html = await pageRes.text();
     const m = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
               html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
-    if (!m) return null;
+    if (!m) { console.log(`[li-photo] no og:image for ${slug}, status=${pageRes.status}, html_len=${html.length}`); return null; }
     const imgRes = await fetch(m[1], {
       headers: { 'User-Agent': LI_UA, 'Referer': 'https://www.linkedin.com/' },
       signal: AbortSignal.timeout(8000),
