@@ -118,21 +118,14 @@ function ExecChip({ member, profile }: { member: typeof EXEC_BOARD[0]; profile?:
 
 // Small member card — founding class + founders grid
 function MemberCard({ profile }: { profile: MemberProfile }) {
-  const [imgErr, setImgErr] = useState(false);
   const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
   const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-  const hasPhoto = profile.photoUrl && !imgErr;
-
   const inner = (
     <>
       <div className="aspect-square bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative overflow-hidden">
-        {hasPhoto ? (
-          <img src={profile.photoUrl} alt={profile.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
-        ) : (
-          <span className="text-[#1B212C] font-bold" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "1.2rem" }}>
-            {initials}
-          </span>
-        )}
+        <span className="text-[#1B212C] font-bold" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "1.2rem" }}>
+          {initials}
+        </span>
         {linkedinSlug && (
           <div className="absolute inset-0 bg-[#05006C]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
             <div className="w-5 h-5 text-white"><LinkedInIcon /></div>
