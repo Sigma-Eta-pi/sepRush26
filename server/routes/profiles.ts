@@ -34,8 +34,8 @@ router.get('/', optionalAuth, async (req, res) => {
   // Authenticated members (logged in) can see PNM profiles in the dashboard.
   // Unauthenticated public requests (MeetUs page) exclude PNMs.
   const rows = req.user
-    ? await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id`
-    : await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm')`;
+    ? await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.email != 'exec@ucsbsep.com'`
+    : await sql`SELECT p.* FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm') AND u.email != 'exec@ucsbsep.com'`;
   res.json(rows.map(rowToProfile));
 });
 
