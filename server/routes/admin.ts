@@ -216,10 +216,11 @@ router.post('/import-notion', requireAdmin, async (_req, res) => {
       }
       if (!profileId) { results.push({ name, status: 'not_found' }); continue; }
 
-      const updated = [phone && 'phone', linkedin && 'linkedin', instagram && 'instagram', hometown && 'hometown', major && 'major', birthday && 'birthday', pledgeClass && 'pledge_class'].filter(Boolean);
+      const updated = ['name', phone && 'phone', linkedin && 'linkedin', instagram && 'instagram', hometown && 'hometown', major && 'major', birthday && 'birthday', pledgeClass && 'pledge_class'].filter(Boolean);
 
       await sql`
         UPDATE profiles SET
+          name         = ${name},
           phone        = COALESCE(NULLIF(${phone}, ''), phone),
           linkedin     = COALESCE(NULLIF(${linkedin}, ''), linkedin),
           instagram    = COALESCE(NULLIF(${instagram}, ''), instagram),
