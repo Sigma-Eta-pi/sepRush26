@@ -268,14 +268,12 @@ router.post('/import-notion', requireAdmin, async (_req, res) => {
   }
 });
 
-// Bulk LinkedIn photo fetch — fills photo_url for profiles that have linkedin but no photo.
-// Uploaded photos (already in photo_url) are never overwritten.
+// Bulk LinkedIn photo fetch — stores in linkedin_photo_url (separate from user-uploaded photo_url).
 router.post('/fetch-linkedin-photos', requireAdmin, async (_req, res) => {
   try {
     const rows = await sql`
       SELECT p.id, p.linkedin FROM profiles p
       WHERE p.linkedin IS NOT NULL AND p.linkedin != ''
-        AND (p.photo_url IS NULL OR p.photo_url = '')
     `;
 
     const results: { id: string; linkedin: string; status: string }[] = [];
@@ -284,7 +282,7 @@ router.post('/fetch-linkedin-photos', requireAdmin, async (_req, res) => {
     await Promise.all(rows.map(async (r: any) => {
       const url = await fetchLinkedinPhoto(r.linkedin);
       if (url) {
-        await sql`UPDATE profiles SET photo_url = ${url}, updated_at = ${now} WHERE id = ${r.id}`;
+        await sql`UPDATE profiles SET linkedin_photo_url = ${url}, updated_at = ${now} WHERE id = ${r.id}`;
         results.push({ id: r.id, linkedin: r.linkedin, status: 'fetched' });
       } else {
         results.push({ id: r.id, linkedin: r.linkedin, status: 'not_found' });

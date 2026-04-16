@@ -55,6 +55,7 @@ interface MemberProfile {
   userId: string;
   name: string;
   photoUrl?: string;
+  linkedinPhotoUrl?: string;
   major?: string;
   pledgeClass?: string;
   linkedin?: string;
@@ -66,17 +67,6 @@ function extractLinkedinSlug(url: string): string {
   return url.trim().replace(/\/$/, "");
 }
 
-function useLinkedinPhoto(slug: string | null): string | null {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (!slug) return;
-    fetch(`/api/proxy/linkedin-photo/${encodeURIComponent(slug)}`)
-      .then(r => r.ok ? r.json() : { url: null })
-      .then(d => setUrl(d.url ?? null))
-      .catch(() => {});
-  }, [slug]);
-  return url;
-}
 
 function LinkedInIcon() {
   return (
@@ -89,12 +79,10 @@ function LinkedInIcon() {
 // Small exec chip — compact row card
 function ExecChip({ member, profile }: { member: typeof EXEC_BOARD[0]; profile?: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
-  // Use profile LinkedIn first, fall back to hardcoded slug
   const linkedinUrl = profile?.linkedin
     ? (profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`)
     : member.slug ? `https://www.linkedin.com/in/${member.slug}` : null;
-  const liSlug = linkedinUrl ? extractLinkedinSlug(linkedinUrl) : null;
-  const photo = useLinkedinPhoto(liSlug);
+  const photo = profile?.linkedinPhotoUrl;
   const hasPhoto = photo && !imgErr;
 
   const inner = (
@@ -134,13 +122,13 @@ function MemberCard({ profile }: { profile: MemberProfile }) {
   const [imgErr, setImgErr] = useState(false);
   const linkedinSlug = profile.linkedin ? extractLinkedinSlug(profile.linkedin) : null;
   const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-  const liPhoto = useLinkedinPhoto(linkedinSlug);
+  const liPhoto = profile.linkedinPhotoUrl;
   const hasPhoto = liPhoto && !imgErr;
   const inner = (
     <>
       <div className="aspect-square bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center relative overflow-hidden">
         {hasPhoto ? (
-          <img src={liPhoto!} alt={profile.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
+          <img src={liPhoto} alt={profile.name} className="w-full h-full object-cover" onError={() => setImgErr(true)} />
         ) : (
           <span className="text-[#1B212C] font-bold" style={{ fontFamily: "'Helvetica Now', -apple-system, sans-serif", fontSize: "1.2rem" }}>
             {initials}

@@ -116,6 +116,9 @@ export async function initDb() {
     )
   `;
 
+  // Separate LinkedIn photo column (never overwritten by user uploads)
+  await sql`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS linkedin_photo_url TEXT`;
+
   // Add source + gcal_uid columns to events table
   await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'manual'`;
   await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS gcal_uid TEXT`;

@@ -25,6 +25,7 @@ function rowToProfile(r: any) {
     phone: r.phone,
     pledgeClass: r.pledge_class,
     photoUrl: r.photo_url,
+    linkedinPhotoUrl: r.linkedin_photo_url,
     role: r.role as string | undefined,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
