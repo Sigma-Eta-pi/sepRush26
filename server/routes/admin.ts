@@ -4,6 +4,33 @@ import { sql } from '../db.js';
 import { requireAdmin, requireExec } from '../middleware/auth.js';
 import { sendPasswordResetEmail, sendBlastEmail } from '../email.js';
 
+const LI_UA = 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)';
+
+async function fetchLinkedinPhoto(linkedinUrl: string): Promise<string | null> {
+  const match = linkedinUrl.match(/linkedin\.com\/in\/([\w\-\.]+)/i);
+  if (!match) return null;
+  const slug = match[1].replace(/\/$/, '');
+  if (!/^[\w\-\.]+$/.test(slug)) return null;
+  try {
+    const pageRes = await fetch(`https://www.linkedin.com/in/${slug}`, {
+      headers: { 'User-Agent': LI_UA, 'Accept': 'text/html,application/xhtml+xml' },
+      signal: AbortSignal.timeout(8000),
+    });
+    const html = await pageRes.text();
+    const m = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+              html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    if (!m) return null;
+    const imgRes = await fetch(m[1], {
+      headers: { 'User-Agent': LI_UA, 'Referer': 'https://www.linkedin.com/' },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!imgRes.ok) return null;
+    const ct = imgRes.headers.get('content-type') || 'image/jpeg';
+    const buf = await imgRes.arrayBuffer();
+    return `data:${ct};base64,${Buffer.from(buf).toString('base64')}`;
+  } catch { return null; }
+}
+
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -236,6 +263,35 @@ router.post('/import-notion', requireAdmin, async (_req, res) => {
     }
 
     res.json({ success: true, total: NOTION_ACTIVE_MEMBERS.length, results });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Bulk LinkedIn photo fetch — fills photo_url for profiles that have linkedin but no photo.
+// Uploaded photos (already in photo_url) are never overwritten.
+router.post('/fetch-linkedin-photos', requireAdmin, async (_req, res) => {
+  try {
+    const rows = await sql`
+      SELECT p.id, p.linkedin FROM profiles p
+      WHERE p.linkedin IS NOT NULL AND p.linkedin != ''
+        AND (p.photo_url IS NULL OR p.photo_url = '')
+    `;
+
+    const results: { id: string; linkedin: string; status: string }[] = [];
+    const now = new Date().toISOString();
+
+    await Promise.all(rows.map(async (r: any) => {
+      const url = await fetchLinkedinPhoto(r.linkedin);
+      if (url) {
+        await sql`UPDATE profiles SET photo_url = ${url}, updated_at = ${now} WHERE id = ${r.id}`;
+        results.push({ id: r.id, linkedin: r.linkedin, status: 'fetched' });
+      } else {
+        results.push({ id: r.id, linkedin: r.linkedin, status: 'not_found' });
+      }
+    }));
+
+    res.json({ success: true, total: rows.length, results });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }

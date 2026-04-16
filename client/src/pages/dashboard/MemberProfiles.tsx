@@ -43,61 +43,66 @@ function InitialsAvatar({ name, size = 64 }: { name: string; size?: number }) {
 function MemberCard({ profile, onClick }: { profile: MemberProfile; onClick: () => void }) {
   const [imgErr, setImgErr] = useState(false);
   const isPnm = profile.role === 'pnm';
+  const hasPhoto = profile.photoUrl && !imgErr;
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(5,0,108,0.12)' }}
       onClick={onClick}
-      className={`bg-white rounded-xl shadow-sm p-5 cursor-pointer transition-shadow hover:shadow-md ${
-        isPnm ? 'border-2 border-orange-400' : 'border border-[#05006C]/10'
+      className={`bg-white rounded-2xl overflow-hidden cursor-pointer transition-shadow ${
+        isPnm ? 'border-2 border-orange-400 shadow-sm' : 'border border-[#05006C]/10 shadow-sm'
       }`}
     >
-      <div className="flex items-center gap-4">
-        <div className="relative shrink-0">
-          {profile.photoUrl && !imgErr ? (
-            <img
-              src={profile.photoUrl}
-              alt={profile.name}
-              className="w-16 h-16 rounded-full object-cover"
-              onError={() => setImgErr(true)}
-            />
-          ) : (
-            <InitialsAvatar name={profile.name} size={64} />
-          )}
-          {isPnm && (
-            <span className="absolute -bottom-1 -right-1 bg-orange-400 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-              PNM
-            </span>
-          )}
-        </div>
-        <div className="min-w-0">
-          <div className="font-bold text-[#05006C] truncate">{profile.name}</div>
-          {(profile.major || profile.gradYear) && (
-            <div className="text-sm text-[#05006C]/60 flex items-center gap-1.5 mt-0.5">
-              <GraduationCap size={14} className="shrink-0" />
-              <span className="truncate">
-                {profile.major}{profile.major && profile.gradYear ? ' · ' : ''}{profile.gradYear ? `'${String(profile.gradYear).slice(-2)}` : ''}
-              </span>
-            </div>
-          )}
-          {profile.hometown && (
-            <div className="text-sm text-[#05006C]/50 flex items-center gap-1.5 mt-0.5">
-              <MapPin size={14} className="shrink-0" />
-              <span className="truncate">{profile.hometown}</span>
-            </div>
-          )}
-        </div>
-      </div>
-      {profile.pledgeClass && (
-        <div className="mt-3">
-          <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#05006C]/8 text-[#05006C]/70 text-xs font-medium tracking-wide">
-            {profile.pledgeClass}
+      {/* Photo header */}
+      <div className="relative aspect-[4/3] bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] overflow-hidden">
+        {hasPhoto ? (
+          <img
+            src={profile.photoUrl}
+            alt={profile.name}
+            className="w-full h-full object-cover"
+            onError={() => setImgErr(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <InitialsAvatar name={profile.name} size={80} />
+          </div>
+        )}
+        {isPnm && (
+          <span className="absolute top-2.5 right-2.5 bg-orange-400 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+            PNM
           </span>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="p-4">
+        <div className="font-bold text-[#05006C] truncate text-sm">{profile.name}</div>
+        {(profile.major || profile.gradYear) && (
+          <div className="text-xs text-[#05006C]/60 flex items-center gap-1 mt-1">
+            <GraduationCap size={12} className="shrink-0" />
+            <span className="truncate">
+              {profile.major}{profile.major && profile.gradYear ? ' · ' : ''}{profile.gradYear ? `'${String(profile.gradYear).slice(-2)}` : ''}
+            </span>
+          </div>
+        )}
+        {profile.hometown && (
+          <div className="text-xs text-[#05006C]/50 flex items-center gap-1 mt-0.5">
+            <MapPin size={12} className="shrink-0" />
+            <span className="truncate">{profile.hometown}</span>
+          </div>
+        )}
+        {profile.pledgeClass && (
+          <div className="mt-2.5">
+            <span className="inline-block px-2 py-0.5 rounded-full bg-[#05006C]/8 text-[#05006C]/60 text-[10px] font-medium tracking-wide">
+              {profile.pledgeClass}
+            </span>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
