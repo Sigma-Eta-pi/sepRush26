@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, User, BookOpen, MapPin, Lock, ChevronDown, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import sepLogo from '@/images/sep-logo.png';
 
@@ -74,12 +74,15 @@ export default function Onboarding() {
     { id: 'basics', label: 'Your Info', icon: User },
     { id: 'background', label: 'Background', icon: MapPin },
     { id: 'bio', label: 'About You', icon: BookOpen },
+    { id: 'photo', label: 'Photo', icon: Camera },
   ];
 
   const [step, setStep] = useState(0);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [linkedinPhoto, setLinkedinPhoto] = useState('');
+  const [uploadedPhoto, setUploadedPhoto] = useState('');
+  const [photoUploading, setPhotoUploading] = useState(false);
   const [classOptions, setClassOptions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -160,7 +163,7 @@ export default function Onboarding() {
           linkedin: form.linkedin || undefined,
           instagram: form.instagram || undefined,
           phone: form.phone || undefined,
-          photoUrl: linkedinPhoto || undefined,
+          photoUrl: uploadedPhoto || linkedinPhoto || undefined,
         }),
       });
       markOnboardingComplete();
@@ -364,6 +367,69 @@ export default function Onboarding() {
                     </div>
                   </div>
                   {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
+                </div>
+              )}
+
+              {/* PHOTO STEP */}
+              {currentStepId === 'photo' && (
+                <div>
+                  <h2 className="text-[#EEEADE] font-bold text-lg tracking-wide mb-2">Profile Photo</h2>
+                  <p className="text-[#EEEADE]/50 text-sm mb-6">Add a photo for your member directory card. You can skip and add one later.</p>
+                  <div className="flex flex-col items-center gap-5">
+                    {/* Preview */}
+                    <div className="w-28 h-28 rounded-full overflow-hidden bg-gradient-to-br from-[#D0E4EF] to-[#8FA2C2] flex items-center justify-center border-2 border-white/20">
+                      {uploadedPhoto ? (
+                        <img src={uploadedPhoto} alt="Profile" className="w-full h-full object-cover" />
+                      ) : linkedinPhoto ? (
+                        <img src={linkedinPhoto} alt="LinkedIn" className="w-full h-full object-cover" />
+                      ) : (
+                        <Camera size={32} className="text-[#1B212C]/40" />
+                      )}
+                    </div>
+                    {linkedinPhoto && !uploadedPhoto && (
+                      <p className="text-[#EEEADE]/40 text-xs">Using your LinkedIn photo — upload below to override.</p>
+                    )}
+                    {/* Upload */}
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          setPhotoUploading(true);
+                          setError('');
+                          try {
+                            const fd = new FormData();
+                            fd.append('photo', file);
+                            const r = await fetch('/api/upload/photo', {
+                              method: 'POST',
+                              headers: { Authorization: `Bearer ${token}` },
+                              body: fd,
+                            });
+                            if (!r.ok) throw new Error(await r.text());
+                            const { url } = await r.json();
+                            setUploadedPhoto(url);
+                          } catch (err: any) {
+                            setError(err.message || 'Upload failed');
+                          } finally {
+                            setPhotoUploading(false);
+                          }
+                        }}
+                      />
+                      <span className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors ${photoUploading ? 'bg-white/10 text-[#EEEADE]/40 cursor-not-allowed' : 'bg-[#EEEADE] text-[#05006C] hover:bg-white'}`}>
+                        <Camera size={15} />
+                        {photoUploading ? 'Uploading...' : uploadedPhoto ? 'Change Photo' : 'Upload Photo'}
+                      </span>
+                    </label>
+                    {uploadedPhoto && (
+                      <button onClick={() => setUploadedPhoto('')} className="text-[#EEEADE]/40 hover:text-[#EEEADE]/70 text-xs transition-colors">
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  {error && <p className="text-red-400 text-xs mt-4 text-center">{error}</p>}
                 </div>
               )}
             </motion.div>
