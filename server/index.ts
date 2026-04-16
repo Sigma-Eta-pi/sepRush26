@@ -13,6 +13,7 @@ import adminRoutes from './routes/admin.js';
 import uploadRoutes from './routes/upload.js';
 import taskRoutes from './routes/tasks.js';
 import proxyRoutes from './routes/proxy.js';
+import gcalRoutes from './routes/gcal.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ async function startServer() {
   app.use('/api/upload', uploadRoutes);
   app.use('/api/tasks', taskRoutes);
   app.use('/api/proxy', proxyRoutes);
+  app.use('/api/gcal', gcalRoutes);
 
   app.all('/api/*', (_req, res) => {
     res.status(404).json({ error: 'Not found' });
