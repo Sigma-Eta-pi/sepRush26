@@ -132,7 +132,7 @@ Emotional intent: Ambitious, modern, entrepreneurial — aligned with SEP's star
 - Background: Warm White `#FAFAF8`
 - Dark Section: `#1C1C1E`
 Emotional intent: School pride, editorial sophistication, and professional ambition.
-
+:)
 **Layout Paradigm:**
 - Hero with large editorial headline overlapping image
 - Stats in large typographic display
