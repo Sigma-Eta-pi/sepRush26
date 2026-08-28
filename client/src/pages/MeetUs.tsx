@@ -37,7 +37,6 @@ const EXEC_BOARD: Member[] = [
   { name: "Nirvaan Patel",        role: "VP of Finance",                  photoSlug: "nirvaan-patel",        linkedin: "https://www.linkedin.com/in/nirvaan-patel" },
   { name: "Amaya Bratcher",       role: "VP of Professional Development", photoSlug: "amaya-bratcher",       linkedin: "https://www.linkedin.com/in/aabratcher" },
   { name: "Nina Rossi",           role: "VP of Marketing",                photoSlug: "nina-rossi",           linkedin: "https://www.linkedin.com/in/ninarossii" },
-  { name: "Saloni Singhal",       role: "VP of Programming",              photoSlug: "saloni-singhal",       linkedin: "https://www.linkedin.com/in/ssaloni-singhal" },
   { name: "Preston Chung",        role: "VP of Brotherhood",              photoSlug: "preston-chung" },
   { name: "Brooke Namie Bradley", role: "VP of Brotherhood",              photoSlug: "brooke-bradley",       linkedin: "https://www.linkedin.com/in/brooke-bradley-562183395" },
   { name: "Vaibhava Raja",        role: "VP of Internal Affairs",         photoSlug: "vaibhava-raja",        linkedin: "https://www.linkedin.com/in/vaibhava-rajesh-0674a5210" },

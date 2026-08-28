@@ -4,6 +4,9 @@ function isPlainObject(val: unknown): val is Record<string, unknown> {
   return typeof val === "object" && val !== null && !Array.isArray(val);
 }
 
+// DB may hold editor content saved before the Fall 2026 rebrand — ignore those values
+const STALE_CONTENT_RE = /alpha class|winter 2026|spring 2026|founder class/i;
+
 function deepMerge<T>(defaults: T, override: unknown): T {
   if (!isPlainObject(defaults) || !isPlainObject(override)) return defaults;
   const result = { ...defaults } as Record<string, unknown>;
@@ -14,7 +17,12 @@ function deepMerge<T>(defaults: T, override: unknown): T {
       result[key] = deepMerge(defVal, overVal);
     } else if (Array.isArray(overVal) && overVal.length > 0) {
       result[key] = overVal;
-    } else if (!Array.isArray(overVal) && overVal !== undefined && overVal !== null) {
+    } else if (
+      !Array.isArray(overVal) &&
+      overVal !== undefined &&
+      overVal !== null &&
+      !(typeof overVal === "string" && STALE_CONTENT_RE.test(overVal))
+    ) {
       result[key] = overVal;
     }
   }
