@@ -160,7 +160,7 @@ export async function initDb() {
     `;
   } catch (e) { console.error('profile dedup migration failed:', e); }
 
-  const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class'];
+  const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class', 'Beta Class'];
   for (const name of defaultClasses) {
     const cid = nanoid();
     const now = new Date().toISOString();

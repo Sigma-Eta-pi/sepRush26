@@ -72,7 +72,7 @@ const defaultHomeContent = {
     title: "Sigma Eta Pi",
     subtitle: "The Premier Entrepreneurship Fraternity at UCSB",
     badge: "Epsilon Chapter · UCSB",
-    cta_primary: "JOIN OUR ALPHA CLASS",
+    cta_primary: "JOIN OUR BETA CLASS",
     cta_primary_href: "/recruitment",
     cta_secondary: "LEARN MORE",
     cta_secondary_href: "/about",
@@ -128,9 +128,9 @@ const defaultHomeContent = {
   },
   recruitment_cta: {
     label: "Recruitment",
-    title: "Join Our Founder Class",
-    description: "As we relaunch at UCSB, we can't wait to meet our founder class — the leaders, builders, and innovators who will define SEP's future on campus. Step forward, write your next chapter, and be part of something from the very beginning.",
-    cta: "WINTER 2026 APPLICATION",
+    title: "Join Our Beta Class",
+    description: "We can't wait to meet our beta class — the leaders, builders, and innovators who will define SEP's future on campus. Rush kicks off week 2 of fall quarter. Step forward, write your next chapter, and be part of something from the very beginning.",
+    cta: "FALL 2026 RECRUITMENT",
     bg_image: "",
   },
 };
@@ -203,7 +203,7 @@ export default function Home() {
       setActiveValue((prev) => (prev + 1) % content.values.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [content.values.length]);
+  }, [content.values.length, activeValue]);
 
   return (
     <div className="min-h-screen bg-[#EEEADE] text-[#0C141A]">
@@ -285,7 +285,7 @@ export default function Home() {
       </section>
 
       {/* ─── STATS SECTION ─── */}
-      <section ref={statsRef} className="bg-[#FFFFFF] border-y-4 border-[#1B212C]">
+      <section ref={statsRef} className="bg-[#FFFFFF] border-y border-[#1B212C]/15">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#1B212C]/20">
             {content.stats.map((stat, i) => (
@@ -330,7 +330,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl border-4 border-[#1B212C]">
+          <div className="relative overflow-hidden rounded-2xl">
             <div
               className="relative h-[500px] md:h-[600px] overflow-hidden"
               style={{
@@ -340,8 +340,8 @@ export default function Home() {
                 transition: "background-image 0.5s ease",
               }}
             >
-              <div className="absolute inset-0 bg-black/50" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
+              <div className="absolute inset-0 bg-black/15" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
 
               <div className="relative z-10 h-full flex items-end p-8 md:p-16">
                 <div className="max-w-xl">
@@ -413,15 +413,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex border-t-4 border-[#1B212C] mt-0">
+          <div className="flex justify-center gap-8 mt-6">
+            <style>{`@keyframes pillarProgress { from { width: 0% } to { width: 100% } }`}</style>
             {content.values.map((value, i) => (
               <button
                 key={i}
                 onClick={() => setActiveValue(i)}
-                className={`flex-1 py-5 text-sm font-bold tracking-widest uppercase transition-all duration-300 ${
-                  i === activeValue
-                    ? "bg-[#1B212C] text-[#EEEADE]"
-                    : "text-[#1B212C] hover:bg-[#1B212C]/10"
+                className={`relative pb-2.5 text-sm font-bold tracking-widest uppercase transition-colors duration-300 ${
+                  i === activeValue ? "text-[#1B212C]" : "text-[#1B212C]/40 hover:text-[#1B212C]"
                 }`}
                 style={{
                   fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -429,6 +428,14 @@ export default function Home() {
                 }}
               >
                 {value.label}
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-[#1B212C]/15" />
+                {i === activeValue && (
+                  <span
+                    key={activeValue}
+                    className="absolute bottom-0 left-0 h-0.5 bg-[#1B212C]"
+                    style={{ animation: "pillarProgress 5000ms linear forwards" }}
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -478,7 +485,7 @@ export default function Home() {
             {COMPANIES.slice(0, 32).map((company, i) => (
               <div
                 key={i}
-                className="aspect-square flex flex-col items-center justify-center border-2 border-white/20 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-white/10 transition-all duration-300 p-2 group"
+                className="aspect-square flex flex-col items-center justify-center border border-white/15 bg-white/5 hover:border-[#D0E4EF]/60 hover:bg-white/10 transition-all duration-300 p-2 group"
               >
                 <img
                   src={`https://www.google.com/s2/favicons?domain=${company.domain}&sz=64`}
@@ -559,14 +566,14 @@ export default function Home() {
             </div>
             <div className="relative">
               <div
-                className="aspect-[4/3] overflow-hidden border-4 border-[#1B212C]"
+                className="aspect-[4/3] overflow-hidden rounded-2xl"
                 style={{
                   backgroundImage: `url(${content.about_teaser.bg_image || ABOUT_BG})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               />
-              <div className="absolute bottom-6 left-6 bg-[#1B212C] text-[#EEEADE] px-6 py-4 border-4 border-[#EEEADE]">
+              <div className="absolute bottom-6 left-6 bg-[#1B212C] text-[#EEEADE] px-6 py-4 rounded-xl">
                 <div
                   className="font-bold"
                   style={{
@@ -586,7 +593,7 @@ export default function Home() {
       </section>
 
       {/* ─── RECRUITMENT CTA ─── */}
-      <section className="py-24 bg-[#EEEADE] border-t-4 border-[#1B212C]">
+      <section className="py-24 bg-[#EEEADE] border-t border-[#1B212C]/15">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div
             className="text-xs font-bold tracking-widest uppercase mb-4"

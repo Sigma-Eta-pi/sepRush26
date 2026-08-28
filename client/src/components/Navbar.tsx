@@ -96,19 +96,12 @@ export default function Navbar() {
               >
                 APPLY
               </Link>
-              {isAuthenticated ? (
+              {isAuthenticated && (
                 <Link
                   href="/dashboard"
                   className="px-4 py-2 bg-[#EEEADE]/10 text-[#EEEADE] hover:bg-[#EEEADE]/20 font-bold rounded-full text-xs tracking-widest transition-all border border-[#EEEADE]/30"
                 >
                   DASHBOARD
-                </Link>
-              ) : (
-                <Link
-                  href="/active-login"
-                  className="px-4 py-2 border border-[#EEEADE]/40 text-[#EEEADE]/80 hover:text-[#EEEADE] hover:border-[#EEEADE] font-bold rounded-full text-xs tracking-widest transition-all"
-                >
-                  ACTIVE LOGIN
                 </Link>
               )}
             </div>
@@ -156,13 +149,9 @@ export default function Navbar() {
               >
                 APPLY NOW
               </Link>
-              {isAuthenticated ? (
+              {isAuthenticated && (
                 <Link href="/dashboard" className="block text-center py-3 px-4 bg-[#EEEADE]/10 text-[#EEEADE] font-bold rounded-lg text-xs tracking-widest border border-[#EEEADE]/30" onClick={() => setMobileOpen(false)}>
                   DASHBOARD
-                </Link>
-              ) : (
-                <Link href="/active-login" className="block text-center py-3 px-4 border border-[#EEEADE]/40 text-[#EEEADE]/80 font-bold rounded-lg text-xs tracking-widest" onClick={() => setMobileOpen(false)}>
-                  ACTIVE LOGIN
                 </Link>
               )}
             </div>

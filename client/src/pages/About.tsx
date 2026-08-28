@@ -57,7 +57,7 @@ const defaultAboutContent = {
   },
   cta: {
     title: "Ready to Be Part of Something?",
-    description: "Join our founder class and help shape the future of entrepreneurship at UCSB.",
+    description: "Join our beta class and help shape the future of entrepreneurship at UCSB.",
     cta_primary: "APPLY NOW",
     cta_secondary: "MEET THE TEAM",
   },

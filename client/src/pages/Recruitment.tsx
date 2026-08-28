@@ -13,24 +13,24 @@ const HERO_BG = heroBg;
 
 const defaultRecruitmentContent = {
   hero: {
-    title: "Join Our Alpha Class",
-    badge: "Spring 2026 Recruitment",
+    title: "Join Our Beta Class",
+    badge: "Fall 2026 Recruitment",
     subtitle: "Be part of something from the very beginning. Help us build Sigma Eta Pi's legacy at UCSB.",
-    cta_primary: "APPLY NOW",
-    cta_primary_href: "https://forms.gle/your-application-form",
+    cta_primary: "APPLICATION COMING SOON",
+    cta_primary_href: "#events",
     cta_secondary: "VIEW EVENTS",
     bg_image: "",
   },
   events_section: {
     label: "Recruitment Schedule",
-    title: "Spring 2026 Events",
+    title: "Fall 2026 Events",
   },
   events: [
-    { date: "April 6, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
-    { date: "April 7, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
-    { date: "April 8, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
-    { date: "April 9, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
-    { date: "April 9, 2026", title: "Applications Due", time: "", location: "", description: "Submit your application by end of day. Info on @ucsbsep on Instagram." },
+    { date: "October 5, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
+    { date: "October 6, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
+    { date: "October 7, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
+    { date: "October 8, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
+    { date: "Coming Soon", title: "Applications Due", time: "", location: "", description: "Application deadline and form will be announced soon. Follow @ucsbsep on Instagram for updates." },
   ],
   faq_section: {
     label: "Questions?",
@@ -41,7 +41,7 @@ const defaultRecruitmentContent = {
     { q: "Do I need to be a business major to join?", a: "No! Sigma Eta Pi welcomes students from all majors. We believe diversity of thought and background strengthens our community. Whether you're an engineer, designer, marketer, or anything else, you belong here." },
     { q: "What is the time commitment?", a: "We understand you're busy. Most members commit 5-10 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities." },
     { q: "Is there a membership fee?", a: "Yes, there are membership dues to support chapter operations, events, and resources. We work to keep costs reasonable and offer payment plans if needed. Contact us for specific details." },
-    { q: "When is the application deadline?", a: "Applications for Spring 2026 recruitment close on February 28, 2026. We'll notify applicants of interview dates shortly after." },
+    { q: "When is the application deadline?", a: "The application deadline for Fall 2026 recruitment is coming soon. Follow @ucsbsep on Instagram for updates — we'll notify applicants of interview dates after applications close." },
     { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
     { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community." },
     { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions." },
@@ -50,39 +50,39 @@ const defaultRecruitmentContent = {
 
 const RECRUITMENT_EVENTS = [
   {
-    date: "April 6, 2026",
+    date: "October 5, 2026",
     title: "Brotherhood Night",
     time: "",
     location: "",
     description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting.",
   },
   {
-    date: "April 7, 2026",
+    date: "October 6, 2026",
     title: "Info Night",
     time: "",
     location: "",
     description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like.",
   },
   {
-    date: "April 8, 2026",
+    date: "October 7, 2026",
     title: "Alumni Panel + Application Workshop",
     time: "",
     location: "",
     description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application.",
   },
   {
-    date: "April 9, 2026",
+    date: "October 8, 2026",
     title: "Shark Tank Night",
     time: "",
     location: "",
     description: "Pitch your ideas and show us your entrepreneurial spirit.",
   },
   {
-    date: "April 9, 2026",
+    date: "Coming Soon",
     title: "Applications Due",
     time: "",
     location: "",
-    description: "Submit your application by end of day. Info on @ucsbsep on Instagram.",
+    description: "Application deadline and form will be announced soon. Follow @ucsbsep on Instagram for updates.",
   },
 ];
 
@@ -105,7 +105,7 @@ const FAQ = [
   },
   {
     q: "When is the application deadline?",
-    a: "Applications for Spring 2026 recruitment close on April 9, 2026 at 11:59. We'll notify applicants of interview dates shortly after.",
+    a: "The application deadline for Fall 2026 recruitment is coming soon. Follow @ucsbsep on Instagram for updates — we'll notify applicants of interview dates after applications close.",
   },
   {
     q: "What happens after I apply?",
@@ -286,7 +286,7 @@ export default function Recruitment() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href={content.hero.cta_primary_href}
-              target="_blank"
+              target={content.hero.cta_primary_href.startsWith("#") ? undefined : "_blank"}
               rel="noopener noreferrer"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
@@ -407,11 +407,11 @@ export default function Recruitment() {
             Ready to Join?
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Applications for Spring 2026 are now open. Submit your application and attend our recruitment events to learn more about Sigma Eta Pi.
+            Fall 2026 recruitment kicks off week 2 of fall quarter. Attend our recruitment events to learn more about Sigma Eta Pi — application details coming soon.
           </p>
           <a
             href={content.hero.cta_primary_href}
-            target="_blank"
+            target={content.hero.cta_primary_href.startsWith("#") ? undefined : "_blank"}
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
