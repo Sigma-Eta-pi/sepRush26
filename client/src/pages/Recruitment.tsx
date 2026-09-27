@@ -26,10 +26,10 @@ const defaultRecruitmentContent = {
     title: "Fall 2026 Events",
   },
   events: [
-    { date: "October 5, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
-    { date: "October 6, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
-    { date: "October 7, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
-    { date: "October 8, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
+    { date: "October 4, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
+    { date: "October 5, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
+    { date: "October 6, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
+    { date: "October 7, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
     { date: "Coming Soon", title: "Applications Due", time: "", location: "", description: "Application deadline and form will be announced soon. Follow @ucsbsep on Instagram for updates." },
   ],
   faq_section: {
