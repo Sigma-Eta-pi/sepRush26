@@ -34,7 +34,7 @@ const defaultRecruitmentContent = {
     { date: "October 5, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
     { date: "October 6, 2026", title: "Alumni Panel + Application Workshop", time: "", location: "", description: "Hear from SEP alumni at Google, Amazon, Deloitte, and more. Get help with your application." },
     { date: "October 7, 2026", title: "Shark Tank Night", time: "", location: "", description: "Pitch your ideas and show us your entrepreneurial spirit." },
-    { date: "Coming Soon", title: "Applications Due", time: "", location: "", description: "Application deadline and form will be announced soon. Follow @ucsbsep on Instagram for updates." },
+    { date: "Fall 2026", title: "Apply Now", time: "", location: "", description: "The Fall 2026 application is open. Submit your application using the form below.", href: APPLICATION_FORM_URL },
   ],
   faq_section: {
     label: "Questions?",
@@ -45,14 +45,23 @@ const defaultRecruitmentContent = {
     { q: "Do I need to be a business major to join?", a: "No! Sigma Eta Pi welcomes students from all majors. We believe diversity of thought and background strengthens our community. Whether you're an engineer, designer, marketer, or anything else, you belong here." },
     { q: "What is the time commitment?", a: "We understand you're busy. Most members commit 5-10 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities." },
     { q: "Is there a membership fee?", a: "Yes, there are membership dues to support chapter operations, events, and resources. We work to keep costs reasonable and offer payment plans if needed. Contact us for specific details." },
-    { q: "When is the application deadline?", a: "The application deadline for Fall 2026 recruitment is coming soon. Follow @ucsbsep on Instagram for updates — we'll notify applicants of interview dates after applications close." },
+    { q: "When is the application deadline?", a: "The Fall 2026 application is open now. Apply using the form on this page, and follow @ucsbsep on Instagram for deadline updates." },
     { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
     { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community." },
     { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions." },
   ],
 };
 
-const RECRUITMENT_EVENTS = [
+type RecruitmentEvent = {
+  date: string;
+  title: string;
+  time: string;
+  location: string;
+  description: string;
+  href?: string;
+};
+
+const RECRUITMENT_EVENTS: RecruitmentEvent[] = [
   {
     date: "October 5, 2026",
     title: "Brotherhood Night",
@@ -82,11 +91,12 @@ const RECRUITMENT_EVENTS = [
     description: "Pitch your ideas and show us your entrepreneurial spirit.",
   },
   {
-    date: "Coming Soon",
-    title: "Applications Due",
+    date: "Fall 2026",
+    title: "Apply Now",
     time: "",
     location: "",
-    description: "Application deadline and form will be announced soon. Follow @ucsbsep on Instagram for updates.",
+    description: "The Fall 2026 application is open. Submit your application using the form below.",
+    href: APPLICATION_FORM_URL,
   },
 ];
 
@@ -109,7 +119,7 @@ const FAQ = [
   },
   {
     q: "When is the application deadline?",
-    a: "The application deadline for Fall 2026 recruitment is coming soon. Follow @ucsbsep on Instagram for updates — we'll notify applicants of interview dates after applications close.",
+    a: "The Fall 2026 application is open now. Apply using the form on this page, and follow @ucsbsep on Instagram for deadline updates.",
   },
   {
     q: "What happens after I apply?",
@@ -126,7 +136,7 @@ const FAQ = [
 ];
 
 function TimelineItem({ event, index, isLast }: {
-  event: typeof RECRUITMENT_EVENTS[number]; index: number; isLast: boolean;
+  event: RecruitmentEvent; index: number; isLast: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -143,6 +153,12 @@ function TimelineItem({ event, index, isLast }: {
   }, []);
 
   const isLeft = index % 2 === 0;
+  const isApplicationEvent = /^(applications?\s+(due|deadline)|apply now)$/i.test(event.title.trim());
+  const eventDate = isApplicationEvent && /coming soon/i.test(event.date) ? "Fall 2026" : event.date;
+  const eventTitle = isApplicationEvent ? "Apply Now" : event.title;
+  const eventDescription = isApplicationEvent
+    ? "The Fall 2026 application is open. Submit your application using the form below."
+    : event.description;
 
   return (
     <div
@@ -176,7 +192,7 @@ function TimelineItem({ event, index, isLast }: {
               color: "#05006C",
             }}
           >
-            {event.date}
+            {eventDate}
           </div>
           <h3
             className="text-[#05006C] mb-2"
@@ -187,11 +203,21 @@ function TimelineItem({ event, index, isLast }: {
               textTransform: "uppercase",
             }}
           >
-            {event.title}
+            {eventTitle}
           </h3>
           <p className="text-[#0C141A]/70 text-sm mb-3" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            {event.description}
+            {eventDescription}
           </p>
+          {isApplicationEvent && (
+            <a
+              href={event.href ?? APPLICATION_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mb-3 px-5 py-2 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-xs tracking-widest"
+            >
+              Apply Now
+            </a>
+          )}
           <div className="flex flex-col gap-1 text-xs text-[#0C141A]/60" style={{ fontFamily: "'Glacial Indifference', serif" }}>
             <span>{event.time}</span>
             <span>{event.location}</span>
@@ -349,7 +375,7 @@ export default function Recruitment() {
             {/* Vertical timeline line */}
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#05006C]/20 -translate-x-1/2" />
 
-            {(content.events as typeof RECRUITMENT_EVENTS).map((event, i) => (
+            {(content.events as RecruitmentEvent[]).map((event, i) => (
               <TimelineItem key={i} event={event} index={i} isLast={i === (content.events as typeof RECRUITMENT_EVENTS).length - 1} />
             ))}
           </div>
