@@ -10,21 +10,25 @@ import heroBg from "@/images/hero.JPG";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const HERO_BG = heroBg;
+const APPLICATION_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSet_FPSJKMivxONdxktOi_4Wibh9nU0E73LlEo_sq-2BcNKcA/viewform?usp=header";
 
 const defaultRecruitmentContent = {
   hero: {
     title: "Join Our Beta Class",
     badge: "Fall 2026 Recruitment",
     subtitle: "Be part of something from the very beginning. Help us build Sigma Eta Pi's legacy at UCSB.",
-    cta_primary: "APPLICATION COMING SOON",
-    cta_primary_href: "#events",
+    cta_primary: "APPLY NOW",
+    cta_primary_href: APPLICATION_FORM_URL,
     cta_secondary: "VIEW EVENTS",
     bg_image: "",
   },
   events_section: {
     label: "Recruitment Schedule",
     title: "Fall 2026 Events",
+
   },
+
+  
   events: [
     { date: "October 4, 2026", title: "Brotherhood Night", time: "", location: "", description: "Get to know the brothers of Sigma Eta Pi in a relaxed, social setting." },
     { date: "October 5, 2026", title: "Info Night", time: "", location: "", description: "Learn everything about Sigma Eta Pi — our mission, events, and what membership looks like." },
@@ -285,8 +289,8 @@ export default function Recruitment() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={content.hero.cta_primary_href}
-              target={content.hero.cta_primary_href.startsWith("#") ? undefined : "_blank"}
+              href={APPLICATION_FORM_URL}
+              target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
               style={{
@@ -407,11 +411,11 @@ export default function Recruitment() {
             Ready to Join?
           </h2>
           <p className="text-[#0C141A]/70 mb-8" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            Fall 2026 recruitment kicks off week 2 of fall quarter. Attend our recruitment events to learn more about Sigma Eta Pi — application details coming soon.
+            Interested in joining Sigma Eta Pi? Apply now using our Fall 2026 application form.
           </p>
           <a
-            href={content.hero.cta_primary_href}
-            target={content.hero.cta_primary_href.startsWith("#") ? undefined : "_blank"}
+            href={APPLICATION_FORM_URL}
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-[#1B212C] text-[#EEEADE] font-bold rounded-lg transition-all duration-300 hover:bg-[#0C141A] text-sm"
             style={{
