@@ -43,11 +43,11 @@ const defaultRecruitmentContent = {
   faq: [
     { q: "What is Sigma Eta Pi?", a: "Sigma Eta Pi is a co-ed professional business entrepreneurship fraternity dedicated to cultivating innovative, action-oriented leaders. We focus on collaboration, mentorship, and practical entrepreneurial skills." },
     { q: "Do I need to be a business major to join?", a: "No! Sigma Eta Pi welcomes students from all majors. We believe diversity of thought and background strengthens our community. Whether you're an engineer, designer, marketer, or anything else, you belong here." },
-    { q: "What is the time commitment?", a: "We understand you're busy. Most members commit 5-10 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities." },
+    { q: "What is the time commitment?", a: "We understand you're busy. Most members commit 1-5 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities." },
     { q: "Is there a membership fee?", a: "Yes, there are membership dues to support chapter operations, events, and resources. We work to keep costs reasonable and offer payment plans if needed. Contact us for specific details." },
-    { q: "When is the application deadline?", a: "The Fall 2026 application is open now. Apply using the form on this page, and follow @ucsbsep on Instagram for deadline updates." },
-    { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
-    { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community." },
+    { q: "When is the application deadline?", a: "The Fall 2026 application is open now and is due until Wednesday October 7th at 11:59pm. Apply using the form on this page, and follow @ucsbsep on Instagram for deadline updates." },
+    { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to brotherhood night and an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
+    { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well as long as you have at least 2 quarters left at UCSB. Your experience and perspective are valuable to our community." },
     { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions." },
   ],
 };
@@ -111,7 +111,7 @@ const FAQ = [
   },
   {
     q: "What is the time commitment?",
-    a: "We understand you're busy. Most members commit 5-10 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities.",
+    a: "We understand you're busy. Most members commit 1-5 hours per week to chapter activities, events, and professional development. You'll have flexibility to balance your academic and personal responsibilities.",
   },
   {
     q: "Is there a membership fee?",
@@ -119,15 +119,15 @@ const FAQ = [
   },
   {
     q: "When is the application deadline?",
-    a: "The Fall 2026 application is open now. Apply using the form on this page, and follow @ucsbsep on Instagram for deadline updates.",
+    a: "The Fall 2026 application is open now and is due until Wednesday October 7th at 11:59pm.",
   },
   {
     q: "What happens after I apply?",
-    a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP.",
+    a: "After submitting your application, you'll be invited to brotherhood night and an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP.",
   },
   {
     q: "Can I rush if I'm a junior or senior?",
-    a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community.",
+    a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well as long as you have at least 2 quarters left at UCSB.",
   },
   {
     q: "How do I stay updated on recruitment?",
