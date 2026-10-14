@@ -144,6 +144,10 @@ export type State = {
     at: string;
   }[];
   demo: boolean;
+  /** The signed-in person is a chapter admin and may view as other members. */
+  canViewAs?: boolean;
+  /** Set while an admin views as `user`; everything is read-only. */
+  viewingAs?: { viewerId: string; viewerName: string };
   demoRoster?: "chapter";
 };
 export type Page =

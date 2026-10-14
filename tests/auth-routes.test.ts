@@ -164,3 +164,19 @@ it('chapter executive Google login keeps the existing admin ID and role without 
   const denied = await post('google',{credential:'signed-token'},{Cookie:cfg.headers.get('set-cookie')!.split(';')[0]});
   expect(denied.status).toBe(403);
 });
+it('promotes the rostered chapter executive account to admin at sign-in', async () => {
+  const cfg = await fetch(base + '/auth/config'), config = await cfg.json();
+  mocks.verify.mockResolvedValue({getPayload: () => ({sub:'chapter-sub', email:'exec@ucsbsep.org', hd:'ucsbsep.org', email_verified:true, nonce:config.nonce})});
+  mocks.sql.mockImplementation(async (parts: TemplateStringsArray) => {
+    const q = parts.join('?');
+    if (q.includes('SELECT id,email,role')) return [{id:'chapter-id',email:'exec@ucsbsep.org',role:'exec',is_editor:0}];
+    if (q.includes('UPDATE users')) return [{id:'chapter-id'}];
+    if (q.includes('INSERT INTO google_sessions')) return [{token_hash:'hash'}];
+    return [];
+  });
+  const response = await post('google',{credential:'signed-token'},{Cookie:cfg.headers.get('set-cookie')!.split(';')[0]});
+  expect(response.status).toBe(200);
+  expect((await response.json()).user.role).toBe('admin');
+  expect(mocks.sql.mock.calls.some(([parts]: any) => /SET role='admin'/.test(parts.join('?')))).toBe(true);
+  expect(mocks.sql.mock.calls.some(([parts]: any) => /INSERT INTO users/.test(parts.join('?')))).toBe(false);
+});

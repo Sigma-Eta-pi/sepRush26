@@ -9,7 +9,11 @@ import {
   sessionToken,
   sameOrigin,
 } from "../middleware/auth.js";
-import { allowedLoginEmail, validateGoogleIdentity } from "../google-identity.js";
+import {
+  allowedLoginEmail,
+  chapterExecutiveEmail,
+  validateGoogleIdentity,
+} from "../google-identity.js";
 const router = Router();
 const cookie = {
   httpOnly: true,
@@ -75,6 +79,11 @@ router.post("/google", async (req, res, next) => {
       return;
     }
     const u = matches[0];
+    // The chapter-owned executive account is always a chapter admin.
+    if (chapterExecutiveEmail(identity.email) && u.role !== "admin") {
+      await sql`UPDATE users SET role='admin' WHERE id=${u.id} AND LOWER(email)=${identity.email}`;
+      u.role = "admin";
+    }
     const bound =
       await sql`UPDATE users SET google_sub=${identity.sub}, first_login=0 WHERE id=${u.id} AND LOWER(email)=${identity.email} AND (google_sub IS NULL OR google_sub=${identity.sub}) RETURNING id`;
     if (!bound.length) {

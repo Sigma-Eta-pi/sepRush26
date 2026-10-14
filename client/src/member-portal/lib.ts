@@ -143,6 +143,49 @@ export function strikeBalance(s: State, pledgeId: string) {
       0
     );
 }
+// View as: an admin loads the portal as another member, read-only. Every
+// request to the chapter API carries the member, and writes never leave.
+const viewAsKey = "sep_view_as";
+export const viewAsMember = () =>
+  typeof sessionStorage === "undefined"
+    ? ""
+    : sessionStorage.getItem(viewAsKey) || "";
+export function setViewAsMember(id: string) {
+  if (id) sessionStorage.setItem(viewAsKey, id);
+  else sessionStorage.removeItem(viewAsKey);
+}
+export const viewOnlyMessage =
+  "You’re viewing as another member, so nothing can be changed. Exit the view to make changes.";
+if (typeof window !== "undefined" && !(window as any).__sepViewAs) {
+  (window as any).__sepViewAs = true;
+  const send = window.fetch.bind(window);
+  window.fetch = (input, init) => {
+    const id = viewAsMember();
+    const request = input instanceof Request ? input : null;
+    const url = new URL(
+      request ? request.url : String(input),
+      window.location.href
+    );
+    if (
+      !id ||
+      url.origin !== window.location.origin ||
+      !url.pathname.startsWith("/api/") ||
+      url.pathname.startsWith("/api/auth/")
+    )
+      return send(input, init);
+    const method = (init?.method || request?.method || "GET").toUpperCase();
+    if (!["GET", "HEAD"].includes(method))
+      return Promise.resolve(
+        new Response(JSON.stringify({ error: viewOnlyMessage }), {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        })
+      );
+    const headers = new Headers(init?.headers || request?.headers);
+    headers.set("X-SEP-View-As", id);
+    return send(input, { ...init, headers });
+  };
+}
 export async function api<T>(path: string, body?: unknown): Promise<T> {
   const r = await fetch("/api/process/" + path, {
     credentials: "same-origin",

@@ -3,7 +3,7 @@ export const schoolEmail = (email: unknown): email is string =>
   typeof email === "string" &&
   /^[^\s@]+@(ucsb\.edu|umail\.ucsb\.edu)$/i.test(email);
 // The chapter-owned executive login is the only non-UCSB exception.
-// This allows authentication only; existing roster roles still control access.
+// Once rostered, this account is promoted to chapter admin when it signs in.
 export const chapterExecutiveEmail = (email: unknown): email is string =>
   typeof email === "string" && email.toLowerCase() === "exec@ucsbsep.org";
 export const allowedLoginEmail = (email: unknown): email is string =>

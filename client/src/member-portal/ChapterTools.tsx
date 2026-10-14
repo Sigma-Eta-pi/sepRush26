@@ -23,6 +23,13 @@ export const chapterLabels: Record<string, string> = {
 export default function ChapterTools() {
   const { page, state } = useApp(),
     { user } = useAuth();
+  if (state.viewingAs)
+    return (
+      <Empty
+        title="Chapter tools aren’t part of this view"
+        description="Viewing as a member covers the class dashboard. Exit the view to use chapter tools as yourself."
+      />
+    );
   if (!canAccessChapterTools(state.user.role))
     return (
       <Empty

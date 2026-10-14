@@ -12,6 +12,7 @@ import { allowedLoginEmail } from "../google-identity.js";
 import { Router } from "express";
 import { sql } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { viewAsGuard, viewAsId } from "../process/view-as.js";
 import {
   applyAction,
   emptyDocument,
@@ -22,6 +23,8 @@ import {
 import type { User } from "../../client/src/member-portal/types.js";
 const router = Router();
 router.use(requireAuth);
+// Chapter admins can load the portal as another member, read-only.
+router.use(viewAsGuard(req => req.user!.role === "admin"));
 router.use(
   "/directory",
   (req, res, next) => {
@@ -81,7 +84,9 @@ router.use(
   "/profile",
   ownProfileRouter({
     current: async req =>
-      (await roster()).find(user => user.id === req.user!.id && !user.archived),
+      (await roster()).find(
+        user => user.id === (viewAsId(req) || req.user!.id) && !user.archived
+      ),
     members: roster,
     archive: async (id, archived) => {
       await sql`INSERT INTO member_profile_edits(user_id,archived) VALUES(${id},${archived}) ON CONFLICT(user_id) DO UPDATE SET archived=EXCLUDED.archived, updated_at=NOW()`;
@@ -109,14 +114,27 @@ export async function readProcess(): Promise<{
 router.get("/state", async (req, res, next) => {
   try {
     const users = await roster(),
-      u = users.find(x => x.id === req.user!.id);
+      viewing = viewAsId(req),
+      u = users.find(x => x.id === (viewing || req.user!.id));
     if (!u)
       fail(
-        "Your account has not been assigned a member-process role yet.",
-        403
+        viewing
+          ? "That member is no longer in the process."
+          : "Your account has not been assigned a member-process role yet.",
+        viewing ? 404 : 403
       );
     const row = await readProcess();
-    res.json(snapshot(row.data as ProcessDocument, users, u));
+    res.json({
+      ...snapshot(row.data as ProcessDocument, users, u),
+      canViewAs: req.user!.role === "admin",
+      viewingAs: viewing
+        ? {
+            viewerId: req.user!.id,
+            viewerName:
+              users.find(x => x.id === req.user!.id)?.name || req.user!.email,
+          }
+        : undefined,
+    });
   } catch (e) {
     next(e);
   }

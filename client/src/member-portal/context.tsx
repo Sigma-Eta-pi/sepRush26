@@ -14,6 +14,8 @@ export type AppContextValue = {
   openForm: (spec: FormSpec) => void;
   notify: (message: string) => void;
   refresh: () => Promise<void>;
+  /** Admins only: load the portal as this member, read-only. "" exits. */
+  viewAs: (memberId: string) => Promise<void>;
 };
 export const AppContext = createContext<AppContextValue | null>(null);
 export function useApp() {

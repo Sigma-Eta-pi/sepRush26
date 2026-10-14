@@ -45,6 +45,7 @@ function render(
           notify: vi.fn(),
           intent: null,
           refresh: async () => {},
+          viewAs: async () => {},
         },
       },
       React.createElement(Component)

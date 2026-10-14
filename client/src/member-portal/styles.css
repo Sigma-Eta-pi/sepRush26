@@ -5937,3 +5937,66 @@
     font-size: 25px;
   }
 }
+
+/* Admin "view as": a constant reminder that this is someone else's view */
+.sep-portal .view-as-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 40px;
+  padding: 7px 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  background: #b9632f;
+  color: #fff;
+}
+.sep-portal .view-as-bar > div,
+.sep-portal .view-as-bar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sep-portal .view-as-bar strong {
+  font-weight: 600;
+}
+.sep-portal .view-as-bar span {
+  opacity: 0.9;
+}
+.sep-portal .view-as-bar select {
+  appearance: none;
+  max-width: 190px;
+  padding: 4px 8px;
+  border: 1px solid #ffffff66;
+  border-radius: 7px;
+  background: #ffffff1f;
+  color: #fff;
+  font-size: 13px;
+  box-shadow: none;
+}
+.sep-portal .view-as-bar select option,
+.sep-portal .view-as-bar select optgroup {
+  color: #1b212c;
+}
+.sep-portal .view-as-bar button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 7px;
+  background: #fff;
+  color: #8d3b20;
+  font-weight: 600;
+  font-size: 13px;
+}
+@media (max-width: 680px) {
+  .sep-portal .view-as-bar {
+    padding: 8px 16px;
+  }
+  .sep-portal .view-as-bar > div:first-child span {
+    display: none;
+  }
+}

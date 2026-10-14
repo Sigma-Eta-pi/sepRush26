@@ -31,6 +31,8 @@ import {
   GraduationCapIcon,
   ArrowsLeftRightIcon,
   UserCircleIcon,
+  EyeIcon,
+  EyeSlashIcon,
 } from "@phosphor-icons/react";
 import logo from "@/images/logo.png";
 import { useAuth, canEditSite } from "@/contexts/AuthContext";
@@ -66,7 +68,7 @@ export default function Navigation({
   children: ReactNode;
   onSignOut: () => void;
 }) {
-  const { state, page, navigate } = useApp();
+  const { state, page, navigate, openForm, viewAs } = useApp();
   const auth = useAuth();
   const reduce = useReducedMotion();
   const menuDrag = useDragControls();
@@ -472,6 +474,53 @@ export default function Navigation({
               </button>
             </div>
             <div className="workspace-account-links">
+              {state.viewingAs && (
+                <button
+                  onClick={() => {
+                    setOverlay(null);
+                    void viewAs("");
+                  }}
+                >
+                  Exit view · back to {state.viewingAs.viewerName}
+                  <EyeSlashIcon size={18} />
+                </button>
+              )}
+              {state.canViewAs && !state.viewingAs && (
+                <button
+                  onClick={() => {
+                    setOverlay(null);
+                    openForm({
+                      title: "View as a member",
+                      description:
+                        "See the dashboard exactly as they do. It’s view only: you can’t change anything on their behalf.",
+                      fields: [
+                        {
+                          name: "memberId",
+                          label: "Member",
+                          type: "select",
+                          options: (["pledge", "active", "master"] as const)
+                            .flatMap(role =>
+                              state.users
+                                .filter(
+                                  u => u.role === role && u.id !== state.user.id
+                                )
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                            )
+                            .map(u => ({
+                              value: u.id,
+                              label: `${u.name} · ${roleName(u.role)}`,
+                            })),
+                        },
+                      ],
+                      submit: "View as this member",
+                      onSubmit: v => viewAs(v.memberId),
+                    });
+                  }}
+                >
+                  View as a member
+                  <EyeIcon size={18} />
+                </button>
+              )}
               <button
                 className="workspace-account-profile"
                 onClick={() => {

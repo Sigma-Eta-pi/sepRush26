@@ -10,6 +10,7 @@ import {
 import { mcpHttpRouter } from "../server/mcp/http";
 // Explicit loopback-only sample preview. No database connection and no production auth bypass.
 import express from "express";
+import { viewAsGuard, viewAsId } from "../server/process/view-as";
 import cookieParser from "cookie-parser";
 import { createServer as createViteServer } from "vite";
 import { randomBytes } from "node:crypto";
@@ -81,10 +82,21 @@ const save = () => {
 };
 save();
 const sessions = new Map<string, string>();
-const actor = (req: express.Request) =>
+const signedIn = (req: express.Request) =>
   workspace.users.find(
     (u: any) => u.id === sessions.get(req.cookies.sep_preview) && !u.archived
   );
+// In the demo every pledge master stands in for a chapter admin.
+app.use(
+  "/api",
+  viewAsGuard(req => signedIn(req)?.role === "master")
+);
+const actor = (req: express.Request) =>
+  viewAsId(req)
+    ? workspace.users.find(
+        (u: any) => u.id === viewAsId(req) && !u.archived
+      )
+    : signedIn(req);
 const authData = (u: any, token: string) => ({
   user: {
     id: u.id,
@@ -296,6 +308,10 @@ app.use("/api", (req, res, next) => {
 app.get("/api/process/state", (req, res) =>
   res.json({
     ...snapshot(workspace.doc, workspace.users, actor(req), true),
+    canViewAs: signedIn(req)?.role === "master",
+    viewingAs: viewAsId(req)
+      ? { viewerId: signedIn(req)?.id, viewerName: signedIn(req)?.name }
+      : undefined,
     submissions: snapshot(
       workspace.doc,
       workspace.users,

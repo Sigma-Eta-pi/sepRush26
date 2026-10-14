@@ -14,10 +14,15 @@ import "./navigation.css";
 import Navigation from "./components/Navigation";
 import ProfileWelcome from "./components/ProfileWelcome";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircleIcon, CaretDownIcon, XIcon } from "@phosphor-icons/react";
+import {
+  CheckCircleIcon,
+  CaretDownIcon,
+  EyeIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { AppContext } from "./context";
 import { Button, FormDialog } from "./components/ui";
-import { api, roleName } from "./lib";
+import { api, roleName, setViewAsMember, viewAsMember } from "./lib";
 import type { FormSpec, Intent, Page, State } from "./types";
 import Today from "./pages/Today";
 import Calendar from "./pages/Calendar";
@@ -42,7 +47,15 @@ export default function App() {
   const [profileLater, setProfileLater] = useState("");
   const refresh = useCallback(async () => {
     const sequence = ++refreshSequence.current;
-    const snapshot = await api<State>("state");
+    let snapshot: State;
+    try {
+      snapshot = await api<State>("state");
+    } catch (e) {
+      // The viewed member left, or this account can no longer view as others.
+      if (!viewAsMember()) throw e;
+      setViewAsMember("");
+      snapshot = await api<State>("state");
+    }
     // A slow poll must never overwrite a newer mutation or role switch.
     if (sequence === refreshSequence.current) setState(snapshot);
   }, []);
@@ -82,6 +95,19 @@ export default function App() {
     if (target) setVisit(n => n + 1);
     setLocation(dashboardPath(p));
     window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  async function viewAs(memberId: string) {
+    const previous = viewAsMember();
+    refreshSequence.current++;
+    setViewAsMember(memberId);
+    setForm(null);
+    try {
+      await refresh();
+      navigate("today");
+    } catch (e) {
+      setViewAsMember(previous);
+      setToast((e as Error).message);
+    }
   }
   async function act(
     type: string,
@@ -144,6 +170,7 @@ export default function App() {
             openForm: setForm,
             refresh,
             notify: setToast,
+            viewAs,
           }}
         >
           <a
@@ -192,6 +219,7 @@ export default function App() {
                     value={s.user.id}
                     onChange={async e => {
                       refreshSequence.current++;
+                      setViewAsMember("");
                       setSwitching(true);
                       try {
                         await auth.previewLogin(e.target.value);
@@ -219,6 +247,51 @@ export default function App() {
                   </select>
                   <CaretDownIcon size={12} />
                 </label>
+              </div>
+            )}
+            {s.viewingAs && (
+              <div className="view-as-bar" role="status">
+                <div>
+                  <EyeIcon size={16} weight="bold" />
+                  <strong>
+                    Viewing as {s.user.name} · {roleName(s.user.role)}
+                  </strong>
+                  <span>
+                    View only. This is what they see; nothing here can be
+                    changed.
+                  </span>
+                </div>
+                <div>
+                  <label>
+                    <span>Switch to</span>
+                    <select
+                      aria-label="View as another member"
+                      value={s.user.id}
+                      onChange={e => void viewAs(e.target.value)}
+                    >
+                      {["pledge", "active", "master"].map(role => (
+                        <optgroup key={role} label={roleName(role)}>
+                          {s.users
+                            .filter(
+                              u =>
+                                u.role === role &&
+                                u.id !== s.viewingAs?.viewerId
+                            )
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map(u => (
+                              <option key={u.id} value={u.id}>
+                                {u.name}
+                              </option>
+                            ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                    <CaretDownIcon size={12} />
+                  </label>
+                  <button onClick={() => void viewAs("")}>
+                    Exit view <XIcon size={13} />
+                  </button>
+                </div>
               </div>
             )}
             <main
