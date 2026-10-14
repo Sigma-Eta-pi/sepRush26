@@ -44,7 +44,7 @@ const defaultRecruitmentContent = {
     { q: "When is the application deadline?", a: "The application deadline for Fall 2026 recruitment is coming soon. Follow @ucsbsep on Instagram for updates — we'll notify applicants of interview dates after applications close." },
     { q: "What happens after I apply?", a: "After submitting your application, you'll be invited to an interview with members of the executive board. We'll learn about your goals, interests, and why you want to join SEP." },
     { q: "Can I rush if I'm a junior or senior?", a: "Absolutely! While we welcome freshmen and sophomores, we encourage upperclassmen to apply as well. Your experience and perspective are valuable to our community." },
-    { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions." },
+    { q: "How do I stay updated on recruitment?", a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Matthew Chang, with any questions." },
   ],
 };
 
@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     q: "How do I stay updated on recruitment?",
-    a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Kate Heidenga, with any questions.",
+    a: "Follow us on Instagram @ucsbsep and check back here for the latest updates. You can also reach out to our VP of Recruitment, Matthew Chang, with any questions.",
   },
 ];
 
@@ -198,6 +198,12 @@ function TimelineItem({ event, index, isLast }: {
   );
 }
 
+// Current recruitment contact — update when the role changes hands
+const RECRUITMENT_CHAIR = {
+  name: "Matthew Chang",
+  linkedin: "https://www.linkedin.com/in/matthewzchang",
+};
+
 function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className="border-2 border-[#1B212C]">
@@ -222,7 +228,21 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
       {isOpen && (
         <div className="px-6 py-4 bg-[#FFFFFF] border-t-2 border-[#1B212C]">
           <p className="text-[#0C141A]/70 text-sm leading-relaxed" style={{ fontFamily: "'Glacial Indifference', serif" }}>
-            {a}
+            {a.split(RECRUITMENT_CHAIR.name).map((part, idx, arr) => (
+              <span key={idx}>
+                {part}
+                {idx < arr.length - 1 && (
+                  <a
+                    href={RECRUITMENT_CHAIR.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-[#05006C] hover:text-[#1B212C] transition-colors"
+                  >
+                    {RECRUITMENT_CHAIR.name}
+                  </a>
+                )}
+              </span>
+            ))}
           </p>
         </div>
       )}

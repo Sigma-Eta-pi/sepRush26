@@ -36,15 +36,21 @@ router.get('/', optionalAuth, async (req, res) => {
   // Authenticated members (logged in) can see PNM profiles in the dashboard.
   // Unauthenticated public requests (MeetUs page) exclude PNMs.
   const rows = req.user
-    ? await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.email != 'exec@ucsbsep.com'`
-    : await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id WHERE u.role NOT IN ('admin', 'pnm') AND u.email != 'exec@ucsbsep.com'`;
-  res.json(rows.map(rowToProfile));
+    ? await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id LEFT JOIN member_profile_edits e ON e.user_id = u.id WHERE COALESCE(e.archived,FALSE) = FALSE AND u.email != 'exec@ucsbsep.com'`
+    : await sql`SELECT p.*, u.role FROM profiles p JOIN users u ON u.id = p.user_id LEFT JOIN member_profile_edits e ON e.user_id = u.id WHERE COALESCE(e.archived,FALSE) = FALSE AND u.role NOT IN ('admin', 'pnm', 'pledge') AND u.email != 'exec@ucsbsep.com'`;
+  res.json(rows.map(r => { const p = rowToProfile(r); if(!req.user || ['pnm','pledge'].includes(req.user.role)) return {...p, birthday:undefined, phone:undefined}; return p; }));
 });
 
 router.get('/:userId', requireAuth, async (req, res) => {
-  const rows = await sql`SELECT * FROM profiles WHERE user_id = ${req.params.userId} LIMIT 1`;
+  if(req.user!.role==='pnm' && req.params.userId!==req.user!.id){res.status(403).json({error:'Member access required.'});return;}
+  const rows = await sql`SELECT p.* FROM profiles p LEFT JOIN member_profile_edits e ON e.user_id = p.user_id WHERE p.user_id = ${req.params.userId} AND COALESCE(e.archived,FALSE) = FALSE LIMIT 1`;
   if (rows.length === 0) { res.status(404).json({ error: 'Profile not found' }); return; }
-  res.json(rowToProfile(rows[0]));
+  const profile = rowToProfile(rows[0]);
+  if (req.user!.role === 'pledge' && req.params.userId !== req.user!.id) {
+    profile.phone = undefined;
+    profile.birthday = undefined;
+  }
+  res.json(profile);
 });
 
 router.post('/', requireAuth, async (req, res) => {

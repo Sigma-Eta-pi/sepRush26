@@ -1,121 +1,195 @@
-import { Router } from 'express';
-import bcrypt from 'bcryptjs';
-import { nanoid } from 'nanoid';
-import { sql } from '../db.js';
-import { signToken, requireAuth, requireAdmin } from '../middleware/auth.js';
-import { sendWelcomeEmail } from '../email.js';
-import type { UserRole } from '../types.js';
-
+import { Router } from "express";
+import { randomBytes, randomUUID } from "node:crypto";
+import { OAuth2Client } from "google-auth-library";
+import { sql } from "../db.js";
+import {
+  requireAdmin,
+  requireAuth,
+  sessionHash,
+  sessionToken,
+  sameOrigin,
+} from "../middleware/auth.js";
+import { allowedLoginEmail, validateGoogleIdentity } from "../google-identity.js";
 const router = Router();
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const VALID_ROLES: UserRole[] = ['active', 'exec', 'admin', 'pnm'];
-
-const loginAttempts = new Map<string, { count: number; resetAt: number }>();
-function checkRateLimit(ip: string) {
-  const now = Date.now();
-  const entry = loginAttempts.get(ip);
-  if (!entry || entry.resetAt < now) { loginAttempts.set(ip, { count: 1, resetAt: now + 60_000 }); return true; }
-  if (entry.count >= 10) return false;
-  entry.count++;
-  return true;
-}
-
-router.post('/login', async (req, res) => {
-  const ip = req.ip || req.socket.remoteAddress || 'unknown';
-  if (!checkRateLimit(ip)) { res.status(429).json({ error: 'Too many login attempts. Try again in a minute.' }); return; }
-
-  const { email, password } = req.body;
-  if (!email || !password) { res.status(400).json({ error: 'Email and password required' }); return; }
-
-  const rows = await sql`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
-  const user = rows[0];
-  if (!user) { res.status(401).json({ error: 'Invalid credentials' }); return; }
-
-  const valid = await bcrypt.compare(password, user.password_hash);
-  if (!valid) { res.status(401).json({ error: 'Invalid credentials' }); return; }
-
-  const profileRows = await sql`SELECT name FROM profiles WHERE user_id = ${user.id} LIMIT 1`;
-  const hasProfile = profileRows.length > 0 && !!profileRows[0].name;
-  const firstLogin = user.first_login === 1;
-
-  const token = signToken({ id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 });
+const cookie = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
+const client = new OAuth2Client();
+router.use(sameOrigin);
+router.get("/config", (_req, res) => {
+  const nonce = randomBytes(24).toString("hex");
+  res.cookie("sep_google_nonce", nonce, { ...cookie, maxAge: 10 * 60 * 1000 });
   res.json({
-    token,
-    user: { id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 },
-    needsOnboarding: firstLogin || !hasProfile,
-    firstLogin,
+    clientId: process.env.GOOGLE_CLIENT_ID || null,
+    nonce,
+    preview: false,
   });
 });
-
-router.get('/me', requireAuth, (req, res) => {
-  res.json(req.user);
-});
-
-// Admin creates user — sends welcome email with set-password link
-router.post('/register', requireAdmin, async (req, res) => {
-  const { email, role } = req.body;
-  if (!email || !role) { res.status(400).json({ error: 'Email and role required' }); return; }
-  if (!EMAIL_RE.test(email)) { res.status(400).json({ error: 'Invalid email format' }); return; }
-  if (!VALID_ROLES.includes(role)) { res.status(400).json({ error: 'Invalid role' }); return; }
-
-  const existing = await sql`SELECT id FROM users WHERE email = ${email} LIMIT 1`;
-  if (existing.length > 0) { res.status(400).json({ error: 'Email already exists' }); return; }
-
-  const id = nanoid();
-  const now = new Date().toISOString();
-  const tempHash = await bcrypt.hash(nanoid(32), 10);
-  await sql`INSERT INTO users (id, email, password_hash, role, created_at, first_login) VALUES (${id}, ${email.trim()}, ${tempHash}, ${role}, ${now}, 1)`;
-
-  const token = nanoid(48);
-  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-  await sql`INSERT INTO password_reset_tokens (id, user_id, token, expires_at, used) VALUES (${nanoid()}, ${id}, ${token}, ${expiresAt}, 0)`;
-
-  try { await sendWelcomeEmail(email.trim(), token); } catch (e) { console.error('Failed to send welcome email:', e); }
-
-  res.json({ user: { id, email: email.trim(), role, createdAt: now }, inviteSent: true });
-});
-
-router.get('/reset-password/:token', async (req, res) => {
-  const rows = await sql`
-    SELECT prt.*, u.email FROM password_reset_tokens prt
-    JOIN users u ON u.id = prt.user_id
-    WHERE prt.token = ${req.params.token} AND prt.used = 0
-    LIMIT 1
-  `;
-  if (rows.length === 0) { res.status(400).json({ error: 'Invalid or expired link' }); return; }
-  if (new Date(rows[0].expires_at) < new Date()) { res.status(400).json({ error: 'Link has expired' }); return; }
-  res.json({ valid: true, email: rows[0].email });
-});
-
-// Set new password via email token — also clears first_login
-router.post('/reset-password', async (req, res) => {
-  const { token, password } = req.body;
-  if (!token || !password) { res.status(400).json({ error: 'Token and password required' }); return; }
-  if (typeof password !== 'string' || password.length < 8) { res.status(400).json({ error: 'Password must be at least 8 characters' }); return; }
-
-  const rows = await sql`SELECT * FROM password_reset_tokens WHERE token = ${token} AND used = 0 LIMIT 1`;
-  if (rows.length === 0) { res.status(400).json({ error: 'Invalid or expired link' }); return; }
-  if (new Date(rows[0].expires_at) < new Date()) { res.status(400).json({ error: 'Link has expired' }); return; }
-
-  const hash = await bcrypt.hash(password, 10);
-  await sql`UPDATE users SET password_hash = ${hash}, first_login = 0 WHERE id = ${rows[0].user_id}`;
-  await sql`UPDATE password_reset_tokens SET used = 1 WHERE id = ${rows[0].id}`;
-
-  const userRows = await sql`SELECT id, email, role, is_editor FROM users WHERE id = ${rows[0].user_id} LIMIT 1`;
-  const user = userRows[0];
-  const authToken = signToken({ id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 });
-  res.json({ success: true, token: authToken, user: { id: user.id, email: user.email, role: user.role, is_editor: user.is_editor === 1 } });
-});
-
-// Change password while logged in (first-login flow) — clears first_login flag
-router.post('/change-password', requireAuth, async (req, res) => {
-  const { newPassword } = req.body;
-  if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
-    res.status(400).json({ error: 'Password must be at least 8 characters' }); return;
+router.post("/google", async (req, res, next) => {
+  try {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      res
+        .status(503)
+        .json({ error: "Google sign-in is awaiting chapter setup." });
+      return;
+    }
+    if (
+      typeof req.body.credential !== "string" ||
+      req.body.credential.length > 12000
+    ) {
+      res.status(400).json({ error: "Missing Google credential." });
+      return;
+    }
+    let identity;
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.credential,
+        audience: clientId,
+      });
+      identity = validateGoogleIdentity(
+        ticket.getPayload(),
+        req.cookies?.sep_google_nonce
+      );
+    } catch (e) {
+      res.status(401).json({
+        error:
+          e instanceof Error && e.message.startsWith("Use your")
+            ? e.message
+            : "Unable to verify this Google sign-in. Refresh and try again.",
+      });
+      return;
+    }
+    res.clearCookie("sep_google_nonce", cookie);
+    // Exact, verified email matching preserves existing IDs without guessing school aliases.
+    const matches =
+      await sql`SELECT id,email,role,is_editor,google_sub FROM users WHERE LOWER(email)=${identity.email}`;
+    if (matches.length !== 1) {
+      res.status(403).json({
+        error:
+          "Your Google account is not on the chapter roster yet. Ask a chapter administrator to add this exact Google email.",
+      });
+      return;
+    }
+    const u = matches[0];
+    const bound =
+      await sql`UPDATE users SET google_sub=${identity.sub}, first_login=0 WHERE id=${u.id} AND LOWER(email)=${identity.email} AND (google_sub IS NULL OR google_sub=${identity.sub}) RETURNING id`;
+    if (!bound.length) {
+      res.status(403).json({
+        error:
+          "This member account is linked to a different Google identity. Contact a chapter administrator.",
+      });
+      return;
+    }
+    const token = randomBytes(32).toString("hex");
+    const issued =
+      await sql`INSERT INTO google_sessions(token_hash,user_id,expires_at)
+      SELECT ${sessionHash(token)},id,${new Date(Date.now() + 7 * 86400000).toISOString()}::timestamptz
+      FROM users WHERE id=${u.id} AND LOWER(email)=${identity.email} AND google_sub=${identity.sub}
+      RETURNING token_hash`;
+    if (!issued.length) {
+      res
+        .status(409)
+        .json({
+          error:
+            "Your chapter account changed during sign-in. Refresh and try again.",
+        });
+      return;
+    }
+    const profiles =
+      await sql`SELECT name FROM profiles WHERE user_id=${u.id} ORDER BY updated_at DESC LIMIT 1`;
+    res.cookie("sep_google_session", token, {
+      ...cookie,
+      maxAge: 7 * 86400000,
+    });
+    res.json({
+      token,
+      user: {
+        id: u.id,
+        email: u.email,
+        role: u.role,
+        is_editor: !!u.is_editor,
+      },
+      needsOnboarding: !profiles[0]?.name,
+      firstLogin: false,
+    });
+  } catch (e) {
+    next(e);
   }
-  const hash = await bcrypt.hash(newPassword, 10);
-  await sql`UPDATE users SET password_hash = ${hash}, first_login = 0 WHERE id = ${req.user!.id}`;
-  res.json({ success: true });
 });
-
+router.get("/me", requireAuth, async (req, res, next) => {
+  try {
+    const profiles =
+      await sql`SELECT name FROM profiles WHERE user_id=${req.user!.id} ORDER BY updated_at DESC LIMIT 1`;
+    res.json({
+      user: req.user,
+      token: sessionToken(req),
+      needsOnboarding: !profiles[0]?.name,
+      firstLogin: false,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+router.post("/logout", async (req, res, next) => {
+  try {
+    const token = sessionToken(req);
+    if (token)
+      await sql`DELETE FROM google_sessions WHERE token_hash=${sessionHash(token)}`;
+    res.clearCookie("sep_google_session", cookie);
+    res.json({ ok: true });
+  } catch (e) {
+    next(e);
+  }
+});
+router.post("/register", requireAdmin, async (req, res, next) => {
+  try {
+    const email = String(req.body.email || "")
+        .trim()
+        .toLowerCase(),
+      role = req.body.role || "active";
+    if (
+      !allowedLoginEmail(email) ||
+      !["active", "exec", "admin", "pnm", "pledge", "pledge_master"].includes(
+        role
+      )
+    ) {
+      res.status(400).json({ error: "Enter an approved Google email and a valid role." });
+      return;
+    }
+    const existing =
+      await sql`SELECT id FROM users WHERE LOWER(email)=${email}`;
+    if (existing.length) {
+      res.status(409).json({ error: "This email is already registered." });
+      return;
+    }
+    const id = randomUUID();
+    await sql`INSERT INTO users(id,email,password_hash,role,created_at,first_login) VALUES(${id},${email},'google-only',${role},${new Date().toISOString()},0)`;
+    res.status(201).json({
+      id,
+      email,
+      role,
+      message: "Member added. They can sign in with their UCSB Google account.",
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+router.all(
+  [
+    "/login",
+    "/change-password",
+    "/reset-password",
+    "/reset-password/:token",
+    "/validate-reset/:token",
+  ],
+  (_req, res) =>
+    res.status(410).json({
+      error:
+        "Password sign-in has been retired. Sign in with your UCSB Google account.",
+    })
+);
 export default router;

@@ -18,71 +18,72 @@ import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditorPage from "./pages/EditorPage";
+import DashboardSkeleton, { PlainSkeleton } from "./components/DashboardSkeleton";
 
+const Privacy = lazy(() => import("./pages/Privacy"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Onboarding = lazy(() => import("./pages/Onboarding"));
 
-const suspenseFallback = (
-  <div className="min-h-screen bg-[#05006C] flex items-center justify-center">
-    <div className="text-[#EEEADE]">Loading...</div>
-  </div>
-);
+const suspenseFallback = <PlainSkeleton />;
+const dashboardFallback = <DashboardSkeleton />;
 
 function Router() {
   const [location] = useLocation();
   return (
     <motion.div
-        key={location}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-      >
-        <Switch>
-          <Route path={"/"} component={Home} />
-          <Route path={"/about"} component={About} />
-          <Route path={"/meet-us"} component={MeetUs} />
-          <Route path={"/careers"} component={Careers} />
-          <Route path={"/recruitment"} component={Recruitment} />
-          <Route path="/active-login" component={Login} />
-          <Route path="/editor">
-            {() => (
-              <ProtectedRoute>
-                <EditorPage />
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path="/reset-password" component={ResetPassword} />
-          <Route path="/onboarding">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Onboarding />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path="/dashboard">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Dashboard />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path="/dashboard/:rest*">
-            {() => (
-              <ProtectedRoute>
-                <Suspense fallback={suspenseFallback}>
-                  <Dashboard />
-                </Suspense>
-              </ProtectedRoute>
-            )}
-          </Route>
-          <Route path={"/404"} component={NotFound} />
-          <Route component={NotFound} />
-        </Switch>
-      </motion.div>
+      key={location.startsWith("/dashboard") ? "dashboard" : location}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/about"} component={About} />
+        <Route path={"/meet-us"} component={MeetUs} />
+        <Route path={"/careers"} component={Careers} />
+        <Route path={"/recruitment"} component={Recruitment} />
+        <Route path="/privacy"><Suspense fallback={suspenseFallback}><Privacy /></Suspense></Route>
+        <Route path="/login" component={Login} />
+        <Route path="/active-login" component={Login} />
+        <Route path="/editor">
+          {() => (
+            <ProtectedRoute>
+              <EditorPage />
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path="/reset-password" component={ResetPassword} />
+        <Route path="/onboarding">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={suspenseFallback}>
+                <Onboarding />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path="/dashboard">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={dashboardFallback}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path="/dashboard/:rest*">
+          {() => (
+            <ProtectedRoute>
+              <Suspense fallback={dashboardFallback}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRoute>
+          )}
+        </Route>
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </motion.div>
   );
 }
 

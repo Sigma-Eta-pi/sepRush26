@@ -113,3 +113,9 @@ client/public/__manus__/version.json
 .claude/worktrees/editor/
 .vercel
 .gstack/
+
+# Fictional local portal preview data
+.local-preview/
+.private/
+test-results/
+playwright-report/

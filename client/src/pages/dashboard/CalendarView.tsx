@@ -1,3 +1,4 @@
+import { SkeletonRows } from '@/components/DashboardSkeleton';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -30,7 +31,7 @@ const typeColors: Record<CalendarEvent['type'], string> = {
   exec: 'bg-purple-600',
   social: 'bg-blue-500',
   professional: 'bg-green-600',
-  general: 'bg-[#05006C]',
+  general: 'bg-[#203354]',
 };
 
 const typeDot: Record<CalendarEvent['type'], string> = {
@@ -38,7 +39,7 @@ const typeDot: Record<CalendarEvent['type'], string> = {
   exec: 'bg-purple-500',
   social: 'bg-blue-500',
   professional: 'bg-green-500',
-  general: 'bg-[#05006C]',
+  general: 'bg-[#203354]',
 };
 
 const typeBadge: Record<CalendarEvent['type'], string> = {
@@ -46,7 +47,7 @@ const typeBadge: Record<CalendarEvent['type'], string> = {
   exec: 'bg-purple-100 text-purple-700',
   social: 'bg-blue-100 text-blue-700',
   professional: 'bg-green-100 text-green-700',
-  general: 'bg-[#05006C]/10 text-[#05006C]',
+  general: 'bg-[#203354]/10 text-[#203354]',
 };
 
 type EventForm = {
@@ -89,38 +90,38 @@ function FormModal({
         className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[#05006C] font-bold tracking-wider text-sm">{heading}</h3>
-          <button onClick={onClose} className="text-[#05006C]/40 hover:text-[#05006C] transition-colors"><X size={18} /></button>
+          <h3 className="text-[#203354] font-bold tracking-wider text-sm">{heading}</h3>
+          <button onClick={onClose} className="text-[#203354]/40 hover:text-[#203354] transition-colors"><X size={18} /></button>
         </div>
         <div className="space-y-3">
           <input
             placeholder="Title *"
             value={form.title}
             onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40"
           />
           <textarea
             placeholder="Description (optional)"
             value={form.description}
             onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-[80px] resize-none focus:outline-none focus:border-[#05006C]/40"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-[80px] resize-none focus:outline-none focus:border-[#203354]/40"
           />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-[#05006C]/50 text-xs mb-1">Date *</p>
+              <p className="text-[#203354]/50 text-xs mb-1">Date *</p>
               <input type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-3 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40" />
+                className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-3 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40" />
             </div>
             <div>
-              <p className="text-[#05006C]/50 text-xs mb-1">Time</p>
+              <p className="text-[#203354]/50 text-xs mb-1">Time</p>
               <input type="time" value={form.time} onChange={e => setForm(f => ({ ...f, time: e.target.value }))}
-                className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-3 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40" />
+                className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-3 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40" />
             </div>
           </div>
           <input placeholder="Location" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40" />
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40" />
           <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as CalendarEvent['type'] }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] focus:outline-none">
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] focus:outline-none">
             <option value="general">General</option>
             <option value="social">Social</option>
             <option value="professional">Professional</option>
@@ -130,10 +131,10 @@ function FormModal({
         </div>
         <div className="flex gap-2 mt-5">
           <button onClick={onSave} disabled={busy || !form.title || !form.date}
-            className="flex-1 bg-[#05006C] text-[#EEEADE] py-2.5 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#0A0080] transition-colors">
+            className="flex-1 bg-[#203354] text-[#EEEADE] py-2.5 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#0A0080] transition-colors">
             {busy ? 'Saving…' : 'Save Event'}
           </button>
-          <button onClick={onClose} className="px-4 py-2 border border-[#05006C]/20 text-[#05006C]/60 rounded-lg text-sm hover:bg-[#05006C]/5 transition-colors">
+          <button onClick={onClose} className="px-4 py-2 border border-[#203354]/20 text-[#203354]/60 rounded-lg text-sm hover:bg-[#203354]/5 transition-colors">
             Cancel
           </button>
         </div>
@@ -244,8 +245,8 @@ export default function CalendarView() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Calendar size={24} className="text-[#05006C]" />
-          <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">CALENDAR</h1>
+          <Calendar size={24} className="text-[#203354]" />
+          <h1 className="text-[#203354] text-2xl font-bold tracking-widest">CALENDAR</h1>
         </div>
         <div className="flex items-center gap-2">
           {canEdit && (
@@ -253,7 +254,7 @@ export default function CalendarView() {
               onClick={syncGcal}
               disabled={syncing}
               title="Sync Google Calendar"
-              className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 transition-colors disabled:opacity-50"
+              className="border border-[#203354]/20 text-[#203354]/70 px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#203354]/5 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
               <span className="hidden sm:inline">Sync Calendar</span>
@@ -261,7 +262,7 @@ export default function CalendarView() {
           )}
           {canEdit && (
             <button onClick={() => { setNewForm({ ...blank }); setShowNew(true); }}
-              className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#0A0080] transition-colors">
+              className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#0A0080] transition-colors">
               <Plus size={16} /> ADD EVENT
             </button>
           )}
@@ -275,38 +276,38 @@ export default function CalendarView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Month grid — spans 3 cols */}
-        <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden">
+        <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-[#203354]/10 overflow-hidden">
           {/* Nav */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#05006C]/10">
-            <button onClick={() => setView(new Date(yr, mo - 1, 1))} className="p-1.5 rounded-lg hover:bg-[#05006C]/5 text-[#05006C]/50 hover:text-[#05006C] transition-colors">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#203354]/10">
+            <button onClick={() => setView(new Date(yr, mo - 1, 1))} className="p-1.5 rounded-lg hover:bg-[#203354]/5 text-[#203354]/50 hover:text-[#203354] transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <span className="text-[#05006C] font-bold tracking-widest text-sm">{monthLabel.toUpperCase()}</span>
-            <button onClick={() => setView(new Date(yr, mo + 1, 1))} className="p-1.5 rounded-lg hover:bg-[#05006C]/5 text-[#05006C]/50 hover:text-[#05006C] transition-colors">
+            <span className="text-[#203354] font-bold tracking-widest text-sm">{monthLabel.toUpperCase()}</span>
+            <button onClick={() => setView(new Date(yr, mo + 1, 1))} className="p-1.5 rounded-lg hover:bg-[#203354]/5 text-[#203354]/50 hover:text-[#203354] transition-colors">
               <ChevronRight size={20} />
             </button>
           </div>
 
           {/* DOW headers */}
-          <div className="grid grid-cols-7 border-b border-[#05006C]/10">
+          <div className="grid grid-cols-7 border-b border-[#203354]/10">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-              <div key={d} className="text-center text-[#05006C]/40 text-xs font-bold tracking-wider py-2.5">{d}</div>
+              <div key={d} className="text-center text-[#203354]/40 text-xs font-bold tracking-wider py-2.5">{d}</div>
             ))}
           </div>
 
           {/* Cells */}
           <div className="grid grid-cols-7">
             {cells.map((day, i) => {
-              if (!day) return <div key={i} className="min-h-[100px] border-b border-r border-[#05006C]/5 bg-[#F5F3EE]/40" />;
+              if (!day) return <div key={i} className="min-h-[100px] border-b border-r border-[#203354]/5 bg-[#F5F3EE]/40" />;
               const ds = `${yr}-${String(mo + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
               const evs = byDate[ds] || [];
               const isToday = ds === todayStr;
               const isSel = ds === selected;
               return (
                 <button key={i} onClick={() => setSelected(ds)}
-                  className={`min-h-[100px] border-b border-r border-[#05006C]/5 p-1.5 text-left align-top transition-colors ${isSel ? 'bg-[#05006C]/8' : 'hover:bg-[#05006C]/4'}`}>
+                  className={`min-h-[100px] border-b border-r border-[#203354]/5 p-1.5 text-left align-top transition-colors ${isSel ? 'bg-[#203354]/8' : 'hover:bg-[#203354]/4'}`}>
                   <span className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full
-                    ${isToday ? 'bg-[#05006C] text-[#EEEADE]' : isSel ? 'text-[#05006C]' : 'text-[#05006C]/60'}`}>
+                    ${isToday ? 'bg-[#203354] text-[#EEEADE]' : isSel ? 'text-[#203354]' : 'text-[#203354]/60'}`}>
                     {day}
                   </span>
                   {evs.length > 0 && (
@@ -318,14 +319,14 @@ export default function CalendarView() {
                             {ev.title}
                           </span>
                         ))}
-                        {evs.length > 3 && <span className="text-[8px] text-[#05006C]/30 leading-none">+{evs.length - 3}</span>}
+                        {evs.length > 3 && <span className="text-[8px] text-[#203354]/30 leading-none">+{evs.length - 3}</span>}
                       </div>
                       {/* Mobile: dots */}
                       <div className="sm:hidden flex flex-wrap gap-0.5 mt-0.5">
                         {evs.slice(0, 3).map(ev => (
                           <span key={ev.id} className={`w-1.5 h-1.5 rounded-full ${typeDot[ev.type]}`} />
                         ))}
-                        {evs.length > 3 && <span className="text-[8px] text-[#05006C]/30 leading-none">+{evs.length - 3}</span>}
+                        {evs.length > 3 && <span className="text-[8px] text-[#203354]/30 leading-none">+{evs.length - 3}</span>}
                       </div>
                     </div>
                   )}
@@ -335,49 +336,47 @@ export default function CalendarView() {
           </div>
 
           {/* Legend */}
-          <div className="flex flex-wrap gap-4 px-5 py-3 border-t border-[#05006C]/10">
+          <div className="flex flex-wrap gap-4 px-5 py-3 border-t border-[#203354]/10">
             {(Object.entries(typeDot) as [CalendarEvent['type'], string][]).map(([t, c]) => (
               <div key={t} className="flex items-center gap-1.5">
                 <span className={`w-2 h-2 rounded-full ${c}`} />
-                <span className="text-[10px] text-[#05006C]/50 capitalize">{t}</span>
+                <span className="text-[10px] text-[#203354]/50 capitalize">{t}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Upcoming panel */}
-        <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-[#05006C]/10 overflow-hidden flex flex-col">
-          <div className="px-5 py-4 border-b border-[#05006C]/10 flex items-center gap-2">
-            <Calendar size={15} className="text-[#05006C]/50" />
-            <p className="text-[#05006C] font-bold text-sm tracking-wider">UPCOMING</p>
+        <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-[#203354]/10 overflow-hidden flex flex-col">
+          <div className="px-5 py-4 border-b border-[#203354]/10 flex items-center gap-2">
+            <Calendar size={15} className="text-[#203354]/50" />
+            <p className="text-[#203354] font-bold text-sm tracking-wider">UPCOMING</p>
           </div>
           <div className="p-3 flex-1 overflow-y-auto max-h-[600px]">
             {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="w-5 h-5 border-2 border-[#05006C]/20 border-t-[#05006C] rounded-full animate-spin" />
-              </div>
+              <SkeletonRows count={4} avatar={false} action={false} label="Loading events" />
             ) : upcomingGroups.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center">
-                <Calendar size={28} className="text-[#05006C]/15 mb-2" />
-                <p className="text-[#05006C]/30 text-sm">No upcoming events</p>
+                <Calendar size={28} className="text-[#203354]/15 mb-2" />
+                <p className="text-[#203354]/30 text-sm">No upcoming events</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {upcomingGroups.map(({ ds, evs }) => (
                   <div key={ds}>
-                    <p className="text-[8px] font-bold tracking-widest text-[#05006C]/40 mb-1.5 px-1">{fmtUpcomingDate(ds)}</p>
+                    <p className="text-[8px] font-bold tracking-widest text-[#203354]/40 mb-1.5 px-1">{fmtUpcomingDate(ds)}</p>
                     <div className="space-y-1.5">
                       {evs.map(ev => (
-                        <div key={ev.id} className="rounded-xl border border-[#05006C]/10 overflow-hidden">
+                        <div key={ev.id} className="rounded-xl border border-[#203354]/10 overflow-hidden">
                           <div className={`h-0.5 ${typeColors[ev.type]}`} />
                           <div className="p-2.5">
                             <div className="flex items-start gap-1.5 justify-between">
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1 flex-wrap">
-                                  <p className="font-bold text-[#05006C] text-xs truncate">{ev.title}</p>
+                                  <p className="font-bold text-[#203354] text-xs truncate">{ev.title}</p>
                                   {ev.source === 'gcal' && (
                                     <span title="From Google Calendar">
-                                      <Calendar size={10} className="text-[#05006C]/30 shrink-0" />
+                                      <Calendar size={10} className="text-[#203354]/30 shrink-0" />
                                     </span>
                                   )}
                                 </div>
@@ -387,15 +386,15 @@ export default function CalendarView() {
                                 <div className="flex gap-0.5 shrink-0">
                                   {ev.source !== 'gcal' && (
                                     <button onClick={() => { setEditingId(ev.id); setEditForm({ title: ev.title, description: ev.description || '', date: ev.date?.split('T')[0] || '', time: ev.time || '', location: ev.location || '', type: ev.type }); }}
-                                      className="text-[#05006C]/40 hover:text-[#05006C] p-1 transition-colors"><Pencil size={11} /></button>
+                                      className="text-[#203354]/40 hover:text-[#203354] p-1 transition-colors"><Pencil size={11} /></button>
                                   )}
                                   <button onClick={() => remove(ev.id)} className="text-red-400 hover:text-red-600 p-1 transition-colors"><Trash2 size={11} /></button>
                                 </div>
                               )}
                             </div>
                             <div className="mt-1 space-y-0.5">
-                              {ev.time && <div className="flex items-center gap-1 text-[10px] text-[#05006C]/50"><Clock size={9} />{ev.time}</div>}
-                              {ev.location && <div className="flex items-center gap-1 text-[10px] text-[#05006C]/50 truncate"><MapPin size={9} /><span className="truncate">{ev.location}</span></div>}
+                              {ev.time && <div className="flex items-center gap-1 text-[10px] text-[#203354]/50"><Clock size={9} />{ev.time}</div>}
+                              {ev.location && <div className="flex items-center gap-1 text-[10px] text-[#203354]/50 truncate"><MapPin size={9} /><span className="truncate">{ev.location}</span></div>}
                             </div>
                           </div>
                         </div>

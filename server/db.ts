@@ -1,6 +1,4 @@
 import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
-import { nanoid } from 'nanoid';
 
 export const sql = neon(process.env.DATABASE_URL!);
 
@@ -116,177 +114,37 @@ export async function initDb() {
     )
   `;
 
-  // Separate LinkedIn photo column (never overwritten by user uploads)
-  await sql`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS linkedin_photo_url TEXT`;
-  // Clear any wrongly-migrated data — linkedin_photo_url is only ever written by the admin bulk fetch
-  await sql`UPDATE profiles SET linkedin_photo_url = NULL WHERE linkedin_photo_url IS NOT NULL`;
+  await sql`CREATE TABLE IF NOT EXISTS member_directory_imports (
+    id TEXT PRIMARY KEY, data JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS member_directory_assets (
+    filename TEXT PRIMARY KEY, sha256 TEXT NOT NULL, content_base64 TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
 
-  // Add source + gcal_uid columns to events table
+  // Idempotent, additive schema only. Member/profile migrations require a separate reviewed operation.
+  await sql`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS linkedin_photo_url TEXT`;
   await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'manual'`;
   await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS gcal_uid TEXT`;
-
-  // Add first_login column if it doesn't exist — defaults to 1 so ALL existing users must change password
-  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 1`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_login INTEGER NOT NULL DEFAULT 0`;
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_editor INTEGER NOT NULL DEFAULT 0`;
-  // Migrate any existing role='editor' users: give them is_editor=1 and set base role to 'active'
-  await sql`UPDATE users SET is_editor = 1 WHERE role = 'editor'`;
-  await sql`UPDATE users SET role = 'active' WHERE role = 'editor'`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub_unique ON users(google_sub) WHERE google_sub IS NOT NULL`;
+  await sql`CREATE TABLE IF NOT EXISTS google_sessions (
+    token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at TIMESTAMPTZ NOT NULL
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS member_process_state (
+    id TEXT PRIMARY KEY, version BIGINT NOT NULL DEFAULT 0, data JSONB NOT NULL
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS member_profile_edits (
+    user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    data JSONB NOT NULL DEFAULT '{}', archived BOOLEAN NOT NULL DEFAULT FALSE, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`ALTER TABLE member_profile_edits ADD COLUMN IF NOT EXISTS archived BOOLEAN NOT NULL DEFAULT FALSE`;
+  await sql`CREATE TABLE IF NOT EXISTS mcp_auth_state (
+    key TEXT PRIMARY KEY, value JSONB NOT NULL, expires_at TIMESTAMPTZ NOT NULL
+  )`;
+  await sql`CREATE INDEX IF NOT EXISTS mcp_auth_expiry ON mcp_auth_state(expires_at)`;
 
-  // Fix pledge_class: founding class members (non-exec) were seeded as 'Founder', correct to 'Founding Class'
-  try {
-    await sql`
-      UPDATE profiles SET pledge_class = 'Founding Class'
-      WHERE pledge_class = 'Founder'
-      AND user_id IN (SELECT id FROM users WHERE role NOT IN ('exec', 'admin'))
-    `;
-  } catch (e) { console.error('pledge_class migration failed:', e); }
-
-  // Clear auto-generated linkedin + photos for active members pending onboarding
-  try {
-    await sql`
-      UPDATE profiles SET linkedin = NULL, photo_url = NULL
-      WHERE user_id IN (SELECT id FROM users WHERE first_login = 1 AND role NOT IN ('exec', 'admin'))
-    `;
-  } catch (e) { console.error('linkedin/photo cleanup migration failed:', e); }
-
-  // Dedup: remove duplicate profile rows, keeping the most recently updated per user
-  try {
-    await sql`
-      WITH ranked AS (
-        SELECT id, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC, id DESC) AS rn
-        FROM profiles
-      )
-      DELETE FROM profiles WHERE id IN (SELECT id FROM ranked WHERE rn > 1)
-    `;
-  } catch (e) { console.error('profile dedup migration failed:', e); }
-
-  const defaultClasses = ['Founder', 'Founding Class', 'Alpha Class', 'Beta Class'];
-  for (const name of defaultClasses) {
-    const cid = nanoid();
-    const now = new Date().toISOString();
-    await sql`INSERT INTO classes (id, name, created_at) VALUES (${cid}, ${name}, ${now}) ON CONFLICT (name) DO NOTHING`;
-  }
-
-  // Restore exec account to admin if accidentally changed
-  await sql`UPDATE users SET role = 'admin' WHERE email = 'exec@ucsbsep.org' AND role != 'admin'`;
-
-  // Fix any lowercase 'founder' pledge_class entries
-  await sql`UPDATE profiles SET pledge_class = 'Founder' WHERE pledge_class = 'founder'`;
-
-  // Clear broken LinkedIn CDN photo URLs — these expire and get hotlink-blocked by LinkedIn
-  await sql`UPDATE profiles SET photo_url = NULL WHERE photo_url LIKE 'https://media.licdn.com%'`;
-
-  const admins = await sql`SELECT id FROM users WHERE role = 'admin' LIMIT 1`;
-  if (admins.length === 0) {
-    const hash = await bcrypt.hash('12345!', 10);
-    const adminId = nanoid();
-    const now = new Date().toISOString();
-    await sql`
-      INSERT INTO users (id, email, password_hash, role, created_at, first_login)
-      VALUES (${adminId}, 'exec@ucsbsep.org', ${hash}, 'admin', ${now}, 1)
-      ON CONFLICT (email) DO NOTHING
-    `;
-  }
-
-  // Migrate @ucsbsep.org accounts → correct @ucsb.edu emails (hardcoded from seed data)
-  try {
-    const NAME_TO_EMAIL: Record<string, string> = {
-      'piam parekh':               'jparekh@ucsb.edu',
-      'shiv dutta':                'shiv749@ucsb.edu',
-      'kate heidenga':             'kheidenga@ucsb.edu',
-      'huy nguyen':                'huy_nguyen@ucsb.edu',
-      'sally hu':                  'shu971@ucsb.edu',
-      'julia jimenea':             'juliajimenea@ucsb.edu',
-      'saloni singhal':            'salonisinghal@ucsb.edu',
-      'christina sfatcu':          'sfatcu@ucsb.edu',
-      'vaibhava sri rajesh khanna':'vaibhavasri@ucsb.edu',
-      'matthew vasquez':     'mrvasquez@ucsb.edu',
-      'aaron ramirez':             'aaronramirez@ucsb.edu',
-      'amaya bratcher':            'amayabratcher@ucsb.edu',
-      'ariana tran':               'arianatran@ucsb.edu',
-      'brooke namie bradley':      'bnbradley@ucsb.edu',
-      'clay griffin':              'claygriffin@ucsb.edu',
-      'daysi recinos':             'drecinos@ucsb.edu',
-      'deepthy mukkara':           'deepthymukkara@ucsb.edu',
-      'henry snow':                'hhs@ucsb.edu',
-      'jack larson':               'jacklarson@umail.ucsb.edu',
-      'jean kalaw':                'kalaw@ucsb.edu',
-      'julio bermudez':            'juliobermudez@ucsb.edu',
-      'kai abutin':                'kaiabutin@ucsb.edu',
-      'katelyn nguyen':            'katelyntnguyen@ucsb.edu',
-      'kyra chagarlamudi':         'kcamudi@ucsb.edu',
-      'luke patterson':            'lukepatterson@ucsb.edu',
-      'madigan escobar':           'madigan@ucsb.edu',
-      'mariana franca pires':      'marianafrancapires@ucsb.edu',
-      'mariana frança pires':      'marianafrancapires@ucsb.edu',
-      'matthew chang':             'matthew_chang@ucsb.edu',
-      'nina rossi':                'ninarossi@ucsb.edu',
-      'nirvaan patel':             'nirvaan_patel@ucsb.edu',
-      'noah de la rionda':         'noahdelarionda@ucsb.edu',
-      'om kulkarni':               'om77@ucsb.edu',
-      'preston chung':             'preston_chung@ucsb.edu',
-      'raiyan khan':               'raiyan@ucsb.edu',
-      'rohan kamdar':              'rohankamdar@ucsb.edu',
-      'ryan nguyen':               'r_nguyen@ucsb.edu',
-      'samrita sivakumar':         'smrita@ucsb.edu',
-      'savannah rivera':           'savannah_rivera@ucsb.edu',
-      'sudiksha kaushik':          'skaushik@ucsb.edu',
-      'tyler pintor':              'tpintor@ucsb.edu',
-    };
-
-    const sepUsers = await sql`
-      SELECT u.id AS user_id, u.email, p.id AS profile_id, p.name, p.photo_url, p.linkedin, p.pledge_class
-      FROM users u
-      LEFT JOIN profiles p ON p.user_id = u.id
-      WHERE u.email LIKE '%@ucsbsep.org' AND u.email != 'exec@ucsbsep.org'
-    `;
-
-    for (const sep of sepUsers) {
-      const nameKey = (sep.name ?? '').toLowerCase().trim();
-      const targetEmail = NAME_TO_EMAIL[nameKey];
-
-      if (!targetEmail) {
-        // No mapping found — delete orphan
-        if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
-        await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
-        await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
-        continue;
-      }
-
-      // Check if a @ucsb.edu account already exists for this email
-      const existing = await sql`
-        SELECT u.id AS user_id, p.id AS profile_id, p.photo_url, p.linkedin
-        FROM users u LEFT JOIN profiles p ON p.user_id = u.id
-        WHERE u.email = ${targetEmail} LIMIT 1
-      `;
-
-      if (existing.length > 0) {
-        // Merge: transfer photo/linkedin to existing @ucsb.edu account if missing
-        if (existing[0].profile_id) {
-          await sql`
-            UPDATE profiles SET
-              photo_url   = COALESCE(photo_url,  ${sep.photo_url  ?? null}),
-              linkedin    = COALESCE(linkedin,   ${sep.linkedin   ?? null})
-            WHERE id = ${existing[0].profile_id}
-          `;
-        }
-        if (sep.profile_id) await sql`DELETE FROM profiles WHERE id = ${sep.profile_id}`;
-        await sql`DELETE FROM password_reset_tokens WHERE user_id = ${sep.user_id}`;
-        await sql`DELETE FROM tasks WHERE assigned_to = ${sep.user_id}`;
-        await sql`DELETE FROM users WHERE id = ${sep.user_id}`;
-      } else {
-        // No existing @ucsb.edu account — update the email directly
-        await sql`UPDATE users SET email = ${targetEmail} WHERE id = ${sep.user_id}`;
-      }
-    }
-  } catch (e) { console.error('ucsbsep.org email migration failed:', e); }
-
-  // Ensure the exec service account profile exists but has no personal data
-  await sql`
-    INSERT INTO profiles (id, user_id, name, created_at, updated_at)
-    SELECT ${nanoid()}, u.id, 'Admin Account', ${new Date().toISOString()}, ${new Date().toISOString()}
-    FROM users u
-    WHERE u.email IN ('exec@ucsbsep.org', 'exec@ucsbsep.com')
-    AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.user_id = u.id)
-  `;
 }

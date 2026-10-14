@@ -1,8 +1,9 @@
+import {allowedLoginEmail} from '../google-identity.js';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import { sql } from '../db.js';
 import { requireAdmin, requireExec } from '../middleware/auth.js';
-import { sendPasswordResetEmail, sendBlastEmail } from '../email.js';
+import { sendBlastEmail } from '../email.js';
 
 const LI_UA = 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)';
 
@@ -64,86 +65,100 @@ function parseCSV(text: string): string[][] {
 
 const router = Router();
 
-router.get('/users', requireAdmin, async (_req, res) => {
-  const rows = await sql`
-    SELECT u.id, u.email, u.role, u.is_editor, u.created_at, p.name AS profile_name, p.pledge_class
-    FROM users u
-    LEFT JOIN profiles p ON p.user_id = u.id
-    ORDER BY u.created_at ASC
-  `;
-  res.json(rows.map(u => ({
-    id: u.id,
-    email: u.email,
-    role: u.role,
-    is_editor: u.is_editor === 1,
-    createdAt: u.created_at,
-    name: u.profile_name || null,
-    pledgeClass: u.pledge_class || null,
-  })));
-});
-
-// Update role/email/pledgeClass — no password field exposed to admin
-router.put('/users/:id', requireAdmin, async (req, res) => {
-  const rows = await sql`SELECT id, email, role, is_editor FROM users WHERE id = ${req.params.id} LIMIT 1`;
-  if (rows.length === 0) { res.status(404).json({ error: 'User not found' }); return; }
-
-  const { role, email, is_editor, pledgeClass } = req.body;
-  const u = rows[0];
-
-  if (req.user!.id === req.params.id && role && role !== u.role) {
-    res.status(403).json({ error: 'Cannot change your own role' }); return;
-  }
-  if (role && !['active', 'exec', 'admin', 'pnm'].includes(role)) {
-    res.status(400).json({ error: 'Invalid role' }); return;
-  }
-  if (email && email !== u.email) {
-    const conflict = await sql`SELECT id FROM users WHERE email = ${email} AND id != ${req.params.id} LIMIT 1`;
-    if (conflict.length > 0) { res.status(409).json({ error: 'Email already in use' }); return; }
-  }
-
-  const newRole = role ?? u.role;
-  const newEmail = email?.trim() || u.email;
-  const newIsEditor = typeof is_editor === 'boolean' ? (is_editor ? 1 : 0) : (u.is_editor ?? 0);
-  await sql`UPDATE users SET role = ${newRole}, email = ${newEmail}, is_editor = ${newIsEditor} WHERE id = ${req.params.id}`;
-
-  let newPledgeClass: string | null | undefined;
-  if (pledgeClass !== undefined) {
-    newPledgeClass = pledgeClass?.trim() || null;
-    await sql`UPDATE profiles SET pledge_class = ${newPledgeClass} WHERE user_id = ${req.params.id}`;
-  }
-  res.json({ id: u.id, email: newEmail, role: newRole, is_editor: newIsEditor === 1, pledgeClass: newPledgeClass });
-});
-
-// Send password reset email
-router.post('/users/:id/reset-password', requireAdmin, async (req, res) => {
-  const rows = await sql`SELECT id, email FROM users WHERE id = ${req.params.id} LIMIT 1`;
-  if (rows.length === 0) { res.status(404).json({ error: 'User not found' }); return; }
-  const user = rows[0];
-
-  // Invalidate old tokens
-  await sql`UPDATE password_reset_tokens SET used = 1 WHERE user_id = ${req.params.id} AND used = 0`;
-
-  const token = nanoid(48);
-  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-  await sql`INSERT INTO password_reset_tokens (id, user_id, token, expires_at, used) VALUES (${nanoid()}, ${req.params.id}, ${token}, ${expiresAt}, 0)`;
-
+router.get('/users', requireAdmin, async (req, res, next) => {
   try {
-    await sendPasswordResetEmail(user.email, token);
-    res.json({ success: true, message: `Password reset email sent to ${user.email}` });
-  } catch (e: any) {
-    console.error('Failed to send password reset email:', e);
-    res.status(500).json({ error: 'Failed to send email' });
-  }
+    const includeArchived = req.query.includeArchived === 'true';
+    const rows = await sql`
+      SELECT DISTINCT ON(u.id) u.id, u.email, u.role, u.is_editor, u.created_at,
+        p.name AS profile_name, p.pledge_class, COALESCE(m.archived,FALSE) AS archived
+      FROM users u
+      LEFT JOIN profiles p ON p.user_id = u.id
+      LEFT JOIN member_profile_edits m ON m.user_id = u.id
+      WHERE (${includeArchived} OR COALESCE(m.archived,FALSE)=FALSE)
+      ORDER BY u.id, p.updated_at DESC
+    `;
+    res.json(rows.map(u => ({
+      id: u.id, email: u.email, role: u.role, is_editor: !!u.is_editor,
+      createdAt: u.created_at, name: u.profile_name || null,
+      pledgeClass: u.pledge_class || null, archived: !!u.archived,
+    })));
+  } catch (error) { next(error); }
 });
 
-router.delete('/users/:id', requireAdmin, async (req, res) => {
-  if (req.params.id === req.user!.id) { res.status(403).json({ error: 'Cannot delete yourself' }); return; }
-  await sql`DELETE FROM profiles WHERE user_id = ${req.params.id}`;
-  await sql`DELETE FROM tasks WHERE assigned_to = ${req.params.id}`;
-  await sql`DELETE FROM password_reset_tokens WHERE user_id = ${req.params.id}`;
-  await sql`DELETE FROM users WHERE id = ${req.params.id}`;
-  res.json({ success: true });
+// Identity/permission changes and session revocation commit together.
+router.put('/users/:id', requireAdmin, async (req, res, next) => {
+  try {
+    const rows = await sql`SELECT id, email, role, is_editor FROM users WHERE id = ${req.params.id} LIMIT 1`;
+    if (!rows.length) { res.status(404).json({ error: 'User not found' }); return; }
+    const { role, email, is_editor, pledgeClass } = req.body;
+    const u = rows[0];
+    if (req.user!.id === req.params.id && role && role !== u.role) {
+      res.status(403).json({ error: 'Cannot change your own role' }); return;
+    }
+    if (role !== undefined && !['active', 'exec', 'admin', 'pnm', 'pledge', 'pledge_master'].includes(role)) {
+      res.status(400).json({ error: 'Invalid role' }); return;
+    }
+    if (email !== undefined && (typeof email !== 'string' || !allowedLoginEmail(email.trim()))) {
+      res.status(400).json({ error: 'Use a UCSB email or exec@ucsbsep.org.' }); return;
+    }
+    if (pledgeClass !== undefined && pledgeClass !== null && typeof pledgeClass !== 'string') {
+      res.status(400).json({ error: 'Class must be text.' }); return;
+    }
+    const newRole = role ?? u.role;
+    const newEmail = email?.trim().toLowerCase() || u.email;
+    const newIsEditor = typeof is_editor === 'boolean' ? (is_editor ? 1 : 0) : (u.is_editor ?? 0);
+    const identityChanged = newEmail !== u.email;
+    if (identityChanged) {
+      const conflict = await sql`SELECT id FROM users WHERE LOWER(email) = ${newEmail} AND id != ${req.params.id} LIMIT 1`;
+      if (conflict.length) { res.status(409).json({ error: 'Email already in use' }); return; }
+    }
+    const revoke = identityChanged || newRole !== u.role || newIsEditor !== (u.is_editor ?? 0);
+    const newPledgeClass = pledgeClass === undefined ? undefined : pledgeClass?.trim() || null;
+    await sql.transaction([
+      sql`UPDATE users SET role=${newRole}, email=${newEmail}, is_editor=${newIsEditor},
+        google_sub=CASE WHEN ${identityChanged} THEN NULL ELSE google_sub END
+        WHERE id=${req.params.id}`,
+      ...(revoke ? [
+        sql`DELETE FROM google_sessions WHERE user_id=${req.params.id}`,
+        sql`DELETE FROM mcp_auth_state WHERE value->>'userId'=${req.params.id}`,
+      ] : []),
+      ...(newPledgeClass !== undefined ? [
+        sql`UPDATE profiles SET pledge_class=${newPledgeClass} WHERE user_id=${req.params.id}`,
+      ] : []),
+    ]);
+    res.json({ id: u.id, email: newEmail, role: newRole, is_editor: newIsEditor === 1, pledgeClass: newPledgeClass });
+  } catch (error) { next(error); }
 });
+
+router.post('/users/:id/reset-password', requireAdmin, (_req,res) => {res.status(410).json({error:'Passwords are retired. Members sign in with their UCSB Google account.'});});
+
+async function setMemberArchived(req: any, res: any, next: any, archived: boolean) {
+  try {
+    if (archived && req.params.id === req.user!.id) {
+      res.status(403).json({ error: 'Cannot archive yourself' }); return;
+    }
+    const rows = await sql`SELECT id FROM users WHERE id=${req.params.id} LIMIT 1`;
+    if (!rows.length) { res.status(404).json({ error: 'User not found' }); return; }
+    const audit = JSON.stringify([{ id: nanoid(), actor: req.user!.id,
+      action: archived ? 'profile.archive' : 'profile.restore',
+      subject: archived ? 'Member archived by administrator' : 'Member restored by administrator',
+      at: new Date().toISOString(), source: 'admin' }]);
+    await sql.transaction([
+      sql`INSERT INTO member_profile_edits(user_id,archived) VALUES(${req.params.id},${archived})
+        ON CONFLICT(user_id) DO UPDATE SET archived=EXCLUDED.archived, updated_at=NOW()`,
+      sql`UPDATE member_process_state SET data=jsonb_set(data,'{audit}',${audit}::jsonb || COALESCE(data->'audit','[]'::jsonb)),
+        version=version+1 WHERE id='current'`,
+      ...(archived ? [
+        sql`DELETE FROM google_sessions WHERE user_id=${req.params.id}`,
+        sql`DELETE FROM mcp_auth_state WHERE value->>'userId'=${req.params.id}`,
+      ] : []),
+    ]);
+    res.json({ success: true, archived });
+  } catch (error) { next(error); }
+}
+// Keep the legacy URL compatible, but preserve all IDs, profiles and historical references.
+router.delete('/users/:id', requireAdmin, (req, res, next) => setMemberArchived(req, res, next, true));
+router.post('/users/:id/restore', requireAdmin, (req, res, next) => setMemberArchived(req, res, next, false));
 
 // Email blast — exec or admin
 // recipient: 'actives' | 'pnms' | 'exec' | 'all' | 'individual'
@@ -156,7 +171,7 @@ router.post('/email-blast', requireExec, async (req, res) => {
   const senderRows = await sql`SELECT name FROM profiles WHERE user_id = ${user.id} LIMIT 1`;
   const senderName = senderRows[0]?.name || user.email;
 
-  let rows: { email: string }[];
+  let rows: Record<string, any>[];
   if (recipient === 'individual') {
     if (!recipientId) { res.status(400).json({ error: 'recipientId required for individual send' }); return; }
     rows = await sql`SELECT email FROM users WHERE id = ${recipientId} LIMIT 1`;

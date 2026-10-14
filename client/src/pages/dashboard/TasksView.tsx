@@ -1,3 +1,4 @@
+import { PageSkeleton } from '@/components/DashboardSkeleton';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
@@ -26,7 +27,7 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 }
 
 const STATUS_CONFIG = {
-  pending: { label: 'To Do', icon: Circle, color: 'text-[#05006C]/40', badge: 'bg-[#05006C]/8 text-[#05006C]/60' },
+  pending: { label: 'To Do', icon: Circle, color: 'text-[#203354]/40', badge: 'bg-[#203354]/8 text-[#203354]/60' },
   in_progress: { label: 'In Progress', icon: Clock, color: 'text-blue-500', badge: 'bg-blue-50 text-blue-700' },
   done: { label: 'Done', icon: CheckCircle2, color: 'text-green-500', badge: 'bg-green-50 text-green-700' },
 };
@@ -70,7 +71,7 @@ export default function TasksView() {
 
   const isPrivileged = user?.role === 'exec' || user?.role === 'admin';
 
-  if (loading) return <div className="text-[#05006C]/50 text-center py-20 animate-pulse">Loading tasks...</div>;
+  if (loading) return <PageSkeleton variant="list" label="Loading tasks" />;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
   const pending = tasks.filter(t => t.status === 'pending');
@@ -80,9 +81,9 @@ export default function TasksView() {
   if (tasks.length === 0) {
     return (
       <div className="text-center py-20">
-        <ListTodo size={40} className="text-[#05006C]/20 mx-auto mb-4" />
-        <p className="text-[#05006C]/40 font-medium">No tasks assigned yet</p>
-        {isPrivileged && <p className="text-[#05006C]/30 text-sm mt-1">Create tasks from the Admin Panel</p>}
+        <ListTodo size={40} className="text-[#203354]/20 mx-auto mb-4" />
+        <p className="text-[#203354]/40 font-medium">No tasks assigned yet</p>
+        {isPrivileged && <p className="text-[#203354]/30 text-sm mt-1">Create tasks from the Admin Panel</p>}
       </div>
     );
   }
@@ -90,12 +91,12 @@ export default function TasksView() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <ListTodo size={24} className="text-[#05006C]" />
+        <ListTodo size={24} className="text-[#203354]" />
         <div>
-          <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">
+          <h1 className="text-[#203354] text-2xl font-bold tracking-widest">
             {isPrivileged ? 'ALL TASKS' : 'MY TASKS'}
           </h1>
-          <p className="text-[#05006C]/40 text-xs mt-0.5">{tasks.length} total · {pending.length} pending · {inProgress.length} in progress</p>
+          <p className="text-[#203354]/40 text-xs mt-0.5">{tasks.length} total · {pending.length} pending · {inProgress.length} in progress</p>
         </div>
       </div>
 
@@ -106,7 +107,7 @@ export default function TasksView() {
           { label: 'Done', items: done, status: 'done' as const },
         ].map(group => group.items.length > 0 && (
           <div key={group.status}>
-            <h2 className="text-[#05006C]/50 text-xs font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
+            <h2 className="text-[#203354]/50 text-xs font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
               {(() => { const S = STATUS_CONFIG[group.status]; return <S.icon size={13} className={S.color} />; })()}
               {group.label} ({group.items.length})
             </h2>
@@ -119,13 +120,13 @@ export default function TasksView() {
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`bg-white rounded-xl p-4 border transition-all ${
-                      overdue ? 'border-red-200' : 'border-[#05006C]/8'
+                      overdue ? 'border-red-200' : 'border-[#203354]/8'
                     } ${task.status === 'done' ? 'opacity-60' : ''}`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`font-bold text-sm text-[#05006C] ${task.status === 'done' ? 'line-through' : ''}`}>
+                          <span className={`font-bold text-sm text-[#203354] ${task.status === 'done' ? 'line-through' : ''}`}>
                             {task.title}
                           </span>
                           {overdue && (
@@ -135,15 +136,15 @@ export default function TasksView() {
                           )}
                         </div>
                         {task.description && (
-                          <p className="text-[#05006C]/50 text-xs mt-1 leading-relaxed">{task.description}</p>
+                          <p className="text-[#203354]/50 text-xs mt-1 leading-relaxed">{task.description}</p>
                         )}
                         <div className="flex items-center gap-3 mt-2 flex-wrap">
                           {isPrivileged && task.assignedToName && (
-                            <span className="text-[#05006C]/40 text-xs">→ {task.assignedToName}</span>
+                            <span className="text-[#203354]/40 text-xs">→ {task.assignedToName}</span>
                           )}
-                          <span className="text-[#05006C]/30 text-xs">From {task.assignedByName}</span>
+                          <span className="text-[#203354]/30 text-xs">From {task.assignedByName}</span>
                           {task.dueDate && (
-                            <span className={`text-xs ${overdue ? 'text-red-500 font-medium' : 'text-[#05006C]/30'}`}>
+                            <span className={`text-xs ${overdue ? 'text-red-500 font-medium' : 'text-[#203354]/30'}`}>
                               Due {new Date(task.dueDate).toLocaleDateString()}
                             </span>
                           )}

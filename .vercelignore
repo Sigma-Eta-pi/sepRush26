@@ -1,0 +1,9 @@
+# Chapter-private exports and local fictional records never enter a deployment bundle.
+.private/
+.local-preview/
+artifacts/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example

@@ -56,7 +56,7 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
   const logPath = path.join(LOG_DIR, `${source}.log`);
 
   // Format entries with timestamps
-  const lines = entries.map((entry) => {
+  const lines = entries.map(entry => {
     const ts = new Date().toISOString();
     return `[${ts}] ${JSON.stringify(entry)}`;
   });
@@ -132,7 +132,7 @@ function vitePluginManusDebugCollector(): Plugin {
         }
 
         let body = "";
-        req.on("data", (chunk) => {
+        req.on("data", chunk => {
           body += chunk.toString();
         });
 
@@ -150,11 +150,11 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== "production";
 const plugins = [
   react(),
   tailwindcss(),
-  ...(isDev ? [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()] : []),
+  // Session replay is disabled for authenticated chapter and student data.
 ];
 
 export default defineConfig({
@@ -177,6 +177,14 @@ export default defineConfig({
     strictPort: false, // Will find next available port if 3000 is busy
     host: true,
     proxy: {
+      ...Object.fromEntries(
+        ["/.well-known", "/authorize", "/token", "/register", "/revoke"].map(
+          route => [
+            route,
+            { target: "http://localhost:3456", changeOrigin: true },
+          ]
+        )
+      ),
       "/api": {
         target: "http://localhost:3456",
         changeOrigin: true,
@@ -197,7 +205,7 @@ export default defineConfig({
     ],
     fs: {
       strict: true,
-      deny: ["**/.*"],
+      deny: ["**/.*", "**/.private/**", "**/.local-preview/**"],
     },
   },
 });

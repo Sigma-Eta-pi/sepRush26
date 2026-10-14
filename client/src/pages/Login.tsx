@@ -1,111 +1,254 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useLocation, Link } from 'wouter';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import sepLogo from '@/images/sep-logo.png';
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
-
-export default function Login() {
-  const auth = useAuth();
-  const [, navigate] = useLocation();
-  const [error, setError] = useState('');
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<LoginForm>();
-
-  const onSubmit = async (data: LoginForm) => {
-    try {
-      setError('');
-      const result = await auth.login(data.email, data.password);
-      if (result.needsOnboarding) navigate('/onboarding');
-      else navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
-    }
+import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
+import logo from "@/images/sep-logo.png";
+import chapterPhoto from "@/images/hero.JPG";
+import "./login.css";
+type Config = { clientId: string | null; nonce: string; preview: boolean };
+type GoogleIdentity = {
+  accounts: {
+    id: {
+      initialize: (options: any) => void;
+      renderButton: (element: HTMLElement, options: any) => void;
+    };
   };
-
+};
+const googleIdentity = () => {
+  const candidate = (window as unknown as { google?: GoogleIdentity }).google;
+  return candidate?.accounts?.id ? candidate : undefined;
+};
+export default function Login() {
+  const reduceMotion = useReducedMotion();
+  const resumeMcp = () => {
+    const next = new URLSearchParams(window.location.search).get("next");
+    if (next && /^\/api\/mcp\/consent\?request=[a-f0-9]{64}$/.test(next)) {
+      window.location.assign(next);
+      return true;
+    }
+    return false;
+  };
+  const auth = useAuth(),
+    [, navigate] = useLocation(),
+    button = useRef<HTMLDivElement>(null);
+  const [config, setConfig] = useState<Config | null>(null),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false),
+    [buttonReady, setButtonReady] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/config")
+      .then(r => {
+        if (!r.ok) throw new Error("Sign-in is temporarily unavailable.");
+        return r.json();
+      })
+      .then(c => {
+        if (!cancelled) setConfig(c);
+      })
+      .catch(e => setError(e.message));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  useEffect(() => {
+    if (!config?.clientId) return;
+    let cancelled = false;
+    let resizeObserver: ResizeObserver | undefined;
+    const scriptError = () => {
+      if (!cancelled)
+        setError("Google could not load. Check your connection and refresh.");
+    };
+    const init = () => {
+      if (cancelled || !button.current || !googleIdentity()) return;
+      googleIdentity()!.accounts.id.initialize({
+        client_id: config.clientId,
+        nonce: config.nonce,
+        auto_select: false,
+        callback: async (response: { credential: string }) => {
+          setBusy(true);
+          setError("");
+          try {
+            const result = await auth.googleLogin(response.credential);
+            if (resumeMcp()) return;
+            navigate(
+              result.needsOnboarding
+                ? "/onboarding"
+                : result.role === "pnm"
+                  ? "/recruitment"
+                  : "/dashboard"
+            );
+          } catch (e) {
+            setError((e as Error).message);
+          } finally {
+            setBusy(false);
+          }
+        },
+      });
+      let lastWidth = 0;
+      const render = () => {
+        if (cancelled || !button.current) return;
+        const width = Math.min(400, Math.floor(button.current.clientWidth));
+        if (!width || width === lastWidth) return;
+        lastWidth = width;
+        googleIdentity()!.accounts.id.renderButton(button.current, {
+          type: "standard",
+          theme: "outline",
+          size: "large",
+          text: "continue_with",
+          shape: "rectangular",
+          width,
+        });
+        setButtonReady(true);
+      };
+      render();
+      resizeObserver = new ResizeObserver(render);
+      resizeObserver.observe(button.current);
+    };
+    let script = document.querySelector<HTMLScriptElement>(
+      "script[data-sep-google]"
+    );
+    if (googleIdentity()) init();
+    else {
+      if (!script) {
+        script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.dataset.sepGoogle = "true";
+        document.head.append(script);
+      }
+      script.addEventListener("load", init);
+      script.addEventListener("error", scriptError);
+    }
+    return () => {
+      cancelled = true;
+      script?.removeEventListener("load", init);
+      script?.removeEventListener("error", scriptError);
+      resizeObserver?.disconnect();
+    };
+  }, [config]);
   return (
-    <div className="min-h-screen bg-[#05006C] flex items-center justify-center px-4 relative">
-      <Link
-        href="/"
-        className="absolute top-6 left-6 text-[#EEEADE]/60 hover:text-[#EEEADE] text-sm tracking-wider transition-colors"
-      >
-        &larr; Back to site
-      </Link>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="w-full max-w-md bg-[#05006C]/80 backdrop-blur border border-[#EEEADE]/20 rounded-2xl p-8"
-      >
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-[72px] h-[72px] mb-4">
-            <img src={sepLogo} alt="Sigma Eta Pi" className="w-full h-full object-contain" style={{ filter: 'brightness(10) contrast(10)', mixBlendMode: 'screen' }} />
-          </div>
-          <h1
-            className="text-[#EEEADE] font-bold text-xl tracking-widest uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
-          >
-            ACTIVE LOGIN
-          </h1>
-          <p
-            className="text-[#EEEADE]/50 text-xs tracking-widest mt-1 uppercase"
-            style={{ fontFamily: "'Helvetica Now', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
-          >
-            SIGMA ETA PI — EPSILON CHAPTER
-          </p>
+    <main className="sep-login">
+      <aside className="sep-login-story" aria-label="Sigma Eta Pi at UCSB">
+        <img
+          className="sep-login-photo"
+          src={chapterPhoto}
+          alt="UCSB Sigma Eta Pi members together with the chapter letters"
+        />
+        <div className="sep-login-photo-shade" />
+        <Link href="/" className="sep-login-brand">
+          <span className="sep-login-crest">
+            <img src={logo} alt="" />
+          </span>
+          <span>
+            Sigma Eta Pi
+            <span className="sep-login-brand-subtitle">
+              UCSB · Epsilon chapter
+            </span>
+          </span>
+        </Link>
+        <div className="sep-login-caption">
+          <p>Our people. Our chapter.</p>
+          <span>University of California, Santa Barbara</span>
         </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div>
-            <label className="block text-[#EEEADE]/70 text-xs uppercase tracking-wider mb-1.5 font-medium">
-              Email
-            </label>
-            <input
-              type="email"
-              {...register('email', { required: true })}
-              className="w-full bg-[#05006C]/60 text-[#EEEADE] border border-[#EEEADE]/30 rounded-lg px-4 py-3 text-sm placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/60 transition-colors"
-              placeholder="you@ucsb.edu"
+      </aside>
+      <section className="sep-login-panel" aria-labelledby="login-title">
+        <header className="sep-login-header">
+          <Link href="/" className="sep-login-back">
+            <span aria-hidden="true">←</span> Chapter website
+          </Link>
+          <span className="sep-login-mobile-brand">ΣΗΠ / UCSB</span>
+        </header>
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 28 }}
+          className="sep-login-form"
+        >
+          <p className="sep-login-eyebrow">Member portal</p>
+          <h1 id="login-title">Welcome back.</h1>
+          <p className="sep-login-intro">Sign in to your chapter.</p>
+          <div className="sep-login-action" aria-busy={busy}>
+            <div
+              ref={button}
+              className="sep-login-google"
+              aria-label="Google sign-in"
+              hidden={busy}
             />
-          </div>
-
-          <div>
-            <label className="block text-[#EEEADE]/70 text-xs uppercase tracking-wider mb-1.5 font-medium">
-              Password
-            </label>
-            <input
-              type="password"
-              {...register('password', { required: true })}
-              className="w-full bg-[#05006C]/60 text-[#EEEADE] border border-[#EEEADE]/30 rounded-lg px-4 py-3 text-sm placeholder:text-[#EEEADE]/30 focus:outline-none focus:border-[#EEEADE]/60 transition-colors"
-              placeholder="Enter password"
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-[#EEEADE] text-[#05006C] font-bold rounded-full py-3 text-sm tracking-widest uppercase hover:bg-white transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              'Sign In'
+            {busy && (
+              <p className="sep-login-loading" role="status">
+                Signing you in…
+              </p>
             )}
-          </button>
-        </form>
-      </motion.div>
-    </div>
+            {!busy &&
+              !buttonReady &&
+              !error &&
+              (!config || config.clientId) && (
+                <p
+                  className="sep-login-loading sep-login-skeleton"
+                  role="status"
+                  aria-label="Loading Google sign-in"
+                />
+              )}
+            {config && !config.clientId && !config.preview && (
+              <p className="sep-login-notice">
+                Sign-in is temporarily unavailable. Please try again later or
+                contact the chapter.
+              </p>
+            )}
+            {error && (
+              <p role="alert" className="sep-login-error">
+                {error}
+              </p>
+            )}
+          </div>
+          <p className="sep-login-account-note">
+            Use your UCSB Google account.
+            <br />
+            Chapter executive accounts are also supported.
+          </p>
+          <div className="sep-login-help">
+            Need access?{" "}
+            <a href="mailto:exec@ucsbsep.org">
+              Contact the chapter <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          {config?.preview && (
+            <div className="sep-login-preview">
+              <p>Local demo · Sample activity</p>
+              <div>
+                {[
+                  ["master", "Pledge master"],
+                  ["pledge", "Pledge"],
+                  ["active", "Active"],
+                ].map(([role, label]) => (
+                  <button
+                    key={role}
+                    disabled={busy}
+                    onClick={async () => {
+                      setBusy(true);
+                      setError("");
+                      try {
+                        await auth.previewLogin(role);
+                        if (!resumeMcp()) navigate("/dashboard");
+                      } catch (e) {
+                        setError((e as Error).message);
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    {label} view
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </motion.div>
+        <footer className="sep-login-footer">
+          <span>Sigma Eta Pi · UCSB</span>
+          <Link href="/privacy">Privacy</Link>
+        </footer>
+      </section>
+    </main>
   );
 }

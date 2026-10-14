@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Redirect } from 'wouter';
+import DashboardSkeleton, { PlainSkeleton } from './DashboardSkeleton';
 
 interface Props {
   children: React.ReactNode;
@@ -8,13 +9,13 @@ interface Props {
 export default function ProtectedRoute({ children }: Props) {
   const { isAuthenticated, isLoading, needsOnboarding } = useAuth();
 
-  if (isLoading) return (
-    <div className="min-h-screen bg-[#05006C] flex items-center justify-center">
-      <div className="text-[#EEEADE]">Loading...</div>
-    </div>
-  );
+  // Match the destination so the placeholder doesn't change shape when it loads.
+  if (isLoading)
+    return typeof window !== 'undefined' && window.location.pathname.startsWith('/dashboard')
+      ? <DashboardSkeleton />
+      : <PlainSkeleton />;
 
-  if (!isAuthenticated) return <Redirect to="/active-login" />;
+  if (!isAuthenticated) return <Redirect to="/login" />;
 
   // If on /onboarding, let it through regardless
   if (typeof window !== 'undefined' && window.location.pathname === '/onboarding') {

@@ -1,0 +1,325 @@
+.sep-login {
+  --login-ink: #203354;
+  --login-muted: #636b75;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding: 16px;
+  gap: 16px;
+  background: #f5f3ec;
+  color: var(--login-ink);
+  font-family:
+    "Helvetica Now",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+.sep-login-story {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 640px;
+  border-radius: 12px;
+  background: #1b2a44;
+  color: #eeeade;
+}
+.sep-login-photo,
+.sep-login-photo-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sep-login-photo {
+  object-fit: cover;
+  object-position: 48% center;
+}
+.sep-login-photo-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(12, 20, 34, 0.72),
+    rgba(12, 20, 34, 0.04) 35%,
+    rgba(12, 20, 34, 0.12) 55%,
+    rgba(12, 20, 34, 0.9)
+  );
+}
+.sep-login-brand {
+  position: relative;
+  display: inline-flex;
+  gap: 16px;
+  align-items: center;
+  margin: 32px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.sep-login-brand-subtitle {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+.sep-login-crest {
+  display: block;
+  position: relative;
+  width: 52px;
+  height: 44px;
+  overflow: hidden;
+  flex: none;
+}
+.sep-login-crest img {
+  position: absolute;
+  width: 114px;
+  max-width: none;
+  height: auto;
+  left: -31px;
+  top: -57px;
+  filter: brightness(0) invert(1);
+}
+.sep-login-caption {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 32px;
+}
+.sep-login-caption p {
+  font-size: clamp(26px, 2.8vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  text-wrap: balance;
+  margin: 0 0 14px;
+}
+.sep-login-caption span {
+  font-size: 12px;
+  color: #d1d7dd;
+}
+.sep-login-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px clamp(24px, 5vw, 84px) 12px;
+}
+.sep-login-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.sep-login-back {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  color: var(--login-muted);
+  transition: color 180ms ease;
+}
+.sep-login-back span {
+  transition: transform 180ms ease;
+}
+.sep-login-back:hover {
+  color: var(--login-ink);
+}
+.sep-login-back:hover span {
+  transform: translateX(-3px);
+}
+.sep-login-mobile-brand {
+  display: none;
+}
+.sep-login-form {
+  width: 100%;
+  max-width: 360px;
+  margin: auto;
+  padding: 72px 0;
+}
+.sep-login-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  color: var(--login-muted);
+}
+.sep-login-form h1 {
+  font-size: clamp(32px, 3.1vw, 44px);
+  font-weight: 550;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  margin: 0 0 14px;
+}
+.sep-login-intro {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--login-muted);
+  margin: 0;
+}
+.sep-login-action {
+  margin-top: 32px;
+}
+.sep-login-google {
+  width: 100%;
+  min-height: 40px;
+}
+.sep-login-google[hidden] {
+  display: none;
+}
+.sep-login-loading {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e7e5de;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.sep-login-notice,
+.sep-login-error {
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 14px 16px;
+  border-radius: 6px;
+}
+.sep-login-notice {
+  background: #e7e5de;
+}
+.sep-login-error {
+  color: #8d2a24;
+  background: #f6e7e2;
+  margin-top: 14px;
+  overflow-wrap: anywhere;
+}
+.sep-login-account-note {
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 18px;
+  color: var(--login-muted);
+}
+.sep-login-help {
+  font-size: 12px;
+  color: var(--login-muted);
+  margin-top: 32px;
+  border-top: 1px solid #deded6;
+  padding-top: 24px;
+}
+.sep-login-help a {
+  color: var(--login-ink);
+  font-weight: 500;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  min-height: 44px;
+}
+.sep-login-help a:hover,
+.sep-login-footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.sep-login-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 11px;
+  color: var(--login-muted);
+  align-items: center;
+}
+.sep-login-footer a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.sep-login a:focus-visible,
+.sep-login button:focus-visible {
+  outline: 2px solid #8fa2c2;
+  outline-offset: 5px;
+  border-radius: 3px;
+}
+.sep-login-preview {
+  border-top: 1px solid #deded6;
+  padding-top: 20px;
+  margin-top: 16px;
+}
+.sep-login-preview p {
+  font-size: 12px;
+  color: var(--login-muted);
+  margin-bottom: 12px;
+}
+.sep-login-preview > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sep-login-preview button {
+  background: #203354;
+  color: #eeeade;
+  padding: 10px 12px;
+  min-height: 44px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+.sep-login-preview button:hover {
+  background: #304968;
+}
+.sep-login-preview button:active {
+  transform: scale(0.98);
+}
+.sep-login-preview button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+@media (max-width: 760px) {
+  .sep-login {
+    display: block;
+    padding: 0;
+  }
+  .sep-login-story {
+    display: none;
+  }
+  .sep-login-panel {
+    min-height: 100dvh;
+    padding: 16px 24px 12px;
+  }
+  .sep-login-mobile-brand {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .sep-login-form {
+    padding: 56px 0;
+  }
+  .sep-login-form h1 {
+    font-size: 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sep-login *,
+  .sep-login *::before,
+  .sep-login *::after {
+    transition: none !important;
+  }
+}
+
+.sep-login-skeleton {
+  background: linear-gradient(100deg, #e7e5de 30%, #f3f1eb 50%, #e7e5de 70%);
+  background-size: 220% 100%;
+  animation: sep-login-shimmer 1.4s linear infinite;
+}
+@keyframes sep-login-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sep-login-skeleton {
+    animation: none;
+  }
+}

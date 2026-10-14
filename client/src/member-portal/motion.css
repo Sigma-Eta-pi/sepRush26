@@ -1,0 +1,392 @@
+/* SEP motion: responsive feedback, quiet surfaces, no continuous decoration. */
+.sep-portal {
+  --motion-fast: 150ms;
+  --motion-settle: 320ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-spring: linear(
+    0,
+    0.014,
+    0.054 6%,
+    0.197 12%,
+    0.44 20%,
+    0.7 30%,
+    0.866 42%,
+    0.956 58%,
+    0.99 76%,
+    1
+  );
+}
+.sep-portal .main-content > div:first-child {
+  animation: none;
+}
+.sep-portal .motion-surface {
+  min-width: 0;
+}
+.sep-portal button,
+.sep-portal a {
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    transform var(--motion-settle) var(--motion-ease);
+}
+.sep-portal
+  :is(
+    .btn,
+    .icon-button,
+    .filter-pills button,
+    .button-group button
+  ):active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
+.sep-portal .nav-item {
+  position: relative;
+  isolation: isolate;
+}
+.sep-portal .nav-item > :not(.selection-indicator) {
+  position: relative;
+  z-index: 1;
+}
+.sep-portal .sidebar nav[aria-label="Main navigation"] .nav-item.active {
+  background: transparent;
+}
+.sep-portal .selection-indicator {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  border-radius: inherit;
+  background: #eeeade;
+  z-index: 0;
+}
+.sep-portal .motion-tabs button {
+  position: relative;
+  isolation: isolate;
+}
+.sep-portal .motion-tabs .motion-tab-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.sep-portal .tabs.motion-tabs button.active {
+  border-bottom-color: transparent;
+}
+.sep-portal .tabs.motion-tabs .selection-indicator {
+  inset: auto 0 -1px;
+  height: 2px;
+  background: #203354;
+  border-radius: 2px;
+  padding: 0;
+  margin: 0;
+}
+.sep-portal .segmented.motion-tabs button.active {
+  background: transparent;
+  box-shadow: none;
+}
+.sep-portal .segmented.motion-tabs .selection-indicator {
+  background: #fff;
+  box-shadow: 0 1px 3px #20335416;
+}
+.sep-portal .progress-track > span {
+  width: 100%;
+  transform-origin: left center;
+  transition: transform 500ms var(--motion-ease);
+}
+.sep-portal .fluid-dialog {
+  overscroll-behavior: contain;
+}
+.sep-portal .fluid-dialog::backdrop {
+  background: #14243e50;
+  backdrop-filter: none;
+  animation: sep-backdrop-in 200ms ease both;
+}
+.sep-portal .fluid-dialog[data-exiting] {
+  pointer-events: none;
+}
+.sep-portal .fluid-dialog[data-exiting]::backdrop {
+  animation: sep-backdrop-out 180ms ease both;
+}
+@keyframes sep-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sep-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.sep-portal .chapter-profile-dialog {
+  inset: 0;
+  margin: auto;
+  width: min(720px, calc(100% - 48px));
+  max-width: 720px;
+  height: fit-content;
+  max-height: calc(100dvh - 64px);
+  border-radius: 24px;
+  border-color: #e3e2db;
+  box-shadow: 0 32px 100px #10223e4d;
+}
+.sep-portal .chapter-profile-dialog::backdrop {
+  background: #10223e8c;
+  backdrop-filter: blur(5px);
+}
+.sep-portal .chapter-profile-content {
+  padding-bottom: max(28px, env(safe-area-inset-bottom));
+}
+.sep-portal .chapter-member-card {
+  transition: border-color 160ms ease;
+}
+.sep-portal .chapter-card-open {
+  transition: background-color 160ms ease;
+}
+.sep-portal .chapter-card-open:active {
+  transform: none;
+}
+.sep-portal .chapter-card-link svg,
+.sep-portal .text-link svg {
+  transition: transform 280ms var(--motion-ease);
+}
+.sep-portal .calendar-event {
+  transition:
+    background-color 160ms ease,
+    transform 200ms var(--motion-ease),
+    opacity 160ms ease;
+}
+.sep-portal .calendar-event:active {
+  transform: scale(0.98);
+}
+.sep-portal .calendar-day {
+  transition: background-color 180ms ease;
+}
+.sep-portal .question-list-item,
+.sep-portal .agenda-row,
+.sep-portal .submission-row {
+  transition: background-color 160ms ease;
+}
+.sep-portal .form-error {
+  animation: sep-error-in 180ms ease both;
+}
+@keyframes sep-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sep-portal .skeleton {
+  background: #e6e9ed;
+  animation: sep-loading 1.5s ease-in-out infinite;
+}
+@keyframes sep-loading {
+  50% {
+    opacity: 0.45;
+  }
+}
+/* Fine-pointer effects don't become sticky hover states on a phone. */
+@media (hover: hover) and (pointer: fine) {
+  .sep-portal .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .sep-portal .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .sep-portal .chapter-card-open:hover .chapter-card-link svg {
+    transform: translate(2px, -2px);
+  }
+  .sep-portal .text-link:hover svg {
+    transform: translateX(2px);
+  }
+}
+@media (max-width: 1000px) {
+  .sep-portal .sidebar {
+    transition:
+      transform 360ms var(--motion-spring),
+      visibility 360ms;
+  }
+}
+@media (max-width: 600px) {
+  .sep-portal .chapter-profile-dialog {
+    inset: 0;
+    margin: auto;
+    width: calc(100% - 24px);
+    height: fit-content;
+    max-height: calc(100dvh - 32px);
+    border-radius: 20px;
+  }
+  .sep-portal .toast {
+    bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sep-portal *,
+  .sep-portal *::before,
+  .sep-portal *::after,
+  .sep-portal dialog::backdrop {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .sep-portal button:active,
+  .sep-portal .btn:hover {
+    transform: none;
+  }
+}
+/* Translation for positioning is separate from the toast's animated transform. */
+.sep-portal .toast {
+  translate: -50% 0;
+  background: #203354;
+  color: #fff;
+}
+.sep-portal .toast > svg {
+  color: #d0e4ef;
+}
+.sep-portal .sidebar-scrim {
+  backdrop-filter: none;
+}
+.sep-portal .profile-editor-tabs.motion-tabs button[aria-selected="true"] {
+  background: transparent;
+}
+.sep-portal .profile-editor-tabs.motion-tabs .selection-indicator {
+  background: #e7edf5;
+}
+@media (max-width: 680px) {
+  .sep-portal .sidebar {
+    transition:
+      transform 360ms var(--motion-spring),
+      visibility 0s 360ms;
+  }
+  .sep-portal .sidebar.is-open {
+    transition:
+      transform 360ms var(--motion-spring),
+      visibility 0s;
+  }
+}
+.sep-portal .mobile-bottom-nav button {
+  position: relative;
+  isolation: isolate;
+}
+.sep-portal .mobile-bottom-nav button > :not(.selection-indicator) {
+  position: relative;
+  z-index: 1;
+}
+.sep-portal .mobile-bottom-nav button.active {
+  background: transparent;
+}
+.sep-portal .mobile-bottom-nav .selection-indicator {
+  background: #e7edf5;
+}
+.sep-portal .deliverable-grid {
+  align-items: start;
+}
+
+/* Stagger newly mounted content; polling does not remount or replay it. */
+@keyframes sep-surface-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.987);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sep-portal
+    .motion-surface
+    :is(
+      .chapter-photo-grid,
+      .stats-grid,
+      .priority-grid,
+      .overview-grid,
+      .active-actions
+    )
+    > * {
+    animation: sep-surface-arrive 540ms var(--motion-ease) both;
+  }
+  .sep-portal
+    .motion-surface
+    :is(
+      .chapter-photo-grid,
+      .stats-grid,
+      .priority-grid,
+      .overview-grid,
+      .active-actions
+    )
+    > :nth-child(2) {
+    animation-delay: 45ms;
+  }
+  .sep-portal
+    .motion-surface
+    :is(
+      .chapter-photo-grid,
+      .stats-grid,
+      .priority-grid,
+      .overview-grid,
+      .active-actions
+    )
+    > :nth-child(3) {
+    animation-delay: 90ms;
+  }
+  .sep-portal
+    .motion-surface
+    :is(
+      .chapter-photo-grid,
+      .stats-grid,
+      .priority-grid,
+      .overview-grid,
+      .active-actions
+    )
+    > :nth-child(4) {
+    animation-delay: 135ms;
+  }
+  .sep-portal
+    .motion-surface
+    :is(
+      .chapter-photo-grid,
+      .stats-grid,
+      .priority-grid,
+      .overview-grid,
+      .active-actions
+    )
+    > :nth-child(n + 5) {
+    animation-delay: 170ms;
+  }
+  .sep-portal .chapter-card-photo img {
+    transition: transform 600ms var(--motion-ease);
+  }
+  .sep-portal .chapter-card-open:hover .chapter-card-photo img {
+    transform: scale(1.035);
+  }
+  .sep-portal .chapter-member-card {
+    transition:
+      box-shadow 350ms var(--motion-ease),
+      border-color 250ms;
+  }
+  .sep-portal .chapter-member-card:hover {
+    box-shadow: 0 12px 32px #20335418;
+  }
+  .sep-portal :is(.btn, .active-action) svg {
+    transition: transform 350ms var(--motion-ease);
+  }
+  .sep-portal :is(.btn, .active-action):hover svg {
+    transform: translateX(2px);
+  }
+}

@@ -13,6 +13,7 @@ const navLinks = [
   { label: "Meet Us", href: "/meet-us" },
   { label: "Careers", href: "/careers" },
   { label: "Recruitment", href: "/recruitment" },
+  { label: "Privacy", href: "/privacy" },
 ];
 
 export default function Footer() {

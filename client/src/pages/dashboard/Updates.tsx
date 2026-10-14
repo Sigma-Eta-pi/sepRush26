@@ -95,13 +95,13 @@ export default function Updates() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <Megaphone size={24} className="text-[#05006C]" />
-          <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">UPDATES</h1>
+          <Megaphone size={24} className="text-[#203354]" />
+          <h1 className="text-[#203354] text-2xl font-bold tracking-widest">UPDATES</h1>
         </div>
         {isExecOrAdmin && (
           <button
             onClick={() => setShowNew(!showNew)}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
           >
             <Plus size={16} /> NEW UPDATE
           </button>
@@ -112,35 +112,35 @@ export default function Updates() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 mb-4"
+          className="bg-white rounded-xl shadow-sm p-6 border border-[#203354]/10 mb-4"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm tracking-wider">NEW UPDATE</span>
-            <button onClick={() => setShowNew(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#203354] font-bold text-sm tracking-wider">NEW UPDATE</span>
+            <button onClick={() => setShowNew(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={18} /></button>
           </div>
           <input
             placeholder="Title"
             value={newForm.title}
             onChange={(e) => setNewForm((f) => ({ ...f, title: e.target.value }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-3"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] mb-3"
           />
           <textarea
             placeholder="Content"
             value={newForm.content}
             onChange={(e) => setNewForm((f) => ({ ...f, content: e.target.value }))}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-3"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-32 mb-3"
           />
           <div className="flex gap-2">
             <button
               onClick={handleCreate}
               disabled={submitting}
-              className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
+              className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
             >
               {submitting ? 'Posting...' : 'POST'}
             </button>
             <button
               onClick={() => setShowNew(false)}
-              className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs"
+              className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs"
             >
               Cancel
             </button>
@@ -151,12 +151,12 @@ export default function Updates() {
       {loading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 animate-pulse">
-              <div className="h-5 bg-[#05006C]/10 rounded w-1/3 mb-3" />
-              <div className="h-3 bg-[#05006C]/5 rounded w-1/4 mb-4" />
+            <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-[#203354]/10 animate-pulse">
+              <div className="h-5 bg-[#203354]/10 rounded w-1/3 mb-3" />
+              <div className="h-3 bg-[#203354]/5 rounded w-1/4 mb-4" />
               <div className="space-y-2">
-                <div className="h-3 bg-[#05006C]/5 rounded w-full" />
-                <div className="h-3 bg-[#05006C]/5 rounded w-2/3" />
+                <div className="h-3 bg-[#203354]/5 rounded w-full" />
+                <div className="h-3 bg-[#203354]/5 rounded w-2/3" />
               </div>
             </div>
           ))}
@@ -171,10 +171,10 @@ export default function Updates() {
 
       {!loading && !error && updates.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="w-16 h-16 bg-[#05006C]/10 rounded-full flex items-center justify-center mb-4">
-            <Megaphone size={28} className="text-[#05006C]/40" />
+          <div className="w-16 h-16 bg-[#203354]/10 rounded-full flex items-center justify-center mb-4">
+            <Megaphone size={28} className="text-[#203354]/40" />
           </div>
-          <p className="text-[#05006C]/50 mt-2">No updates yet</p>
+          <p className="text-[#203354]/50 mt-2">No updates yet</p>
         </div>
       )}
 
@@ -186,31 +186,31 @@ export default function Updates() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white rounded-xl shadow-sm p-6 border border-[#05006C]/10 relative"
+              className="bg-white rounded-xl shadow-sm p-6 border border-[#203354]/10 relative"
             >
               {editing === update.id ? (
                 <div>
                   <input
                     value={editForm.title}
                     onChange={(e) => setEditForm((f) => ({ ...f, title: e.target.value }))}
-                    className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-2"
+                    className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] mb-2"
                   />
                   <textarea
                     value={editForm.content}
                     onChange={(e) => setEditForm((f) => ({ ...f, content: e.target.value }))}
-                    className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-2"
+                    className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-32 mb-2"
                   />
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(update.id)}
                       disabled={submitting}
-                      className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
+                      className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
                     >
                       Save
                     </button>
                     <button
                       onClick={() => setEditing(null)}
-                      className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs"
+                      className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs"
                     >
                       Cancel
                     </button>
@@ -222,7 +222,7 @@ export default function Updates() {
                     <div className="absolute top-4 right-4 flex gap-1.5">
                       <button
                         onClick={() => { setEditing(update.id); setEditForm({ title: update.title, content: update.content }); }}
-                        className="border border-[#05006C]/20 text-[#05006C]/70 px-2 py-1.5 rounded-lg hover:bg-[#05006C]/5"
+                        className="border border-[#203354]/20 text-[#203354]/70 px-2 py-1.5 rounded-lg hover:bg-[#203354]/5"
                       >
                         <Pencil size={14} />
                       </button>
@@ -234,8 +234,8 @@ export default function Updates() {
                       </button>
                     </div>
                   )}
-                  <h2 className="text-[#05006C] text-xl font-bold pr-20">{update.title}</h2>
-                  <div className="flex gap-4 mt-1 text-[#05006C]/50 text-sm">
+                  <h2 className="text-[#203354] text-xl font-bold pr-20">{update.title}</h2>
+                  <div className="flex gap-4 mt-1 text-[#203354]/50 text-sm">
                     <span className="flex items-center gap-1">
                       <User size={14} /> {update.authorName}
                     </span>
@@ -243,7 +243,7 @@ export default function Updates() {
                       <Clock size={14} /> {new Date(update.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-[#05006C]/80 mt-4 leading-relaxed whitespace-pre-wrap">{update.content}</p>
+                  <p className="text-[#203354]/80 mt-4 leading-relaxed whitespace-pre-wrap">{update.content}</p>
                 </>
               )}
             </motion.div>

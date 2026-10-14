@@ -1,10 +1,11 @@
+import { SkeletonRows } from '@/components/DashboardSkeleton';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings, Trash2, Pencil, Plus, Users, Megaphone, Calendar,
   X, Check, Mail, RotateCcw, Send, ListTodo, Shield,
-  RefreshCw, ChevronDown, ChevronUp,
+  RefreshCw, ChevronDown, ChevronUp, Archive,
 } from 'lucide-react';
 
 async function apiFetch(path: string, token: string, options?: RequestInit) {
@@ -19,8 +20,9 @@ async function apiFetch(path: string, token: string, options?: RequestInit) {
 interface MemberUser {
   id: string;
   email: string;
-  role: 'active' | 'exec' | 'admin' | 'pnm';
+  role: 'active' | 'exec' | 'admin' | 'pnm' | 'pledge' | 'pledge_master';
   is_editor: boolean;
+  archived?: boolean;
   createdAt: string;
   name?: string | null;
   pledgeClass?: string | null;
@@ -67,27 +69,27 @@ export default function AdminPanel() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-2">
-        <Settings size={24} className="text-[#05006C]" />
-        <h1 className="text-[#05006C] text-2xl font-bold tracking-widest">
+        <Settings size={24} className="text-[#203354]" />
+        <h1 className="text-[#203354] text-2xl font-bold tracking-widest">
           {isAdmin ? 'ADMIN PANEL' : 'EXEC PANEL'}
         </h1>
       </div>
-      <p className="text-[#05006C]/50 text-sm mb-6">
+      <p className="text-[#203354]/50 text-sm mb-6">
         {isAdmin
           ? 'Full access — user management, tasks, announcements, events, email blast'
           : 'Exec access — tasks, announcements, events, email blast to actives'}
       </p>
 
       <div className="bg-white rounded-2xl shadow-sm p-6">
-        <div className="flex gap-4 border-b border-[#05006C]/10 mb-6 overflow-x-auto">
+        <div className="flex gap-4 border-b border-[#203354]/10 mb-6 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`pb-3 px-1 text-sm font-bold tracking-wider transition-colors flex items-center gap-2 whitespace-nowrap ${
                 activeTab === tab.key
-                  ? 'border-b-2 border-[#05006C] text-[#05006C]'
-                  : 'text-[#05006C]/50 hover:text-[#05006C]/70'
+                  ? 'border-b-2 border-[#203354] text-[#203354]'
+                  : 'text-[#203354]/50 hover:text-[#203354]/70'
               }`}
             >
               <tab.icon size={16} />
@@ -149,28 +151,28 @@ function GCalSection({ token }: { token: string }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-[#05006C]/10 shadow-sm p-6 mt-6">
+    <div className="bg-white rounded-2xl border border-[#203354]/10 shadow-sm p-6 mt-6">
       <div className="flex items-center gap-3 mb-4">
-        <Calendar size={20} className="text-[#05006C]" />
-        <h2 className="text-[#05006C] font-bold tracking-widest text-sm">GOOGLE CALENDAR SYNC</h2>
+        <Calendar size={20} className="text-[#203354]" />
+        <h2 className="text-[#203354] font-bold tracking-widest text-sm">GOOGLE CALENDAR SYNC</h2>
       </div>
 
       <div className="space-y-3">
         <div>
-          <label className="text-[#05006C]/60 text-xs font-bold block mb-1">iCAL URL</label>
+          <label className="text-[#203354]/60 text-xs font-bold block mb-1">iCAL URL</label>
           <input
             type="url"
             value={icalUrl}
             onChange={e => setIcalUrl(e.target.value)}
             placeholder="https://calendar.google.com/calendar/ical/..."
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40"
           />
         </div>
 
         <button
           onClick={handleSaveAndSync}
           disabled={syncing || !icalUrl.trim()}
-          className="flex items-center gap-2 bg-[#05006C] text-[#EEEADE] px-5 py-2.5 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#0A0080] transition-colors"
+          className="flex items-center gap-2 bg-[#203354] text-[#EEEADE] px-5 py-2.5 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#0A0080] transition-colors"
         >
           <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
           {syncing ? 'Syncing…' : 'Save & Sync Now'}
@@ -181,16 +183,16 @@ function GCalSection({ token }: { token: string }) {
         )}
 
         {lastSync && (
-          <p className="text-xs text-[#05006C]/40">
+          <p className="text-xs text-[#203354]/40">
             Last synced {lastCount} events on {fmtSync(lastSync)}
           </p>
         )}
       </div>
 
-      <div className="mt-4 border-t border-[#05006C]/10 pt-4">
+      <div className="mt-4 border-t border-[#203354]/10 pt-4">
         <button
           onClick={() => setShowInstructions(s => !s)}
-          className="flex items-center gap-2 text-xs text-[#05006C]/60 hover:text-[#05006C] font-bold tracking-wider transition-colors"
+          className="flex items-center gap-2 text-xs text-[#203354]/60 hover:text-[#203354] font-bold tracking-wider transition-colors"
         >
           {showInstructions ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           HOW TO GET YOUR iCAL URL
@@ -202,13 +204,13 @@ function GCalSection({ token }: { token: string }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-3 space-y-1.5 text-xs text-[#05006C]/60 list-decimal list-inside overflow-hidden"
+              className="mt-3 space-y-1.5 text-xs text-[#203354]/60 list-decimal list-inside overflow-hidden"
             >
               <li>Open Google Calendar (calendar.google.com)</li>
               <li>Click the gear icon → Settings</li>
               <li>Click your calendar name on the left sidebar</li>
               <li>Scroll to "Integrate calendar"</li>
-              <li>Copy the <strong className="text-[#05006C]/80">"Secret address in iCal format"</strong> (for private calendars) or <strong className="text-[#05006C]/80">"Public address in iCal format"</strong></li>
+              <li>Copy the <strong className="text-[#203354]/80">"Secret address in iCal format"</strong> (for private calendars) or <strong className="text-[#203354]/80">"Public address in iCal format"</strong></li>
               <li>Paste it above and click Save &amp; Sync</li>
             </motion.ol>
           )}
@@ -221,6 +223,9 @@ function GCalSection({ token }: { token: string }) {
 /* ─── MEMBERS TAB (admin only) ─── */
 
 function MembersTab({ token }: { token: string }) {
+  const { user } = useAuth();
+  const [showArchived, setShowArchived] = useState(false);
+  const [pendingMember, setPendingMember] = useState<string | null>(null);
   const [members, setMembers] = useState<MemberUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -235,14 +240,13 @@ function MembersTab({ token }: { token: string }) {
   const [showClasses, setShowClasses] = useState(false);
   const [newClassName, setNewClassName] = useState('');
   const [classError, setClassError] = useState('');
-  const [resetStatus, setResetStatus] = useState<Record<string, string>>({});
   const [search, setSearch] = useState('');
   const [importStatus, setImportStatus] = useState('');
   const [liStatus, setLiStatus] = useState('');
 
   const fetchMembers = () => {
     setLoading(true);
-    apiFetch('/api/admin/users', token)
+    apiFetch('/api/admin/users?includeArchived=true', token)
       .then(setMembers)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -278,13 +282,17 @@ function MembersTab({ token }: { token: string }) {
     }
   };
 
-  const handleDelete = async (id: string, email: string) => {
-    if (!window.confirm(`Delete ${email}?`)) return;
+  const handleArchive = async (id: string, email: string, restore = false) => {
+    if (!restore && !window.confirm(`Archive ${email}? Their access will end, but their profile and history will be preserved. You can restore them later.`)) return;
+    setPendingMember(id);
     try {
-      await apiFetch(`/api/admin/users/${id}`, token, { method: 'DELETE' });
-      setMembers((prev) => prev.filter((m) => m.id !== id));
+      await apiFetch(`/api/admin/users/${id}${restore ? '/restore' : ''}`, token, { method: restore ? 'POST' : 'DELETE' });
+      setMembers(prev => prev.map(m => m.id === id ? { ...m, archived: !restore } : m));
+      setEditing(null);
     } catch (e: any) {
       alert(e.message);
+    } finally {
+      setPendingMember(null);
     }
   };
 
@@ -306,18 +314,7 @@ function MembersTab({ token }: { token: string }) {
     }
   };
 
-  const handleResetPassword = async (id: string, email: string) => {
-    if (!window.confirm(`Send password reset email to ${email}?`)) return;
-    setResetStatus(s => ({ ...s, [id]: 'sending' }));
-    try {
-      const data = await apiFetch(`/api/admin/users/${id}/reset-password`, token, { method: 'POST' });
-      setResetStatus(s => ({ ...s, [id]: data.message || 'Sent!' }));
-      setTimeout(() => setResetStatus(s => { const n = { ...s }; delete n[id]; return n; }), 4000);
-    } catch (e: any) {
-      setResetStatus(s => ({ ...s, [id]: `Error: ${e.message}` }));
-      setTimeout(() => setResetStatus(s => { const n = { ...s }; delete n[id]; return n; }), 4000);
-    }
-  };
+  const handleResetPassword = (_id: string, email: string) => { alert(`${email} can sign in using their UCSB Google account. No SEP password is needed.`); };
 
   const handleImportNotion = async () => {
     setImportStatus('Importing...');
@@ -359,59 +356,63 @@ function MembersTab({ token }: { token: string }) {
     } catch (e: any) { alert(e.message); }
   };
 
-  const inputCls = 'bg-white border border-[#05006C]/15 rounded-lg px-3 py-2 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 w-full';
+  const inputCls = 'bg-white border border-[#203354]/15 rounded-lg px-3 py-2 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40 w-full';
 
-  if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading members...</div>;
+  if (loading) return <SkeletonRows count={8} label="Loading members" />;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
   const filteredMembers = members.filter(m => {
     const matchClass = classFilter === 'All' || m.pledgeClass === classFilter;
     const q = search.toLowerCase();
     const matchSearch = !q || (m.name || '').toLowerCase().includes(q) || m.email.toLowerCase().includes(q);
-    return matchClass && matchSearch;
+    return matchClass && matchSearch && Boolean(m.archived) === showArchived;
   });
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <span className="text-[#05006C]/60 text-sm font-bold">{filteredMembers.length} / {members.length} members</span>
+        <span className="text-[#203354]/60 text-sm font-bold">{filteredMembers.length} {showArchived ? 'archived' : 'current'} members</span>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={handleImportNotion}
             disabled={!!importStatus}
-            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 disabled:opacity-50"
+            className="border border-[#203354]/20 text-[#203354]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#203354]/5 disabled:opacity-50"
           >
             {importStatus || 'Import Members'}
           </button>
           <button
             onClick={handleFetchLinkedinPhotos}
             disabled={!!liStatus}
-            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5 disabled:opacity-50"
+            className="border border-[#203354]/20 text-[#203354]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#203354]/5 disabled:opacity-50"
           >
             {liStatus || 'Fetch LinkedIn Photos'}
           </button>
           <button
             onClick={() => { setShowClasses(s => !s); setShowAdd(false); }}
-            className="border border-[#05006C]/20 text-[#05006C]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#05006C]/5"
+            className="border border-[#203354]/20 text-[#203354]/70 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-[#203354]/5"
           >
             <Settings size={15} /> Classes
           </button>
           <button
             onClick={() => { setShowAdd(s => !s); setShowClasses(false); }}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
           >
             <Plus size={16} /> Add Member
           </button>
         </div>
       </div>
 
-      <div className="mb-3">
+      <div className="mb-3 flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-sm text-[#203354]">
+          <input type="checkbox" checked={showArchived} onChange={e => { setShowArchived(e.target.checked); setEditing(null); }} />
+          Archived members
+        </label>
         <input
           type="text"
           placeholder="Search by name or email..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full sm:w-72 bg-white border border-[#05006C]/15 rounded-lg px-4 py-2 text-sm text-[#05006C] placeholder:text-[#05006C]/30 focus:outline-none focus:border-[#05006C]/40 transition"
+          className="w-full sm:w-72 bg-white border border-[#203354]/15 rounded-lg px-4 py-2 text-sm text-[#203354] placeholder:text-[#203354]/30 focus:outline-none focus:border-[#203354]/40 transition"
         />
       </div>
 
@@ -421,7 +422,7 @@ function MembersTab({ token }: { token: string }) {
             key={cls}
             onClick={() => setClassFilter(cls)}
             className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide transition-colors cursor-pointer ${
-              classFilter === cls ? 'bg-[#05006C] text-[#EEEADE]' : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+              classFilter === cls ? 'bg-[#203354] text-[#EEEADE]' : 'bg-[#203354]/8 text-[#203354]/60 hover:bg-[#203354]/15'
             }`}
           >
             {cls}
@@ -435,17 +436,17 @@ function MembersTab({ token }: { token: string }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10 overflow-hidden"
+            className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#203354]/10 overflow-hidden"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[#05006C] font-bold text-sm">MANAGE CLASSES</span>
-              <button onClick={() => setShowClasses(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={16} /></button>
+              <span className="text-[#203354] font-bold text-sm">MANAGE CLASSES</span>
+              <button onClick={() => setShowClasses(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={16} /></button>
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {classes.map(c => (
-                <span key={c.id} className="flex items-center gap-1.5 bg-white border border-[#05006C]/15 rounded-full px-3 py-1 text-xs text-[#05006C] font-medium">
+                <span key={c.id} className="flex items-center gap-1.5 bg-white border border-[#203354]/15 rounded-full px-3 py-1 text-xs text-[#203354] font-medium">
                   {c.name}
-                  <button onClick={() => handleDeleteClass(c.id)} className="text-[#05006C]/30 hover:text-red-500 transition-colors"><X size={11} /></button>
+                  <button onClick={() => handleDeleteClass(c.id)} className="text-[#203354]/30 hover:text-red-500 transition-colors"><X size={11} /></button>
                 </span>
               ))}
             </div>
@@ -455,9 +456,9 @@ function MembersTab({ token }: { token: string }) {
                 onChange={e => setNewClassName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAddClass()}
                 placeholder="New class name..."
-                className="bg-white border border-[#05006C]/15 rounded-lg px-3 py-2 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 flex-1"
+                className="bg-white border border-[#203354]/15 rounded-lg px-3 py-2 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40 flex-1"
               />
-              <button onClick={handleAddClass} className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold">Add</button>
+              <button onClick={handleAddClass} className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold">Add</button>
             </div>
             {classError && <p className="text-red-600 text-xs mt-2">{classError}</p>}
           </motion.div>
@@ -468,79 +469,73 @@ function MembersTab({ token }: { token: string }) {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10"
+          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#203354]/10"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm">NEW MEMBER</span>
-            <button onClick={() => setShowAdd(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#203354] font-bold text-sm">NEW MEMBER</span>
+            <button onClick={() => setShowAdd(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={18} /></button>
           </div>
-          <p className="text-[#05006C]/50 text-xs mb-3">A welcome email with a set-password link will be sent automatically.</p>
+          <p className="text-[#203354]/50 text-xs mb-3">Add their exact UCSB Google email. They can then sign in with Google.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input type="email" placeholder="Email *" value={addForm.email}
               onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
-              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+              className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
             <select value={addForm.role} onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
-              className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]">
-              <option value="pnm">PNM</option>
+              className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]">
+              <option value="pnm">PNM / applicant</option><option value="pledge">Pledge</option><option value="pledge_master">Pledge master</option>
               <option value="active">Active</option>
               <option value="exec">Exec</option>
               <option value="admin">Admin</option>
             </select>
           </div>
           <button onClick={handleAdd} disabled={submitting}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50 flex items-center gap-2">
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50 flex items-center gap-2">
             <Mail size={14} />
-            {submitting ? 'Sending invite...' : 'Send Invite'}
+            {submitting ? 'Adding...' : 'Add member'}
           </button>
         </motion.div>
       )}
 
-      <div className="divide-y divide-[#05006C]/10">
+      <div className="divide-y divide-[#203354]/10">
         {filteredMembers.map((m) => (
           <div key={m.id}>
             {editing !== m.id && (
               <div className="flex items-center justify-between py-3 gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
-                  {m.name && <p className="text-[#05006C] text-sm font-bold truncate">{m.name}</p>}
-                  <p className={`text-[#05006C]/60 truncate ${m.name ? 'text-xs' : 'text-sm font-medium'}`}>{m.email}</p>
-                  {m.pledgeClass && <p className="text-[#05006C]/40 text-xs">{m.pledgeClass}</p>}
+                  {m.name && <p className="text-[#203354] text-sm font-bold truncate">{m.name}</p>}
+                  <p className={`text-[#203354]/60 truncate ${m.name ? 'text-xs' : 'text-sm font-medium'}`}>{m.email}</p>
+                  {m.pledgeClass && <p className="text-[#203354]/40 text-xs">{m.pledgeClass}</p>}
                 </div>
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                   m.role === 'admin' ? 'bg-red-100 text-red-700' :
                   m.role === 'exec' ? 'bg-yellow-100 text-yellow-700' :
                   m.role === 'pnm' ? 'bg-orange-100 text-orange-700' :
-                  'bg-[#05006C]/8 text-[#05006C]/60'
+                  'bg-[#203354]/8 text-[#203354]/60'
                 }`}>{m.role}</span>
                 {m.is_editor && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 uppercase tracking-wider">editor</span>
                 )}
 
-                {resetStatus[m.id] ? (
-                  <span className={`text-xs px-2 py-1 rounded-lg ${
-                    resetStatus[m.id] === 'sending' ? 'text-[#05006C]/50' :
-                    resetStatus[m.id].startsWith('Error') ? 'text-red-600 bg-red-50' :
-                    'text-green-600 bg-green-50'
-                  }`}>
-                    {resetStatus[m.id] === 'sending' ? 'Sending...' : resetStatus[m.id]}
-                  </span>
-                ) : (
-                  <button
-                    onClick={() => handleResetPassword(m.id, m.email)}
-                    title="Send password reset email"
-                    className="border border-[#05006C]/20 text-[#05006C]/60 hover:text-[#05006C] px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
-                  >
-                    <RotateCcw size={12} /> Reset PW
+                {m.archived ? (
+                  <button onClick={() => handleArchive(m.id, m.email, true)} disabled={pendingMember !== null}
+                    className="border border-[#203354]/20 text-[#203354] px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 flex items-center gap-1">
+                    <RotateCcw size={13} /> {pendingMember === m.id ? 'Restoring...' : 'Restore member'}
                   </button>
-                )}
+                ) : <>
+                  <button onClick={() => handleResetPassword(m.id, m.email)}
+                    className="border border-[#203354]/20 text-[#203354]/60 hover:text-[#203354] px-2.5 py-2 rounded-lg text-xs">
+                    Google login
+                  </button>
+                  <button onClick={() => openEdit(m)} aria-label={`Edit ${m.name || m.email}`}
+                    className="border border-[#203354]/20 text-[#203354]/60 hover:text-[#203354] px-2.5 py-2 rounded-lg text-xs">
+                    <Pencil size={13} />
+                  </button>
+                  {m.id !== user?.id && <button onClick={() => handleArchive(m.id, m.email)} disabled={pendingMember !== null}
+                    className="border border-[#203354]/20 text-[#203354]/70 px-2.5 py-2 rounded-lg text-xs font-bold disabled:opacity-50 flex items-center gap-1">
+                    <Archive size={13} /> {pendingMember === m.id ? 'Archiving...' : 'Archive'}
+                  </button>}
+                </>}
 
-                <button onClick={() => openEdit(m)}
-                  className="border border-[#05006C]/20 text-[#05006C]/60 hover:text-[#05006C] px-2.5 py-1.5 rounded-lg text-xs transition-colors">
-                  <Pencil size={13} />
-                </button>
-                <button onClick={() => handleDelete(m.id, m.email)}
-                  className="bg-red-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold">
-                  <Trash2 size={13} />
-                </button>
               </div>
             )}
 
@@ -552,25 +547,25 @@ function MembersTab({ token }: { token: string }) {
                   exit={{ opacity: 0, height: 0 }}
                   className="py-3 overflow-hidden"
                 >
-                  <div className="bg-[#F5F3EE] rounded-xl p-4 border border-[#05006C]/10 space-y-3">
+                  <div className="bg-[#F5F3EE] rounded-xl p-4 border border-[#203354]/10 space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[#05006C] font-bold text-xs tracking-wider uppercase">Edit — {m.email}</span>
-                      <button onClick={() => setEditing(null)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={16} /></button>
+                      <span className="text-[#203354] font-bold text-xs tracking-wider uppercase">Edit — {m.email}</span>
+                      <button onClick={() => setEditing(null)} className="text-[#203354]/40 hover:text-[#203354]"><X size={16} /></button>
                     </div>
-                    <p className="text-[#05006C]/40 text-xs">To change their password, use the "Reset PW" button — it sends a secure email link.</p>
+                    <p className="text-[#203354]/40 text-xs">Members sign in with Google. SEP does not store or reset Google passwords.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-[#05006C]/50 text-xs mb-1">Email</label>
+                        <label className="block text-[#203354]/50 text-xs mb-1">Email</label>
                         <input type="email" value={editForm.email}
                           onChange={(e) => setEditForm((f) => ({ ...f, email: e.target.value }))}
                           className={inputCls} />
                       </div>
                       <div>
-                        <label className="block text-[#05006C]/50 text-xs mb-1">Role</label>
+                        <label className="block text-[#203354]/50 text-xs mb-1">Role</label>
                         <select value={editForm.role}
                           onChange={(e) => setEditForm((f) => ({ ...f, role: e.target.value as MemberUser['role'] }))}
                           className={inputCls}>
-                          <option value="pnm">pnm</option>
+                          <option value="pnm">pnm</option><option value="pledge">pledge</option><option value="pledge_master">pledge master</option>
                           <option value="active">active</option>
                           <option value="exec">exec</option>
                           <option value="admin">admin</option>
@@ -595,7 +590,7 @@ function MembersTab({ token }: { token: string }) {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[#05006C]/50 text-xs mb-1">Class</label>
+                        <label className="block text-[#203354]/50 text-xs mb-1">Class</label>
                         <select value={editForm.pledgeClass}
                           onChange={(e) => setEditForm((f) => ({ ...f, pledgeClass: e.target.value }))}
                           className={inputCls}>
@@ -609,11 +604,11 @@ function MembersTab({ token }: { token: string }) {
                     )}
                     <div className="flex gap-2">
                       <button onClick={() => handleEdit(m.id)} disabled={submitting}
-                        className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 disabled:opacity-50">
+                        className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 disabled:opacity-50">
                         <Check size={13} /> {submitting ? 'Saving...' : 'Save'}
                       </button>
                       <button onClick={() => setEditing(null)}
-                        className="border border-[#05006C]/20 text-[#05006C]/60 px-3 py-2 rounded-lg text-xs">Cancel</button>
+                        className="border border-[#203354]/20 text-[#203354]/60 px-3 py-2 rounded-lg text-xs">Cancel</button>
                     </div>
                   </div>
                 </motion.div>
@@ -680,12 +675,12 @@ function TasksTab({ token }: { token: string }) {
   };
 
   const statusColors: Record<Task['status'], string> = {
-    pending: 'bg-[#05006C]/8 text-[#05006C]/60',
+    pending: 'bg-[#203354]/8 text-[#203354]/60',
     in_progress: 'bg-blue-50 text-blue-700',
     done: 'bg-green-50 text-green-700',
   };
 
-  if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading tasks...</div>;
+  if (loading) return <SkeletonRows count={5} avatar={false} label="Loading tasks" />;
 
   const filtered = filterStatus === 'all' ? tasks : tasks.filter(t => t.status === filterStatus);
 
@@ -696,14 +691,14 @@ function TasksTab({ token }: { token: string }) {
           {(['all', 'pending', 'in_progress', 'done'] as const).map(s => (
             <button key={s} onClick={() => setFilterStatus(s)}
               className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
-                filterStatus === s ? 'bg-[#05006C] text-[#EEEADE]' : 'bg-[#05006C]/8 text-[#05006C]/60 hover:bg-[#05006C]/15'
+                filterStatus === s ? 'bg-[#203354] text-[#EEEADE]' : 'bg-[#203354]/8 text-[#203354]/60 hover:bg-[#203354]/15'
               }`}>
               {s === 'all' ? 'All' : s === 'in_progress' ? 'In Progress' : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
           ))}
         </div>
         <button onClick={() => setShowNew(s => !s)}
-          className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+          className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
           <Plus size={16} /> Assign Task
         </button>
       </div>
@@ -712,33 +707,33 @@ function TasksTab({ token }: { token: string }) {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10"
+          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#203354]/10"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm">ASSIGN TASK</span>
-            <button onClick={() => setShowNew(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#203354] font-bold text-sm">ASSIGN TASK</span>
+            <button onClick={() => setShowNew(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={18} /></button>
           </div>
           <div className="space-y-3">
             <input placeholder="Task title *" value={newForm.title}
               onChange={e => setNewForm(f => ({ ...f, title: e.target.value }))}
-              className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+              className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
             <textarea placeholder="Description (optional)" value={newForm.description}
               onChange={e => setNewForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-16 resize-none" />
+              className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-16 resize-none" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <select value={newForm.assignedTo}
                 onChange={e => setNewForm(f => ({ ...f, assignedTo: e.target.value }))}
-                className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]">
+                className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]">
                 <option value="">Assign to... *</option>
                 {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
               </select>
               <input type="date" value={newForm.dueDate}
                 onChange={e => setNewForm(f => ({ ...f, dueDate: e.target.value }))}
-                className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+                className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
             </div>
           </div>
           <button onClick={handleCreate} disabled={submitting || !newForm.title || !newForm.assignedTo}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50">
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50">
             {submitting ? 'Assigning...' : 'Assign Task'}
           </button>
         </motion.div>
@@ -746,25 +741,25 @@ function TasksTab({ token }: { token: string }) {
 
       <div className="space-y-2">
         {filtered.length === 0 && (
-          <p className="text-[#05006C]/40 text-center py-8 text-sm">No tasks{filterStatus !== 'all' ? ` with status "${filterStatus}"` : ''}</p>
+          <p className="text-[#203354]/40 text-center py-8 text-sm">No tasks{filterStatus !== 'all' ? ` with status "${filterStatus}"` : ''}</p>
         )}
         {filtered.map(task => (
-          <div key={task.id} className={`bg-[#F5F3EE] rounded-xl p-4 border border-[#05006C]/10 ${task.status === 'done' ? 'opacity-60' : ''}`}>
+          <div key={task.id} className={`bg-[#F5F3EE] rounded-xl p-4 border border-[#203354]/10 ${task.status === 'done' ? 'opacity-60' : ''}`}>
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`font-bold text-sm text-[#05006C] ${task.status === 'done' ? 'line-through' : ''}`}>
+                  <span className={`font-bold text-sm text-[#203354] ${task.status === 'done' ? 'line-through' : ''}`}>
                     {task.title}
                   </span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${statusColors[task.status]}`}>
                     {task.status.replace('_', ' ')}
                   </span>
                 </div>
-                {task.description && <p className="text-[#05006C]/50 text-xs mt-1">{task.description}</p>}
+                {task.description && <p className="text-[#203354]/50 text-xs mt-1">{task.description}</p>}
                 <div className="flex gap-3 mt-1.5 flex-wrap">
-                  <span className="text-[#05006C]/40 text-xs">→ {task.assignedToName}</span>
+                  <span className="text-[#203354]/40 text-xs">→ {task.assignedToName}</span>
                   {task.dueDate && (
-                    <span className={`text-xs ${new Date(task.dueDate) < new Date() && task.status !== 'done' ? 'text-red-500 font-medium' : 'text-[#05006C]/30'}`}>
+                    <span className={`text-xs ${new Date(task.dueDate) < new Date() && task.status !== 'done' ? 'text-red-500 font-medium' : 'text-[#203354]/30'}`}>
                       Due {new Date(task.dueDate).toLocaleDateString()}
                     </span>
                   )}
@@ -774,7 +769,7 @@ function TasksTab({ token }: { token: string }) {
                 <select
                   value={task.status}
                   onChange={e => handleStatusChange(task.id, e.target.value as Task['status'])}
-                  className="bg-white border border-[#05006C]/15 rounded-lg px-2 py-1 text-xs text-[#05006C]"
+                  className="bg-white border border-[#203354]/15 rounded-lg px-2 py-1 text-xs text-[#203354]"
                 >
                   <option value="pending">Pending</option>
                   <option value="in_progress">In Progress</option>
@@ -857,14 +852,14 @@ function EmailBlastTab({ token }: { token: string }) {
   return (
     <div>
       <div className="mb-6">
-        <h3 className="text-[#05006C] font-bold text-sm tracking-wider mb-1">EMAIL BLAST</h3>
-        <p className="text-[#05006C]/50 text-xs">Choose who to send to, then write your message.</p>
+        <h3 className="text-[#203354] font-bold text-sm tracking-wider mb-1">EMAIL BLAST</h3>
+        <p className="text-[#203354]/50 text-xs">Choose who to send to, then write your message.</p>
       </div>
 
       <div className="space-y-4">
         {/* Recipient selector */}
         <div>
-          <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SEND TO</label>
+          <label className="block text-[#203354]/60 text-xs font-bold tracking-wider mb-1.5">SEND TO</label>
           <div className="flex flex-wrap gap-2">
             {RECIPIENT_OPTIONS.map(opt => (
               <button
@@ -872,15 +867,15 @@ function EmailBlastTab({ token }: { token: string }) {
                 onClick={() => { setRecipient(opt.value); setSelectedId(''); setMemberSearch(''); }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors ${
                   recipient === opt.value
-                    ? 'bg-[#05006C] text-[#EEEADE] border-[#05006C]'
-                    : 'bg-white text-[#05006C]/60 border-[#05006C]/20 hover:border-[#05006C]/40 hover:text-[#05006C]'
+                    ? 'bg-[#203354] text-[#EEEADE] border-[#203354]'
+                    : 'bg-white text-[#203354]/60 border-[#203354]/20 hover:border-[#203354]/40 hover:text-[#203354]'
                 }`}
               >
                 {opt.label}
               </button>
             ))}
           </div>
-          <p className="text-[#05006C]/40 text-xs mt-1.5">
+          <p className="text-[#203354]/40 text-xs mt-1.5">
             {RECIPIENT_OPTIONS.find(o => o.value === recipient)?.desc}
           </p>
         </div>
@@ -888,22 +883,22 @@ function EmailBlastTab({ token }: { token: string }) {
         {/* Individual member picker */}
         {recipient === 'individual' && (
           <div>
-            <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SELECT MEMBER</label>
+            <label className="block text-[#203354]/60 text-xs font-bold tracking-wider mb-1.5">SELECT MEMBER</label>
             <input
               placeholder="Search by name or email..."
               value={memberSearch}
               onChange={e => setMemberSearch(e.target.value)}
-              className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-xl px-4 py-2.5 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 mb-2"
+              className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-xl px-4 py-2.5 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40 mb-2"
             />
-            <div className="max-h-40 overflow-y-auto border border-[#05006C]/10 rounded-xl divide-y divide-[#05006C]/5 bg-white">
+            <div className="max-h-40 overflow-y-auto border border-[#203354]/10 rounded-xl divide-y divide-[#203354]/5 bg-white">
               {filteredMembers.length === 0 ? (
-                <p className="text-[#05006C]/30 text-xs text-center py-4">No members found</p>
+                <p className="text-[#203354]/30 text-xs text-center py-4">No members found</p>
               ) : filteredMembers.map(m => (
                 <button
                   key={m.id}
                   onClick={() => setSelectedId(m.id)}
                   className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                    selectedId === m.id ? 'bg-[#05006C]/8 font-bold text-[#05006C]' : 'text-[#05006C]/70 hover:bg-[#05006C]/4'
+                    selectedId === m.id ? 'bg-[#203354]/8 font-bold text-[#203354]' : 'text-[#203354]/70 hover:bg-[#203354]/4'
                   }`}
                 >
                   {m.name && <span className="font-medium">{m.name} — </span>}
@@ -915,22 +910,22 @@ function EmailBlastTab({ token }: { token: string }) {
         )}
 
         <div>
-          <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">SUBJECT</label>
+          <label className="block text-[#203354]/60 text-xs font-bold tracking-wider mb-1.5">SUBJECT</label>
           <input
             value={form.subject}
             onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
             placeholder="Email subject..."
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-xl px-4 py-3 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-xl px-4 py-3 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40"
           />
         </div>
         <div>
-          <label className="block text-[#05006C]/60 text-xs font-bold tracking-wider mb-1.5">MESSAGE</label>
+          <label className="block text-[#203354]/60 text-xs font-bold tracking-wider mb-1.5">MESSAGE</label>
           <textarea
             value={form.content}
             onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
             placeholder="Write your message..."
             rows={8}
-            className="w-full bg-[#F5F3EE] border border-[#05006C]/15 rounded-xl px-4 py-3 text-sm text-[#05006C] focus:outline-none focus:border-[#05006C]/40 resize-none"
+            className="w-full bg-[#F5F3EE] border border-[#203354]/15 rounded-xl px-4 py-3 text-sm text-[#203354] focus:outline-none focus:border-[#203354]/40 resize-none"
           />
         </div>
 
@@ -945,7 +940,7 @@ function EmailBlastTab({ token }: { token: string }) {
         <button
           onClick={handleSend}
           disabled={submitting || !canSend}
-          className="bg-[#05006C] text-[#EEEADE] px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 disabled:opacity-50 hover:bg-[#05006C]/90 transition-colors"
+          className="bg-[#203354] text-[#EEEADE] px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 disabled:opacity-50 hover:bg-[#203354]/90 transition-colors"
         >
           <Send size={16} />
           {submitting ? 'Sending...' : `Send to ${recipientLabel}`}
@@ -1007,34 +1002,34 @@ function AnnouncementsTab({ token }: { token: string }) {
     } catch (e: any) { alert(e.message); }
   };
 
-  if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading announcements...</div>;
+  if (loading) return <SkeletonRows count={4} avatar={false} label="Loading announcements" />;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[#05006C]/60 text-sm font-bold">{updates.length} announcements</span>
+        <span className="text-[#203354]/60 text-sm font-bold">{updates.length} announcements</span>
         <button onClick={() => setShowNew(!showNew)}
-          className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+          className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
           <Plus size={16} /> New Announcement
         </button>
       </div>
 
       {showNew && (
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10">
+          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#203354]/10">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm">NEW ANNOUNCEMENT</span>
-            <button onClick={() => setShowNew(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#203354] font-bold text-sm">NEW ANNOUNCEMENT</span>
+            <button onClick={() => setShowNew(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={18} /></button>
           </div>
           <input placeholder="Title" value={newForm.title}
             onChange={(e) => setNewForm((f) => ({ ...f, title: e.target.value }))}
-            className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-3" />
+            className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] mb-3" />
           <textarea placeholder="Content" value={newForm.content}
             onChange={(e) => setNewForm((f) => ({ ...f, content: e.target.value }))}
-            className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-3" />
+            className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-32 mb-3" />
           <button onClick={handleCreate} disabled={submitting}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">
             {submitting ? 'Posting...' : 'Post'}
           </button>
         </motion.div>
@@ -1042,32 +1037,32 @@ function AnnouncementsTab({ token }: { token: string }) {
 
       <div className="space-y-3">
         {updates.map((u) => (
-          <div key={u.id} className="bg-[#F5F3EE] rounded-xl p-4 border border-[#05006C]/10">
+          <div key={u.id} className="bg-[#F5F3EE] rounded-xl p-4 border border-[#203354]/10">
             {editing === u.id ? (
               <div>
                 <input value={editForm.title}
                   onChange={(e) => setEditForm((f) => ({ ...f, title: e.target.value }))}
-                  className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] mb-2" />
+                  className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] mb-2" />
                 <textarea value={editForm.content}
                   onChange={(e) => setEditForm((f) => ({ ...f, content: e.target.value }))}
-                  className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-32 mb-2" />
+                  className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-32 mb-2" />
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(u.id)} disabled={submitting}
-                    className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
+                    className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
                   <button onClick={() => setEditing(null)}
-                    className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
+                    className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
                 </div>
               </div>
             ) : (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-[#05006C] font-bold text-sm">{u.title}</h3>
-                  <p className="text-[#05006C]/40 text-xs mt-0.5">{new Date(u.createdAt).toLocaleDateString()}</p>
-                  <p className="text-[#05006C]/70 text-sm mt-1 line-clamp-2">{u.content}</p>
+                  <h3 className="text-[#203354] font-bold text-sm">{u.title}</h3>
+                  <p className="text-[#203354]/40 text-xs mt-0.5">{new Date(u.createdAt).toLocaleDateString()}</p>
+                  <p className="text-[#203354]/70 text-sm mt-1 line-clamp-2">{u.content}</p>
                 </div>
                 <div className="flex gap-1.5 flex-shrink-0">
                   <button onClick={() => { setEditing(u.id); setEditForm({ title: u.title, content: u.content }); }}
-                    className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs"><Pencil size={13} /></button>
+                    className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs"><Pencil size={13} /></button>
                   <button onClick={() => handleDelete(u.id)}
                     className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold"><Trash2 size={13} /></button>
                 </div>
@@ -1134,25 +1129,25 @@ function EventsTab({ token }: { token: string }) {
     exec: 'bg-purple-100 text-purple-700',
     social: 'bg-blue-100 text-blue-700',
     professional: 'bg-green-100 text-green-700',
-    general: 'bg-[#05006C]/10 text-[#05006C]',
+    general: 'bg-[#203354]/10 text-[#203354]',
   };
 
   const eventFormFields = (form: typeof newForm, setForm: (fn: (f: typeof newForm) => typeof newForm) => void) => (
     <div className="space-y-3">
       <input placeholder="Title *" value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-        className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+        className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
       <textarea placeholder="Description (optional)" value={form.description}
         onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-        className="w-full bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C] min-h-20" />
+        className="w-full bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354] min-h-20" />
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <input type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-          className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+          className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
         <input type="time" value={form.time} onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
-          className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+          className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
         <input placeholder="Location" value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-          className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]" />
+          className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]" />
         <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as CalendarEvent['type'] }))}
-          className="bg-white border border-[#05006C]/15 rounded-lg px-4 py-2.5 text-sm text-[#05006C]">
+          className="bg-white border border-[#203354]/15 rounded-lg px-4 py-2.5 text-sm text-[#203354]">
           <option value="general">General</option>
           <option value="social">Social</option>
           <option value="professional">Professional</option>
@@ -1163,29 +1158,29 @@ function EventsTab({ token }: { token: string }) {
     </div>
   );
 
-  if (loading) return <div className="text-[#05006C]/50 text-center py-12 animate-pulse">Loading events...</div>;
+  if (loading) return <SkeletonRows count={5} avatar={false} label="Loading events" />;
   if (error) return <div className="bg-red-50 text-red-600 rounded-xl p-4 border border-red-200">{error}</div>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[#05006C]/60 text-sm font-bold">{events.length} events</span>
+        <span className="text-[#203354]/60 text-sm font-bold">{events.length} events</span>
         <button onClick={() => setShowNew(!showNew)}
-          className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+          className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
           <Plus size={16} /> Add Event
         </button>
       </div>
 
       {showNew && (
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#05006C]/10">
+          className="bg-[#F5F3EE] rounded-xl p-4 mb-4 border border-[#203354]/10">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#05006C] font-bold text-sm">ADD EVENT</span>
-            <button onClick={() => setShowNew(false)} className="text-[#05006C]/40 hover:text-[#05006C]"><X size={18} /></button>
+            <span className="text-[#203354] font-bold text-sm">ADD EVENT</span>
+            <button onClick={() => setShowNew(false)} className="text-[#203354]/40 hover:text-[#203354]"><X size={18} /></button>
           </div>
           {eventFormFields(newForm, setNewForm)}
           <button onClick={handleCreate} disabled={submitting}
-            className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50">
+            className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold mt-3 disabled:opacity-50">
             {submitting ? 'Adding...' : 'Add Event'}
           </button>
         </motion.div>
@@ -1193,36 +1188,36 @@ function EventsTab({ token }: { token: string }) {
 
       <div className="space-y-3">
         {events.map((ev) => (
-          <div key={ev.id} className="bg-[#F5F3EE] rounded-xl p-4 border border-[#05006C]/10">
+          <div key={ev.id} className="bg-[#F5F3EE] rounded-xl p-4 border border-[#203354]/10">
             {editing === ev.id ? (
               <div>
                 {eventFormFields(editForm, setEditForm)}
                 <div className="flex gap-2 mt-3">
                   <button onClick={() => handleEdit(ev.id)} disabled={submitting}
-                    className="bg-[#05006C] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
+                    className="bg-[#203354] text-[#EEEADE] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
                   <button onClick={() => setEditing(null)}
-                    className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
+                    className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
                 </div>
               </div>
             ) : (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-[#05006C] font-bold text-sm">{ev.title}</h3>
+                    <h3 className="text-[#203354] font-bold text-sm">{ev.title}</h3>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${typeBadgeColors[ev.type]}`}>
                       {ev.type}
                     </span>
                   </div>
-                  <p className="text-[#05006C]/40 text-xs mt-0.5">
+                  <p className="text-[#203354]/40 text-xs mt-0.5">
                     {new Date(ev.date).toLocaleDateString()}{ev.time && ` at ${ev.time}`}{ev.location && ` — ${ev.location}`}
                   </p>
-                  {ev.description && <p className="text-[#05006C]/70 text-sm mt-1 line-clamp-2">{ev.description}</p>}
+                  {ev.description && <p className="text-[#203354]/70 text-sm mt-1 line-clamp-2">{ev.description}</p>}
                 </div>
                 <div className="flex gap-1.5 flex-shrink-0">
                   <button onClick={() => {
                     setEditing(ev.id);
                     setEditForm({ title: ev.title, description: ev.description || '', date: ev.date?.split('T')[0] || '', time: ev.time || '', location: ev.location || '', type: ev.type });
-                  }} className="border border-[#05006C]/20 text-[#05006C]/70 px-3 py-1.5 rounded-lg text-xs"><Pencil size={13} /></button>
+                  }} className="border border-[#203354]/20 text-[#203354]/70 px-3 py-1.5 rounded-lg text-xs"><Pencil size={13} /></button>
                   <button onClick={() => handleDelete(ev.id)}
                     className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold"><Trash2 size={13} /></button>
                 </div>

@@ -1,0 +1,19 @@
+{
+  "members": [
+    {
+      "name": "REPLACE: active member's full name",
+      "email": "REPLACE: exact email shown by their UCSB Google account",
+      "role": "active"
+    },
+    {
+      "name": "REPLACE: pledge's full name",
+      "email": "REPLACE: exact email shown by their UCSB Google account",
+      "role": "pledge"
+    },
+    {
+      "name": "REPLACE: pledge master's full name",
+      "email": "REPLACE: exact email shown by their UCSB Google account",
+      "role": "pledge_master"
+    }
+  ]
+}

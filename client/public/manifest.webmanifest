@@ -1,0 +1,10 @@
+{
+  "name": "Sigma Eta Pi · UCSB",
+  "short_name": "SEP",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f3ee",
+  "theme_color": "#203354",
+  "icons": [{"src":"/portal-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}
